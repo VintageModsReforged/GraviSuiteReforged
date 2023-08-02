@@ -1,0 +1,94 @@
+####################
+# armors
+####################
+
+item.advanced_lappack.name=Advanced Lappack
+item.ultimate_lappack.name=Ultimate Lappack
+item.advanced_jetpack.name=Advanced Electric Jetpack
+item.advanced_nano.name=Advanced Nano Chestplate
+item.advanced_quant.name=Gravitational Chestplate
+
+####################
+# components
+####################
+
+item.superconductor_cover.name=Superconductor Cover
+item.superconductor.name=Superconductor
+item.cooling_core.name=Cooling Core
+item.gravi_engine.name=Gravitational Engine
+item.magnetron.name=Magnetron
+item.vajra_core.name=Vajra Core
+item.engine_booster.name=Engine Booster
+
+####################
+# tools
+###################
+
+item.advanced_diamond_drill.name=Advanced Diamond Drill
+item.advanced_iridium_drill.name=Advanced Iridium Drill
+item.advanced_chainsaw.name=Advanced Chainsaw
+item.gravitool.name=GraviTool
+item.magnet.name=Magnet
+item.vajra.name=Vajra
+item.wooden_hammer.name=Wooden Hammer
+item.stone_hammer.name=Stone Hammer
+item.iron_hammer.name=Iron Hammer
+item.diamond_hammer.name=Diamond Hammer
+item.bronze_hammer.name=Bronze Hammer
+item.quartz_hammer.name=Quartz Hammer
+
+####################
+# messages
+####################
+
+key.toggle.engine.desc=[GraviSuite] Armor Toggle Key
+key.toggle.magnet.desc=[GraviSuite] Magnet Toggle Key
+message.gravitation.engine=Antigravity Engine:
+message.gravitation.levitation=Levitation:
+message.text.energy_level=Energy Level:
+message.text.jetpack.engine=Jetpack Engine:
+message.text.jetpack.hover=Hover Mode:
+message.text.low_energy=Not enough energy for this operation!
+message.text.off=Off
+message.text.on=On
+message.text.shutdown=Low energy! Shutting down!
+message.tool.eff.mode=Efficiency Mode:
+message.tool.eff.mode.stat=Efficiency Mode
+message.tool.eff.mode.fine=Fine
+message.tool.eff.mode.low_power=Low Power
+message.tool.eff.mode.normal=Normal
+message.tool.mining.mode=Mining Mode:
+message.tool.mining.mode.stat=Mining Mode
+message.tool.mode=Tool Mode:
+message.tool.mode.stat=Tool Mode
+message.tool.mode.big_holes=Big Holes
+message.tool.mode.fortune=Fortune III
+message.tool.mode.hoe=Hoe
+message.tool.mode.magnet=Magnet Mode:
+message.tool.mode.normal=Normal
+message.tool.mode.screwdriver=Screwdriver
+message.tool.mode.shear=Shears Mode:
+message.tool.mode.silk=Silk Touch
+message.tool.mode.treetap=Treetap
+message.tool.mode.vein=Vein
+message.tool.mode.vein_extended=Extended Vein
+message.tool.mode.wrench=Wrench
+
+message.ench.mode=Enchantment Mode:
+message.ench.mode.stat=Enchantment Mode
+message.tool.mode.shear.stat=Shears Mode
+message.tool.mode.magnet.stat=Magnet Mode
+message.text.jetpack.engine.stat=Jetpack Engine
+message.text.jetpack.hover.stat=Hover Mode
+message.text.jetpack.boost.stat=Boost Mode
+message.gravitation.engine.stat=Antigravity Engine
+message.gravitation.levitation.stat=Levitation
+
+message.info.press=Press %1$s for more info
+message.info.press.to1=Press %1$s to change %2$s
+message.info.press.to2=Press %1$s and %2$s to change %3$s
+message.info.press.to.enable1=Press %1$s to enable %2$s
+message.info.press.to.enable2=Press %1$s and %2$s to enable %3$s
+message.vein.active=Active Vein Miner
+
+
