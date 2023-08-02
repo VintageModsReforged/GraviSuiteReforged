@@ -352,7 +352,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                 ItemStack blockStack = new ItemStack(block, 1, meta);
                 // Ugly check for ore blocks
                 // TODO: register all ores to OreDict;
-                boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("ore");
+                boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains(" ore");
 //            List<String> oreNames = Utils.getAOreDictNames(blockStack);
 //            for (String name : oreNames) {
 //                if (name.startsWith("ore")) {
