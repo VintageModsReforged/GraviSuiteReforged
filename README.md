@@ -1,4 +1,6 @@
-![](preview.png)
+<p align="center">
+    <img src="./preview.png">
+</p>
 
 # GraviSuite Reforged for Minecraft 1.5.2
 
