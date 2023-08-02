@@ -50,9 +50,9 @@ public class Refs {
     public static final String TOOL_MODE_SCREWDRIVER = "message.tool.mode.screwdriver";
     public static final String KEY_TOGGLE_DESC = "key.toggle.engine.desc";
     public static final String KEY_MAGNET_TOGGLE_DESC = "key.toggle.magnet.desc";
-    public static final String ench_mode = "message.ench.mode";
+    public static final String ENCH_MODE = "message.ench.mode";
 
-    public static final String boost_mode = "message.text.jetpack.boost.stat";
+    public static final String BOOST_MODE = "message.text.jetpack.boost.stat";
 
 
 
@@ -92,7 +92,7 @@ public class Refs {
     public static final String tool_mining_mode_gold = "\2476" + StatCollector.translateToLocal(MINING_MODE);
     public static final String tool_mode = "\247e" + StatCollector.translateToLocal(MODE);
     public static final String tool_mode_gold = "\2476" + StatCollector.translateToLocal(MODE);
-    public static final String ench_mode_yellow = "\247e" + StatCollector.translateToLocal(ench_mode);
+    public static final String ench_mode_yellow = "\247e" + StatCollector.translateToLocal(ENCH_MODE);
     public static final String tool_mode_normal = "\247a" + StatCollector.translateToLocal(MODE_NORMAL);
     public static final String tool_mode_big_holes = "\247d" + StatCollector.translateToLocal(MODE_BIG_HOLES);
     public static final String tool_mode_vein = "\247b" + StatCollector.translateToLocal(MODE_VEIN);

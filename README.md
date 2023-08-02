@@ -1,3 +1,5 @@
+![](preview.png)
+
 # GraviSuite Reforged for Minecraft 1.5.2
 
 This is an attempt to reforge the old-classic IC2 addon - GraviSuite, using [voldeloom](https://github.com/CrackedPolishedBlackstoneBricksMC/voldeloom) as foundation. 

@@ -53,7 +53,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         if (Helpers.isShiftKeyDown()) {
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.engine_toggle.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.JETPACK_HOVER + ".stat"));
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.boost_mode));
+            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }

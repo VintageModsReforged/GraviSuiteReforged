@@ -299,6 +299,11 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
             tooltip.add("\2477" + Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier);
             tooltip.add("\2476" + StatCollector.translateToLocal(Refs.vein_miner));
+            if (Helpers.isShiftKeyDown()) {
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
+            } else {
+                tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+            }
         }
 
         @Override

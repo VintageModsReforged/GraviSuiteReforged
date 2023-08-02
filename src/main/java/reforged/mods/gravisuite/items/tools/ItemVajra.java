@@ -45,7 +45,7 @@ public class ItemVajra extends ItemToolElectric {
         if (Helpers.isShiftKeyDown()) {
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MINING_MODE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", "Right Click", Refs.EFF_MODE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ench_mode + ".stat"));
+            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
