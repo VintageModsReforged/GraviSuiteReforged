@@ -8,14 +8,11 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.GraviSuiteData;
 import reforged.mods.gravisuite.GraviSuiteOverlay;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.I18n;
-import reforged.mods.gravisuite.utils.ItemGraviToolRenderer;
 import reforged.mods.gravisuite.utils.Refs;
 
 public class ClientProxy extends CommonProxy {
@@ -49,10 +46,5 @@ public class ClientProxy extends CommonProxy {
     @Override
     public int addArmor(String armorName) {
         return RenderingRegistry.addNewArmourRendererPrefix(armorName);
-    }
-
-    @Override
-    public void registerRenderers() {
-        MinecraftForgeClient.registerItemRenderer(GraviSuiteData.gravitool.itemID, new ItemGraviToolRenderer());
     }
 }

@@ -54,6 +54,19 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
         this.itemIcon = iconsList[0];
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(ItemStack stack, int pass) {
+        int index = readToolMode(stack).ordinal();
+        return iconsList[index];
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
     @SuppressWarnings("unchecked")

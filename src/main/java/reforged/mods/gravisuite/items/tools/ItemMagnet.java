@@ -61,7 +61,6 @@ public class ItemMagnet extends ItemToolElectric {
         String message;
         NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         if (Helpers.getCharge(stack) > ENERGY_COST) {
-            tag.setByte(NBT_TICKER, MAGNET_TICKER);
             if (tag.getBoolean(NBT_ACTIVE)) {
                 tag.setBoolean(NBT_ACTIVE, false);
                 message = Refs.tool_mode_magnet + " " + Refs.status_off;
@@ -72,10 +71,7 @@ public class ItemMagnet extends ItemToolElectric {
         } else {
             message = Refs.status_low;
         }
-
-        if (IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(player, message);
-        }
+        IC2.platform.messagePlayer(player, message);
     }
 
     @Override
@@ -90,6 +86,7 @@ public class ItemMagnet extends ItemToolElectric {
             }
             if (ClientProxy.magnet_toggle.pressed && ticker <= 0) {
                 changeMode(stack, player);
+                tag.setByte(NBT_TICKER, MAGNET_TICKER);
             }
             if (!tag.getBoolean(NBT_ACTIVE))
                 return;

@@ -11,6 +11,4 @@ public class CommonProxy {
     public void postInit(FMLPostInitializationEvent e) {}
 
     public int addArmor(String armorName) { return 0; }
-
-    public void registerRenderers() {}
 }
