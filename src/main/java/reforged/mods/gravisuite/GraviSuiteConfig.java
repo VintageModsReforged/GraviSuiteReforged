@@ -45,15 +45,6 @@ public class GraviSuiteConfig {
 
     public static void initConfig() {
 
-        try {
-            if (info == null) {
-                info = new File(Minecraft.getMinecraftDir(), "/config/gravisuite/lang/info.md");
-                FileWriter writer = new FileWriter(info);
-                writer.write("# Additional Langs \nThis folder can be used to store additional .lang files for GraviSuite. \n\nCopy your .lang file here and don't forget to specify the file name in the common config#additional_languages field as well.");
-                writer.close();
-            }
-        } catch (Throwable ignored) {}
-
         id_config = new Configuration(new File(Minecraft.getMinecraftDir(), "/config/gravisuite/ids.cfg"));
         id_config.load();
 
@@ -95,6 +86,16 @@ public class GraviSuiteConfig {
         magnet_range = getInt(Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
 
         if (main_config.hasChanged()) main_config.save();
+
+        info = new File(Minecraft.getMinecraftDir(), "/config/gravisuite/langs.md");
+
+        try {
+            FileWriter writer = new FileWriter(info);
+            writer.write("# Additional Langs \nYou can have multiple different lang files for GraviSuite. \n\nFirst you need to create a new folder called \"lang\" inside #config/gravisuite folder and copy your .lang file there and don't forget to specify the file name in the common config#additional_languages field as well.");
+            writer.close();
+        } catch (Throwable e) {
+            GraviSuite.logger.info("Failed to create new file!");
+        }
     }
 
     private static int getInt(String cat, String tag, int min, int max, int defaultValue, String comment) {
