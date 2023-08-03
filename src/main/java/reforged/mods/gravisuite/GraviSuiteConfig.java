@@ -6,12 +6,15 @@ import net.minecraftforge.common.Property;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
+import java.io.FileWriter;
 
 public class GraviSuiteConfig {
 
+    public static File info;
     public static Configuration id_config;
     public static Configuration main_config;
-    public static String languages;
+    public static String additional_languages;
+    public static String default_language;
     public static int magnet_range = 8;
     public static boolean log_wrench = false;
     public static boolean enable_hud = true;
@@ -41,6 +44,16 @@ public class GraviSuiteConfig {
     public static int ADVANCED_QUANT_ID = 30236;
 
     public static void initConfig() {
+
+        try {
+            if (info == null) {
+                info = new File(Minecraft.getMinecraftDir(), "/config/gravisuite/lang/info.md");
+                FileWriter writer = new FileWriter(info);
+                writer.write("# Additional Langs \nThis folder can be used to store additional .lang files for GraviSuite. \n\nCopy your .lang file here and don't forget to specify the file name in the common config#additional_languages field as well.");
+                writer.close();
+            }
+        } catch (Throwable ignored) {}
+
         id_config = new Configuration(new File(Minecraft.getMinecraftDir(), "/config/gravisuite/ids.cfg"));
         id_config.load();
 
@@ -77,7 +90,8 @@ public class GraviSuiteConfig {
         hud_pos_gravi_y = getInt(Refs.hud, "hud_pos_gravi_y", 0, Integer.MAX_VALUE, hud_pos_gravi_y, "Y Pos for Gravitational Chestplate status info.");
 
         log_wrench = getBoolean(Refs.general, "enable_wrench_logging", log_wrench, "Should GraviTool Wrench be logged? [Debug purposes only!]");
-        languages = getString(Refs.general, "localization_list", "en_US", "Supported localizations. Place your <name>.lang file in gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
+        default_language = getString(Refs.general, "default_language", "en_US", "Default Language. DO NOT CHANGE THIS! Use additional_languages field instead!");
+        additional_languages = getString(Refs.general, "additional_languages", "", "Additional supported localizations. Place your <name>.lang file in config/gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
         magnet_range = getInt(Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
 
         if (main_config.hasChanged()) main_config.save();

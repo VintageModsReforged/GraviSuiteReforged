@@ -1,10 +1,12 @@
 package reforged.mods.gravisuite.utils;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,13 +19,17 @@ public final class LangHelper {
     }
 
     public static void addEntry(Object object, boolean special) {
-        String[] LANGS = GraviSuiteConfig.languages.split(",");
-        if (LANGS.length == 1) {
-            addEntry(object, GraviSuiteConfig.languages, special);
-        } else {
-            for (String lang : LANGS) {
-                addEntry(object, lang, special);
+        if (!GraviSuiteConfig.additional_languages.isEmpty()) {
+            String[] LANGS = GraviSuiteConfig.additional_languages.split(",");
+            if (LANGS.length == 1) {
+                addEntry(object, GraviSuiteConfig.additional_languages, special);
+            } else {
+                for (String lang : LANGS) {
+                    addEntry(object, lang, special);
+                }
             }
+        } else {
+            addEntry(object, GraviSuiteConfig.default_language, special);
         }
     }
 
@@ -31,7 +37,11 @@ public final class LangHelper {
         InputStream stream = null;
         InputStreamReader reader = null;
         try {
-            stream = LangHelper.class.getResourceAsStream("/mods/gravisuite/lang/" + lang + ".lang");
+            if (GraviSuiteConfig.additional_languages.isEmpty()) {
+                stream = LangHelper.class.getResourceAsStream("/mods/gravisuite/lang/" + lang + ".lang"); // use the default .lang file from modJar
+            } else {
+                stream = new FileInputStream(Minecraft.getMinecraftDir() + "/config/gravisuite/lang/" + lang + ".lang"); // use the lang files from config/gravisuite/lang folder
+            }
             if (stream == null) {
                 throw new IOException("Couldn't load language file.");
             }
