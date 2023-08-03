@@ -27,13 +27,7 @@ public class GraviSuiteConfig {
     public static int hud_pos_gravi_x = 3;
     public static int hud_pos_gravi_y = 15;
 
-    public static int SUPERCONDUCTOR_COVER_ID = 30219;
-    public static int SUPERCONDUCTOR_ID = 30220;
-    public static int COOLING_CORE_ID = 30221;
-    public static int GRAVI_ENGINE_ID = 30222;
-    public static int MAGNETRON_ID = 30223;
-    public static int VAJRA_CORE_ID = 30224;
-    public static int ENGINE_BOOSTER_ID = 30225;
+    public static int COMPONENT_ID = 30219;
     public static int ADVANCED_DIAMOND_DRILL = 30226;
     public static int ADVANCED_IRIDIUM_DRILL = 30227;
     public static int ADVANCED_CHAINSAW_ID = 30228;
@@ -50,13 +44,7 @@ public class GraviSuiteConfig {
         id_config = new Configuration(new File(Minecraft.getMinecraftDir(), "/config/gravisuite/ids.cfg"));
         id_config.load();
 
-        SUPERCONDUCTOR_COVER_ID = getId("supercondustor_cover", SUPERCONDUCTOR_COVER_ID, "supercondustor_cover");
-        SUPERCONDUCTOR_ID = getId("superconductor", SUPERCONDUCTOR_ID, "superconductor");
-        COOLING_CORE_ID = getId("cooling_core", COOLING_CORE_ID, "cooling_core_id");
-        GRAVI_ENGINE_ID = getId("gravi_engine", GRAVI_ENGINE_ID, "gravi_engine_id");
-        MAGNETRON_ID = getId("magnetron", MAGNETRON_ID, "magnetron_id");
-        VAJRA_CORE_ID = getId("vajra_core", VAJRA_CORE_ID, "vajra_core_id");
-        ENGINE_BOOSTER_ID = getId("engine_booster", ENGINE_BOOSTER_ID, "engine_booster_id");
+        COMPONENT_ID = getId("component_id", COMPONENT_ID, "component");
 
         ADVANCED_DIAMOND_DRILL = getId("advanced_diamond_drill", ADVANCED_DIAMOND_DRILL, "Advanced Diamond Drill ID");
         ADVANCED_IRIDIUM_DRILL = getId("advanced_iridium_drill", ADVANCED_IRIDIUM_DRILL, "Advanced Iridium Drill ID");

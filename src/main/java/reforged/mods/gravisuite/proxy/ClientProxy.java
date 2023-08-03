@@ -12,7 +12,6 @@ import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.GraviSuiteOverlay;
 import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.I18n;
 import reforged.mods.gravisuite.utils.Refs;
 
 public class ClientProxy extends CommonProxy {
@@ -23,7 +22,6 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
         GraviSuiteConfig.initConfig();
-        I18n.init();
         engine_toggle = new KeyBinding(Refs.KEY_TOGGLE_DESC, Keyboard.KEY_F);
         magnet_toggle = new KeyBinding(Refs.KEY_MAGNET_TOGGLE_DESC, Keyboard.KEY_G);
         // Register Keybinds using 1.7.10 method

@@ -12,13 +12,13 @@ item.advanced_quant.name=Gravitational Chestplate
 # components
 ####################
 
-item.superconductor_cover.name=Superconductor Cover
-item.superconductor.name=Superconductor
-item.cooling_core.name=Cooling Core
-item.gravi_engine.name=Gravitational Engine
-item.magnetron.name=Magnetron
-item.vajra_core.name=Vajra Core
-item.engine_booster.name=Engine Booster
+item.component.superconductor_cover.name=Superconductor Cover
+item.component.superconductor.name=Superconductor
+item.component.cooling_core.name=Cooling Core
+item.component.gravi_engine.name=Gravitational Engine
+item.component.magnetron.name=Magnetron
+item.component.vajra_core.name=Vajra Core
+item.component.engine_booster.name=Engine Booster
 
 ####################
 # tools

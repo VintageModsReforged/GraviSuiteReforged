@@ -41,8 +41,7 @@ public class GraviSuiteOverlay implements ITickHandler {
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... objects) {
         if (type.contains(TickType.RENDER) && GraviSuiteConfig.enable_hud && mc.theWorld != null && mc.inGameHasFocus) {
-            Minecraft minecraft = mc;
-            renderOverlay(minecraft);
+            renderOverlay(mc);
         }
     }
 

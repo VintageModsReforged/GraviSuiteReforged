@@ -103,53 +103,53 @@ public class GraviSuiteRecipes {
                 'L', new ItemStack(Item.dyePowder, 1, 4),
                 'C', Items.getItem("refinedIronIngot"));
 
-        Recipes.advRecipes.addRecipe(count(GraviSuiteData.superconductor_cover, 3),
-                "RBR", "CCC", "RBR",
-                'R', Items.getItem("advancedAlloy"),
-                'B', Items.getItem("iridiumPlate"),
-                'C', Items.getItem("carbonPlate"));
-
-        Recipes.advRecipes.addRecipe(count(GraviSuiteData.superconductor, 3),
-                "RRR", "CBC", "RRR",
-                'R', GraviSuiteData.superconductor_cover,
-                'B', Item.ingotGold,
-                'C', Items.getItem("glassFiberCableItem"));
-
-        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.cooling_core),
-                "RBR", "CDC", "RBR",
-                'R', Items.getItem("reactorCoolantSix"),
-                'B', Items.getItem("reactorHeatSwitchDiamond"),
-                'C', Items.getItem("reactorPlatingHeat"),
-                'D', Items.getItem("iridiumPlate"));
-
-        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.gravi_engine),
-                "RBR", "CDC", "RBR",
-                'R', Items.getItem("teslaCoil"),
-                'B', GraviSuiteData.superconductor,
-                'C', GraviSuiteData.cooling_core,
-                'D', Items.getItem("hvTransformer"));
-
-        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.magnetron),
-                "ABA", "BCB", "ABA",
-                'A', Items.getItem("refinedIronIngot"),
-                'B', Items.getItem("copperIngot"),
-                'C', GraviSuiteData.superconductor);
-
-        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.vajra_core),
-                " A ", "BCB", "FDF",
-                'A', GraviSuiteData.magnetron,
-                'B', Items.getItem("iridiumPlate"),
-                'C', Items.getItem("teslaCoil"),
-                'F', GraviSuiteData.superconductor,
-                'D', Items.getItem("hvTransformer"));
-
-        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.engine_booster),
-                "ABA", "CDC", "BFB",
-                'A', Item.lightStoneDust,
-                'B', Items.getItem("advancedAlloy"),
-                'C', Items.getItem("advancedCircuit"),
-                'D', Items.getItem("overclockerUpgrade"),
-                'F', Items.getItem("reactorVentDiamond"));
+//        Recipes.advRecipes.addRecipe(count(GraviSuiteData.superconductor_cover, 3),
+//                "RBR", "CCC", "RBR",
+//                'R', Items.getItem("advancedAlloy"),
+//                'B', Items.getItem("iridiumPlate"),
+//                'C', Items.getItem("carbonPlate"));
+//
+//        Recipes.advRecipes.addRecipe(count(GraviSuiteData.superconductor, 3),
+//                "RRR", "CBC", "RRR",
+//                'R', GraviSuiteData.superconductor_cover,
+//                'B', Item.ingotGold,
+//                'C', Items.getItem("glassFiberCableItem"));
+//
+//        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.cooling_core),
+//                "RBR", "CDC", "RBR",
+//                'R', Items.getItem("reactorCoolantSix"),
+//                'B', Items.getItem("reactorHeatSwitchDiamond"),
+//                'C', Items.getItem("reactorPlatingHeat"),
+//                'D', Items.getItem("iridiumPlate"));
+//
+//        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.gravi_engine),
+//                "RBR", "CDC", "RBR",
+//                'R', Items.getItem("teslaCoil"),
+//                'B', GraviSuiteData.superconductor,
+//                'C', GraviSuiteData.cooling_core,
+//                'D', Items.getItem("hvTransformer"));
+//
+//        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.magnetron),
+//                "ABA", "BCB", "ABA",
+//                'A', Items.getItem("refinedIronIngot"),
+//                'B', Items.getItem("copperIngot"),
+//                'C', GraviSuiteData.superconductor);
+//
+//        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.vajra_core),
+//                " A ", "BCB", "FDF",
+//                'A', GraviSuiteData.magnetron,
+//                'B', Items.getItem("iridiumPlate"),
+//                'C', Items.getItem("teslaCoil"),
+//                'F', GraviSuiteData.superconductor,
+//                'D', Items.getItem("hvTransformer"));
+//
+//        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.engine_booster),
+//                "ABA", "CDC", "BFB",
+//                'A', Item.lightStoneDust,
+//                'B', Items.getItem("advancedAlloy"),
+//                'C', Items.getItem("advancedCircuit"),
+//                'D', Items.getItem("overclockerUpgrade"),
+//                'F', Items.getItem("reactorVentDiamond"));
     }
 
     public static ItemStack count(Item item, int count) {
