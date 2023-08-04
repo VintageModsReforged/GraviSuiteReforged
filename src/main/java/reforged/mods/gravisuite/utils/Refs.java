@@ -7,7 +7,7 @@ public class Refs {
 
     public static final String id = "gravisuite";
     public static final String name = "GraviSuite - Addon";
-    public static final String version = "1.5.2-2.0.9-forge";
+    public static final String version = "1.5.2-2.1.0-forge";
     public static final String mc = "[1.5.2]";
     public static final String deps = "required-after:IC2";
 
