@@ -41,7 +41,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
     public boolean LOW_ENERGY = false;
 
     public ItemGraviTool() {
-        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", 2, 5000, 10000, EnumRarity.uncommon, EnumToolMaterial.IRON);
+        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", 2, 5000, 100000, EnumRarity.uncommon, EnumToolMaterial.IRON);
     }
 
     @SideOnly(Side.CLIENT)
