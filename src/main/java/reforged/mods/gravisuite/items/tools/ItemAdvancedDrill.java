@@ -10,17 +10,19 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.*;
@@ -99,21 +101,19 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
             MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, true, 4.5D);
-            int block = world.getBlockId(x, y, x);
+            int block = world.getBlockId(x, y, z);
+            int radius = player.isSneaking() ? 0 : 1;
+            float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
             if (block == 0)
                 return false;
             if (!canOperate(stack))
                 return false;
-
             if (mode == DrillMode.BIG_HOLES) {
-                int radius = player.isSneaking() ? 0 : 1;
-                float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
+                if (mop == null) { // cancel 3x3 when rayTrace fails
+                    return false;
+                }
                 if (refStrength != 0.0D) {
-                    int adjBlockId;
-                    float strength;
-
                     int xRange = radius, yRange = radius, zRange = radius;
-
                     switch (mop.sideHit) {
                         case 0:
                         case 1:
@@ -128,20 +128,15 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                             xRange = 0;
                             break;
                     }
-
-                    for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
-                        for (int yPos = y - yRange; yPos <= y + yRange; yPos++) {
-                            for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
-                                adjBlockId = world.getBlockId(xPos, yPos, zPos);
-                                if (adjBlockId != 0) {
-                                    Block adjBlock = Block.blocksList[adjBlockId];
-                                    strength = adjBlock.getBlockHardness(world, xPos, yPos, zPos);
-                                    if (strength > 0f && refStrength / strength <= 10f) {
-                                        if (canOperate(stack)) {
-                                            if (canHarvestBlock(adjBlock, stack) && harvestBlock(world, xPos, yPos, zPos, player)) {
-                                                ElectricItem.manager.use(stack, props.energy_cost, player);
-                                            }
-                                        }
+                    BlockPos origin = new BlockPos(x, y, z);
+                    for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
+                        Block adjBlock = Block.blocksList[world.getBlockId(pos.getX(), pos.getY(), pos.getZ())];
+                        if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
+                            float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
+                            if (strength > 0f && strength / refStrength <= 8f) {
+                                if (canOperate(stack)) {
+                                    if (canHarvestBlock(adjBlock, stack) && harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
+                                        ElectricItem.manager.use(stack, props.energy_cost, player);
                                     }
                                 }
                             }
