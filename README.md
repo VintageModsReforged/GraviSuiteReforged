@@ -9,7 +9,7 @@ This is an attempt to reforge the old-classic IC2 addon - GraviSuite, using [vol
 ## Armors
  - - -
 ### Advanced Lappack
-<img src="src/main/resources/mods/gravisuite/textures/items/armor/advanced_lappack.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/armor/advanced_lappack.png" style="border: solid 5px #CCC">
 
 As the name states, this is an advanced version of IC2's Lappack.
  - Features: 
@@ -20,7 +20,7 @@ As the name states, this is an advanced version of IC2's Lappack.
    - Capacity: 1.000.000 EU/t
  - - - 
 ### Ultimate Lappack
-<img src="src/main/resources/mods/gravisuite/textures/items/armor/ultimate_lappack.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/armor/ultimate_lappack.png" style="border: solid 5px #CCC">
 
 An ultimate portable energy storage!
  - Features: 
@@ -31,7 +31,7 @@ An ultimate portable energy storage!
    - Max Capacity: 10.000.000 EU
  - - - 
 ### Advanced Electric Jetpack
-<img src="src/main/resources/mods/gravisuite/textures/items/armor/advanced_jetpack.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/armor/advanced_jetpack.png" style="border: solid 5px #CCC">
 
 An advanced electric jetpack.
 - Features: 
@@ -44,7 +44,7 @@ An advanced electric jetpack.
     - Max Capacity: 1.000.000 EU
  - - - - 
 ### Advanced Nano Chestplate
-<img src="src/main/resources/mods/gravisuite/textures/items/armor/advanced_nano.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/armor/advanced_nano.png" style="border: solid 5px #CCC">
 
 A hybrid of Advanced Electric Jetpack and IC2's NanoSuit Bodyarmor.
 - Features: 
@@ -59,7 +59,7 @@ A hybrid of Advanced Electric Jetpack and IC2's NanoSuit Bodyarmor.
     - Max Capacity: 1.000.000 EU
  - - - - 
 ### Gravitational Chestplate
-<img src="src/main/resources/mods/gravisuite/textures/items/armor/advanced_quant.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/armor/advanced_quant.png" style="border: solid 5px #CCC">
 
 ULTIMATE BODYARMOR!
 - Features:
@@ -77,7 +77,7 @@ ULTIMATE BODYARMOR!
 ## Tools
  - - -
 ### Advanced Diamond Drill
-<img src="src/main/resources/mods/gravisuite/textures/items/advanced_diamond_drill.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/advanced_diamond_drill.png" style="border: solid 5px #CCC">
 
 An advanced mining tool for IC2
 - Features:
@@ -91,7 +91,7 @@ An advanced mining tool for IC2
     - Max Capacity: 45.000 EU
  - - -
 ### Advanced Iridium Drill
-<img src="src/main/resources/mods/gravisuite/textures/items/advanced_iridium_drill.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/advanced_iridium_drill.png" style="border: solid 5px #CCC">
 
 An advanced mining tool MK2 for IC2
 - Features:
@@ -104,7 +104,7 @@ An advanced mining tool MK2 for IC2
     - Max Capacity: 100.000 EU
  - - -
 ### Advanced Chainsaw
-<img src="src/main/resources/mods/gravisuite/textures/items/advanced_chainsaw.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/advanced_chainsaw.png" style="border: solid 5px #CCC">
 
 Improved version if IC2's Chainsaw
 - Features:
@@ -115,7 +115,7 @@ Improved version if IC2's Chainsaw
     - Max Capacity: 45.000 EU
  - - -
 ### Vajra
-<img src="src/main/resources/mods/gravisuite/textures/items/vajra.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/vajra.png" style="border: solid 5px #CCC">
 
 Ultimate Mining Tool!
 - Features:
@@ -129,10 +129,7 @@ Ultimate Mining Tool!
     - Max Capacity: 1.000.000 EU
  - - -
 ### GraviTool
-<img src="src/main/resources/mods/gravisuite/textures/items/gravitool/hoe.png" style="width:64px; height:64px; border: solid 5px #CCC">
-<img src="src/main/resources/mods/gravisuite/textures/items/gravitool/treetap.png" style="width:64px; height:64px; border: solid 5px #CCC">
-<img src="src/main/resources/mods/gravisuite/textures/items/gravitool/wrench.png" style="width:64px; height:64px; border: solid 5px #CCC">
-<img src="src/main/resources/mods/gravisuite/textures/items/gravitool/screwdriver.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/gravitool/hoe.png" style="border: solid 5px #CCC"> <img src="demo/items/gravitool/treetap.png" style="border: solid 5px #CCC"> <img src="demo/items/gravitool/wrench.png" style="border: solid 5px #CCC"> <img src="demo/items/gravitool/screwdriver.png" style="border: solid 5px #CCC">
 
 A 4in1 universal tool  
 - Features:
@@ -144,7 +141,7 @@ A 4in1 universal tool
     - Max Capacity: 100.000 EU
  - - -
 ### Magnet
-<img src="src/main/resources/mods/gravisuite/textures/items/magnet.png" style="width:64px; height:64px; border: solid 5px #CCC">
+<img src="demo/items/magnet.png" style="border: solid 5px #CCC">
 
 Very useful helper when mining.
 - Features:
