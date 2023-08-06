@@ -6,8 +6,6 @@ import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -25,7 +23,10 @@ import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Helpers {
 
@@ -97,26 +98,6 @@ public class Helpers {
         }
         Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
         return world.rayTraceBlocks_do_do(vec3, vec31, par3, !par3);
-    }
-
-    public static MovingObjectPosition retraceBlock(World world, EntityLiving entity, int x, int y, int z) {
-        Vec3 var5 = Vec3.createVectorHelper(entity.posX, entity.posY + 1.62 - (double)entity.yOffset, entity.posZ);
-        Vec3 var6 = entity.getLook(1.0F);
-        Vec3 var7 = var5.addVector(var6.xCoord * 5.0, var6.yCoord * 5.0, var6.zCoord * 5.0);
-        Block block = Block.blocksList[world.getBlockId(x, y, z)];
-        return block == null ? null : block.collisionRayTrace(world, x, y, x, var5, var7);
-    }
-
-    public static void dropAsEntity(World var0, int var1, int var2, int var3, ItemStack var4) {
-        if (var4 != null) {
-            double var5 = 0.7;
-            double var7 = (double)var0.rand.nextFloat() * var5 + (1.0 - var5) * 0.5;
-            double var9 = (double)var0.rand.nextFloat() * var5 + (1.0 - var5) * 0.5;
-            double var11 = (double)var0.rand.nextFloat() * var5 + (1.0 - var5) * 0.5;
-            EntityItem var13 = new EntityItem(var0, (double)var1 + var7, (double)var2 + var9, (double)var3 + var11, var4.copy());
-            var13.delayBeforeCanPickup = 10;
-            var0.spawnEntityInWorld(var13);
-        }
     }
 
     // Java 8+ method
