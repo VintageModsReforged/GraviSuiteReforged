@@ -2,7 +2,6 @@ package reforged.mods.gravisuite.items.tools;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtechmod.api.util.GT_Utility;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import net.minecraft.block.Block;
@@ -20,8 +19,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
-import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;

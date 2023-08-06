@@ -17,14 +17,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class ItemVajra extends ItemToolElectric {

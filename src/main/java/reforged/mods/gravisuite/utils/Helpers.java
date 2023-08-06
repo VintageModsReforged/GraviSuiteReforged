@@ -168,10 +168,6 @@ public class Helpers {
         return tag;
     }
 
-    public static boolean areStacksEqual(ItemStack aStack1, ItemStack aStack2) {
-        return aStack1 != null && aStack2 != null && aStack1.itemID == aStack2.itemID && aStack1.getTagCompound() == null == (aStack2.getTagCompound() == null) && (aStack1.getTagCompound() == null || aStack1.getTagCompound().equals(aStack2.getTagCompound())) && (aStack1.getItemDamage() == aStack2.getItemDamage() || aStack1.getItemDamage() == 32767 || aStack2.getItemDamage() == 32767);
-    }
-
     public static boolean isShiftKeyDown() {
         return Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode);
     }
