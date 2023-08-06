@@ -2,6 +2,7 @@ package reforged.mods.gravisuite.items.tools;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregtechmod.api.util.GT_Utility;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import net.minecraft.block.Block;
@@ -19,6 +20,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -348,11 +351,16 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                 if (block == Block.oreRedstoneGlowing) {
                     block = Block.oreRedstone;
                 }
-                ItemStack blockStack = new ItemStack(block);
-                boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains(" ore");
+                ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
+                boolean isOre = false;
+                for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
+                    if (oreStack.isItemEqual(blockStack)) {
+                        isOre = true;
+                        break;
+                    }
+                }
                 if (!ElectricItem.manager.canUse(stack, this.energy_per_use))
                     return false;
-
                 if (isOre && !player.capabilities.isCreativeMode) {
                     BlockPos origin = new BlockPos(x, y, z);
                     for (BlockPos coord : veinPos(origin, world, player)) {

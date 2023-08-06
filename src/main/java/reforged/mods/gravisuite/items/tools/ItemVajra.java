@@ -115,8 +115,14 @@ public class ItemVajra extends ItemToolElectric {
             if (block == Block.oreRedstoneGlowing) {
                 block = Block.oreRedstone;
             }
-            ItemStack blockStack = new ItemStack(block);
-            boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains(" ore");
+            ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
+            boolean isOre = false;
+            for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
+                if (oreStack.isItemEqual(blockStack)) {
+                    isOre = true;
+                    break;
+                }
+            }
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral && !player.capabilities.isCreativeMode) {
                 BlockPos origin = new BlockPos(x, y, z);

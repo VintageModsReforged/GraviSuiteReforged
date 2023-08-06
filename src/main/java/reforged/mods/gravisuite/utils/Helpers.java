@@ -64,6 +64,7 @@ public class Helpers {
         return found;
     }
 
+    @SuppressWarnings("unchecked")
     public static void removeRecipeByOutput(ItemStack stack) {
         if (stack != null) {
             ArrayList<IRecipe> recipeList = (ArrayList<IRecipe>) CraftingManager.getInstance().getRecipeList();
@@ -126,16 +127,15 @@ public class Helpers {
         return Array.newInstance(newArrayComponentType, 1);
     }
 
-    public static List<String> getAOreDictNames(ItemStack stack) {
-        List<String> returnList = new ArrayList<String>();
-        if (stack == null || stack.getItem() == null) {
-            return new ArrayList<String>();
+    public static List<ItemStack> getStackFromOre(String startWith) {
+        List<ItemStack> stacks = new ArrayList<ItemStack>();
+        for (String name : OreDictionary.getOreNames()) {
+            if (name.startsWith(startWith)) {
+                List<ItemStack> oreDictList = OreDictionary.getOres(name);
+                stacks.addAll(oreDictList);
+            }
         }
-        List<ItemStack> foundIDs = OreDictionary.getOres(stack.getItem().itemID);
-        for (ItemStack oreId : foundIDs) {
-            returnList.add(oreId.getItemName());
-        }
-        return returnList;
+        return stacks;
     }
 
     public static ItemStack getCharged(Item item, int charge) {
@@ -166,6 +166,10 @@ public class Helpers {
             stack.setTagCompound(tag);
         }
         return tag;
+    }
+
+    public static boolean areStacksEqual(ItemStack aStack1, ItemStack aStack2) {
+        return aStack1 != null && aStack2 != null && aStack1.itemID == aStack2.itemID && aStack1.getTagCompound() == null == (aStack2.getTagCompound() == null) && (aStack1.getTagCompound() == null || aStack1.getTagCompound().equals(aStack2.getTagCompound())) && (aStack1.getItemDamage() == aStack2.getItemDamage() || aStack1.getItemDamage() == 32767 || aStack2.getItemDamage() == 32767);
     }
 
     public static boolean isShiftKeyDown() {
