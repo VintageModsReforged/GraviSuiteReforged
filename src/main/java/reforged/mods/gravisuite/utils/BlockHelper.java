@@ -1,52 +1,50 @@
 package reforged.mods.gravisuite.utils;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.*;
 import net.minecraft.world.World;
 
 public class BlockHelper {
 
-    public static byte[] rotateType = new byte[4096];
     public static final int[][] SIDE_COORD_MOD = new int[][]{{0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}, {-1, 0, 0}, {1, 0, 0}};
     public static final int[] SIDE_LEFT = new int[]{4, 5, 5, 4, 2, 3};
     public static final int[] SIDE_RIGHT = new int[]{5, 4, 4, 5, 3, 2};
     public static final int[] SIDE_OPPOSITE = new int[]{1, 0, 3, 2, 5, 4};
-    public static final int[] SIDE_UP = new int[]{2, 3, 1, 1, 1, 1};
-    public static final int[] SIDE_DOWN = new int[]{3, 2, 0, 0, 0, 0};
 
-    static {
-        rotateType[Block.wood.blockID] = 7;
-        rotateType[Block.dispenser.blockID] = 2;
-        rotateType[Block.railPowered.blockID] = 3;
-        rotateType[Block.railDetector.blockID] = 3;
-        rotateType[Block.pistonStickyBase.blockID] = 2;
-        rotateType[Block.pistonBase.blockID] = 2;
-        rotateType[Block.stoneSingleSlab.blockID] = 8;
-        rotateType[Block.stairsWoodOak.blockID] = 5;
-        rotateType[Block.chest.blockID] = 9;
-        rotateType[Block.furnaceIdle.blockID] = 1;
-        rotateType[Block.furnaceBurning.blockID] = 1;
-        rotateType[Block.signPost.blockID] = 11;
-        rotateType[Block.rail.blockID] = 3;
-        rotateType[Block.stairsCobblestone.blockID] = 5;
-        rotateType[Block.lever.blockID] = 10;
-        rotateType[Block.pumpkin.blockID] = 4;
-        rotateType[Block.pumpkinLantern.blockID] = 4;
-        rotateType[Block.redstoneRepeaterIdle.blockID] = 6;
-        rotateType[Block.redstoneRepeaterActive.blockID] = 6;
-        rotateType[Block.stairsBrick.blockID] = 5;
-        rotateType[Block.stairsStoneBrick.blockID] = 5;
-        rotateType[Block.stairsNetherBrick.blockID] = 5;
-        rotateType[Block.woodSingleSlab.blockID] = 8;
-        rotateType[Block.stairsSandStone.blockID] = 5;
-        rotateType[Block.enderChest.blockID] = 1;
-        rotateType[Block.stairsWoodSpruce.blockID] = 5;
-        rotateType[Block.stairsWoodBirch.blockID] = 5;
-        rotateType[Block.stairsWoodJungle.blockID] = 5;
-        rotateType[Block.chestTrapped.blockID] = 9;
-        rotateType[Block.stairsNetherQuartz.blockID] = 5;
-        rotateType[Block.hopperBlock.blockID] = 2;
-        rotateType[Block.railActivator.blockID] = 3;
-        rotateType[Block.dropper.blockID] = 2;
+    public static int getRotateType(Block block) {
+        if (block instanceof BlockChest) {
+            return 9;
+        }
+        if (block instanceof BlockWood) {
+            return 7;
+        }
+        if (block instanceof BlockDispenser || block instanceof BlockPistonBase || block instanceof BlockHopper) {
+            return 2;
+        }
+        if (block instanceof  BlockRailBase) {
+            return 3;
+        }
+        if (block instanceof BlockHalfSlab) {
+            return 8;
+        }
+        if (block instanceof BlockStairs) {
+            return 5;
+        }
+        if (block instanceof BlockFurnace) {
+            return 1;
+        }
+        if (block instanceof BlockSign) {
+            return 11;
+        }
+        if (block instanceof BlockLever) {
+            return 10;
+        }
+        if (block instanceof BlockPumpkin) {
+            return 4;
+        }
+        if (block instanceof BlockRedstoneRepeater) {
+            return 6;
+        }
+        return 0;
     }
 
     public static int[] getAdjacentCoordinatesForSide(int x, int y, int z, int side) {
@@ -55,7 +53,7 @@ public class BlockHelper {
 
     public static int rotate(World world, int block, int meta, int x, int y, int z) {
         int shift;
-        switch (rotateType[block]) {
+        switch (getRotateType(Block.blocksList[block])) {
             case 1:
                 return SIDE_LEFT[meta];
             case 2:
@@ -89,7 +87,7 @@ public class BlockHelper {
                 return (meta + 8) % 16;
             case 9:
                 for(shift = 2; shift < 6; ++shift) {
-                    int[] coords = new int[3];
+                    int[] coords;
                     coords = getAdjacentCoordinatesForSide(x, y, z, shift);
                     if (world.getBlockId(coords[0], coords[1], coords[2]) == block) {
                         world.setBlockMetadataWithNotify(coords[0], coords[1], coords[2], SIDE_OPPOSITE[meta], 1);
@@ -128,7 +126,7 @@ public class BlockHelper {
 
     public static int rotateAlt(World world, int block, int meta, int x, int y, int z) {
         int shift;
-        switch (rotateType[block]) {
+        switch (getRotateType(Block.blocksList[block])) {
             case 1:
                 return SIDE_RIGHT[meta];
             case 2:
@@ -158,7 +156,7 @@ public class BlockHelper {
                 return (meta + 8) % 16;
             case 9:
                 for(shift = 2; shift < 6; ++shift) {
-                    int[] coords = new int[3];
+                    int[] coords;
                     coords = getAdjacentCoordinatesForSide(x, y, z, shift);
                     if (world.getBlockId(coords[0], coords[1], coords[2]) == block) {
                         world.setBlockMetadataWithNotify(coords[0], coords[1], coords[2], SIDE_OPPOSITE[meta], 1);

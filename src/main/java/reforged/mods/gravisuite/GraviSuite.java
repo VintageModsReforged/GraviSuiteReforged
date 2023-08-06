@@ -28,11 +28,11 @@ public class GraviSuite {
     @Mod.PreInit
     public void preInit(FMLPreInitializationEvent e) {
         proxy.preInit(e);
-        GraviSuiteData.init();
+
     }
 
     @Mod.PostInit
     public void postInit(FMLPostInitializationEvent e) {
-        GraviSuiteRecipes.initRecipes();
+        proxy.postInit(e);
     }
 }

@@ -10,9 +10,11 @@ import ic2.api.tile.IWrenchable;
 import ic2.core.IC2;
 import ic2.core.Ic2Items;
 import ic2.core.audio.PositionSpec;
+import mods.railcraft.api.core.items.IToolCrowbar;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
@@ -22,15 +24,17 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.BlockHelper;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import universalelectricity.prefab.implement.IToolConfigurator;
 
 import java.util.List;
 
-public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
+public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToolCrowbar, IToolConfigurator {
 
 
     public static Icon[] iconsList = new Icon[4];
@@ -139,7 +143,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
                     return true;
                 }
             } else if (mode == ToolMode.SCREWDRIVER) {
-                boolean screwdriver = onScrewdriverUse(player, world, x, y, z);
+                boolean screwdriver = onScrewdriverUse(player, world, x, y, z, side);
                 if (screwdriver) {
                     ElectricItem.manager.use(stack, this.energy_per_use, player);
                     IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
@@ -192,16 +196,23 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
         return false;
     }
 
-    public boolean onScrewdriverUse(EntityPlayer player, World world, int x, int y, int z) {
+    public boolean onScrewdriverUse(EntityPlayer player, World world, int x, int y, int z, int side) {
         int blockId = world.getBlockId(x, y, z);
         int blockMeta = world.getBlockMetadata(x, y, z);
-        if (BlockHelper.rotateType[blockId] != 0) {
+        Block block = Block.blocksList[blockId];
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        if (BlockHelper.getRotateType(block) != 0) {
             if (player.isSneaking()) {
                 world.setBlockMetadataWithNotify(x, y, z, BlockHelper.rotateAlt(world, blockId, blockMeta, x, y, z), 3);
             } else {
                 world.setBlockMetadataWithNotify(x, y, z, BlockHelper.rotate(world, blockId, blockMeta, x, y, z), 3);
             }
             return IC2.platform.isSimulating();
+        } else {
+            if (!(tile instanceof IEnergySource)) {
+                if (Block.blocksList[blockId] != null && Block.blocksList[blockId].rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
+                    return IC2.platform.isSimulating();
+            }
         }
         return false;
     }
@@ -209,7 +220,8 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
 
     /**
      *
-     * {@link IToolWrench}
+     * {@link IToolWrench} and
+     * {@link IToolConfigurator}
      *
      * */
 
@@ -222,10 +234,44 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
 
     @Override
     public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
-        if (IC2.platform.isRendering())
-            IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
+        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
         ElectricItem.manager.use(player.getHeldItem(), this.energy_per_use, player);
     }
+
+    /**
+     *
+     * {@link IToolCrowbar}
+     *
+     * */
+
+    @Override
+    public boolean canWhack(EntityPlayer player, ItemStack stack, int x, int y, int z) {
+        ToolMode mode = readToolMode(stack);
+        return mode == ToolMode.WRENCH;
+    }
+
+    @Override
+    public void onWhack(EntityPlayer player, ItemStack stack, int x, int y, int z) {
+        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
+        ElectricItem.manager.use(player.getHeldItem(), this.energy_per_use, player);
+    }
+
+    @Override
+    public boolean canLink(EntityPlayer player, ItemStack stack, EntityMinecart minecart) {
+        ToolMode mode = readToolMode(stack);
+        return mode == ToolMode.SCREWDRIVER;
+    }
+
+    @Override
+    public void onLink(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {}
+
+    @Override
+    public boolean canBoost(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {
+        return false;
+    }
+
+    @Override
+    public void onBoost(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {}
 
     public enum ToolMode {
         HOE(Refs.tool_mode_hoe), TREETAP(Refs.tool_mode_treetap), WRENCH(Refs.tool_mode_wrench), SCREWDRIVER(Refs.tool_mode_screwdriver);
