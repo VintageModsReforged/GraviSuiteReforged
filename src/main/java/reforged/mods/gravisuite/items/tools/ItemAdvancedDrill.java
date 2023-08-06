@@ -19,6 +19,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -345,21 +347,11 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             World world = player.worldObj;
             if (IC2.platform.isSimulating()) {
                 Block block = Block.blocksList[world.getBlockId(x, y, z)];
-                int meta = world.getBlockMetadata(x, y, z);
                 if (block == Block.oreRedstoneGlowing) {
                     block = Block.oreRedstone;
                 }
-                ItemStack blockStack = new ItemStack(block, 1, meta);
-                // Ugly check for ore blocks
-                // TODO: register all ores to OreDict;
+                ItemStack blockStack = new ItemStack(block);
                 boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains(" ore");
-//            List<String> oreNames = Utils.getAOreDictNames(blockStack);
-//            for (String name : oreNames) {
-//                if (name.startsWith("ore")) {
-//                    isOre = true;
-//                    break;
-//                }
-//            }
                 if (!ElectricItem.manager.canUse(stack, this.energy_per_use))
                     return false;
 

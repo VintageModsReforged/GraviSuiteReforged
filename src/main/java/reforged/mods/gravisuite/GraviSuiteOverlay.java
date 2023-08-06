@@ -3,7 +3,6 @@ package reforged.mods.gravisuite;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import ic2.api.item.IElectricItem;
-import ic2.api.item.Items;
 import ic2.core.IC2;
 import ic2.core.item.armor.ItemArmorBatpack;
 import ic2.core.item.armor.ItemArmorJetpackElectric;
@@ -18,9 +17,7 @@ import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 public class GraviSuiteOverlay implements ITickHandler {
 
@@ -30,13 +27,8 @@ public class GraviSuiteOverlay implements ITickHandler {
     int yPosEnergy = offset, yPosEnergyJoint = offset, yPosJetpack = offset, yPosHover = offset, yPosGravi = offset, yPosLevitation = offset;
 
     public static Minecraft mc = Minecraft.getMinecraft();
-    public static List<ItemStack> armors = new ArrayList<ItemStack>();
 
-    public GraviSuiteOverlay() {
-        armors.add(Items.getItem("electricJetpack"));
-        armors.add(Items.getItem("batPack"));
-        armors.add(Items.getItem("lapPack"));
-    }
+    public GraviSuiteOverlay() {}
 
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... objects) {
@@ -49,13 +41,6 @@ public class GraviSuiteOverlay implements ITickHandler {
         if (IC2.platform.isRendering()) {
             ScaledResolution scaledRes = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             EntityPlayer player = mc.thePlayer;
-//            ItemStack armor = null;
-//            for (ItemStack stack : player.inventory.armorInventory) {
-//                if (stack != null && stack.getItem() instanceof IHasOverlay) {
-//                    armor = stack;
-//                    break;
-//                }
-//            }
             ItemStack armor = player.getCurrentArmor(2);
 
             if (armor != null && armor.getItem() instanceof IElectricItem) {

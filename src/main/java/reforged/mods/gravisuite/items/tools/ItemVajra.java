@@ -112,23 +112,11 @@ public class ItemVajra extends ItemToolElectric {
 
         if (IC2.platform.isSimulating()) {
             Block block = Block.blocksList[world.getBlockId(x, y, z)];
-            int meta = world.getBlockMetadata(x, y, z);
             if (block == Block.oreRedstoneGlowing) {
                 block = Block.oreRedstone;
             }
-            ItemStack blockStack = new ItemStack(block, 1, meta);
-            // Ugly check for ore blocks
-            // TODO: register all ores to OreDist;
+            ItemStack blockStack = new ItemStack(block);
             boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains(" ore");
-//            boolean isOre = blockStack.getItem().getUnlocalizedName().toLowerCase(Locale.ENGLISH).startsWith("ore");
-//            List<String> oreNames = Utils.getAOreDictNames(blockStack);
-//            for (String name : oreNames) {
-//                if (name.startsWith("ore")) {
-//                    isOre = true;
-//                    break;
-//                }
-//            }
-
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral && !player.capabilities.isCreativeMode) {
                 BlockPos origin = new BlockPos(x, y, z);
