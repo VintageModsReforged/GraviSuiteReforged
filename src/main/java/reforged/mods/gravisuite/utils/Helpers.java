@@ -2,7 +2,6 @@ package reforged.mods.gravisuite.utils;
 
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
-import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -69,11 +68,20 @@ public class Helpers {
         if (stack != null) {
             ArrayList<IRecipe> recipeList = (ArrayList<IRecipe>) CraftingManager.getInstance().getRecipeList();
             for (int i = 0; i < recipeList.size(); i++) {
-                if (StackUtil.isStackEqual(stack, recipeList.get(i).getRecipeOutput())) {
-                    recipeList.remove(i);
+                ItemStack output = recipeList.get(i).getRecipeOutput();
+                if (output != null) {
+                    if (stack.isItemEqual(recipeList.get(i).getRecipeOutput())) {
+                        recipeList.remove(i);
+                    }
                 }
             }
         }
+    }
+
+    public static ItemStack withSize(ItemStack stack, int count) {
+        ItemStack returnStack = stack.copy();
+        returnStack.stackSize = count;
+        return returnStack;
     }
 
     public static MovingObjectPosition raytraceFromEntity(World world, Entity player, boolean par3, double range) {
@@ -155,7 +163,7 @@ public class Helpers {
     }
 
     public static int getCharge(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
+        NBTTagCompound tag = getOrCreateTag(stack);
         return tag.getInteger("charge");
     }
 

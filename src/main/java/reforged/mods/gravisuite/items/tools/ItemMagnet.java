@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
-import ic2.core.util.StackUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,7 +58,7 @@ public class ItemMagnet extends ItemToolElectric {
 
     public void changeMode(ItemStack stack, EntityPlayer player) {
         String message;
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
+        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         if (Helpers.getCharge(stack) > ENERGY_COST) {
             if (tag.getBoolean(NBT_ACTIVE)) {
                 tag.setBoolean(NBT_ACTIVE, false);
@@ -77,7 +76,7 @@ public class ItemMagnet extends ItemToolElectric {
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int hand, boolean update) {
         EntityPlayer player = (EntityPlayer) entity;
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
+        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         byte ticker = tag.getByte(NBT_TICKER);
         if (IC2.platform.isSimulating()) {
             if (ticker > 0) {

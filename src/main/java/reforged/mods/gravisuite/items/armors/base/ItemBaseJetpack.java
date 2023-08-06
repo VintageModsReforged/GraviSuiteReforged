@@ -6,7 +6,6 @@ import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
-import ic2.core.util.StackUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -61,7 +60,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
 
     @Override
     public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
+        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         boolean hoverMode = readWorkMode(stack);
 
         byte toggleTimer = tag.getByte(NBT_TOGGLE_TIMER);

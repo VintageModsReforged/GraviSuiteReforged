@@ -51,6 +51,7 @@ dependencies {
 	modImplementation files("libs/industrialcraft-2_1.117.385-lf.jar")
 	modImplementation files("libs/gregtechmod311.jar")
 	modImplementation files("libs/buildcraft-A-3.7.2.jar")
+	modImplementation files("libs/CraftGuide-1.6.7.3-forge.zip")
 }
 
 sourceSets {

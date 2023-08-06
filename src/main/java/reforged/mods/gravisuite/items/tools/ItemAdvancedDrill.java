@@ -360,7 +360,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                     return false;
                 if (isOre && !player.capabilities.isCreativeMode) {
                     BlockPos origin = new BlockPos(x, y, z);
-                    for (BlockPos coord : veinPos(origin, world, player)) {
+                    for (BlockPos coord : Helpers.veinPos(origin, world, player)) {
                         if (coord.equals(origin)) {
                             continue;
                         }
@@ -378,40 +378,6 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                 }
             }
             return false;
-        }
-
-        private static List<BlockPos> veinPos(BlockPos origin, World world, EntityPlayer player) {
-            List<BlockPos> found = new ArrayList<BlockPos>();
-            Set<BlockPos> checked = new HashSet<BlockPos>();
-            found.add(origin);
-            Block block = Block.blocksList[world.getBlockId(origin.getX(), origin.getY(), origin.getZ())];
-
-            if (player.isSneaking()) return found;
-
-            for (int i = 0; i < found.size(); i++) {
-                BlockPos pos = found.get(i);
-                checked.add(pos);
-                for (BlockPos foundPos : BlockPos.getAllInBoxMutable(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-                    if (!checked.contains(foundPos)) {
-                        int checkedBlockId = world.getBlockId(foundPos.getX(), foundPos.getY(), foundPos.getZ());
-                        Block checkedBlock = Block.blocksList[checkedBlockId];
-                        if (!(checkedBlockId == 0)) {
-                            if (block == checkedBlock) {
-                                found.add(foundPos.toImmutable());
-                            }
-                            if (block == Block.oreRedstone || block == Block.oreRedstoneGlowing) {
-                                if (checkedBlock == Block.oreRedstone || checkedBlock == Block.oreRedstoneGlowing) {
-                                    found.add(foundPos.toImmutable());
-                                }
-                            }
-                            if (found.size() > 127) {
-                                return found;
-                            }
-                        }
-                    }
-                }
-            }
-            return found;
         }
 
         @Override

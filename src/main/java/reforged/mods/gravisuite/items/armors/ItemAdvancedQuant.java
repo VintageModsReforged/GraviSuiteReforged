@@ -6,7 +6,6 @@ import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
-import ic2.core.util.StackUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,7 +70,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
 
     @Override
     public void onArmorTickUpdate(World worldObj, EntityPlayer player, ItemStack itemStack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(itemStack);
+        NBTTagCompound tag = Helpers.getOrCreateTag(itemStack);
         byte toggleTimer = tag.getByte("toggleTimer");
         boolean used = false;
 
