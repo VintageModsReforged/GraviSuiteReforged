@@ -2,7 +2,6 @@ package reforged.mods.gravisuite.utils;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 
@@ -18,22 +17,24 @@ public final class LangHelper {
         throw new UnsupportedOperationException();
     }
 
-    public static void addEntry(Object object, boolean special) {
+    // TODO: make it possible to use different languages on the fly
+
+    public static void init() {
         if (!GraviSuiteConfig.additional_languages.isEmpty()) {
             String[] LANGS = GraviSuiteConfig.additional_languages.split(",");
             if (LANGS.length == 1) {
-                addEntry(object, GraviSuiteConfig.additional_languages, special);
+                addEntry(GraviSuiteConfig.additional_languages);
             } else {
                 for (String lang : LANGS) {
-                    addEntry(object, lang, special);
+                    addEntry(lang);
                 }
             }
         } else {
-            addEntry(object, GraviSuiteConfig.default_language, special);
+            addEntry(GraviSuiteConfig.default_language);
         }
     }
 
-    private static void addEntry(Object object, String lang, boolean special) {
+    private static void addEntry(String lang) {
         InputStream stream = null;
         InputStreamReader reader = null;
         try {
@@ -50,13 +51,6 @@ public final class LangHelper {
             Properties props = new Properties();
             props.load(reader);
             for (String key : props.stringPropertyNames()) {
-                if (special) {
-                    if (object instanceof ItemStack) {
-                        if (key.equals(((ItemStack) object).getItem().getUnlocalizedName((ItemStack) object))) {
-                            LanguageRegistry.instance().addStringLocalization(key, lang, props.getProperty(key));
-                        }
-                    }
-                }
                 LanguageRegistry.instance().addStringLocalization(key, lang, props.getProperty(key));
             }
 

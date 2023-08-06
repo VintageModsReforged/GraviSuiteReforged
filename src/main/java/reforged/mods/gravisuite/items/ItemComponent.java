@@ -22,7 +22,6 @@ public class ItemComponent extends Item {
         this.setUnlocalizedName("component");
         this.setCreativeTab(GraviSuite.graviTab);
         this.setHasSubtypes(true);
-        LangHelper.addEntry(new ItemStack(this), true);
     }
 
     @Override
