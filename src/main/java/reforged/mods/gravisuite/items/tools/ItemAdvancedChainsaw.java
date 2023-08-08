@@ -26,9 +26,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,31 +82,34 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, int x, int y, int z, EntityPlayer player) {
-        if (IC2.platform.isRendering()) {
-            return false;
-        }
-        if (!readToolMode(itemstack)) {
-            return false;
-        }
-        World world = player.worldObj;
-        Block block = Block.blocksList[world.getBlockId(x, y, z)];
-        if ((block instanceof IShearable)) {
-            IShearable target = (IShearable) block;
-            if ((target.isShearable(itemstack, player.worldObj, x, y, z))
-                    && (ElectricItem.use(itemstack, this.energyPerOperation, player))) {
-                ArrayList<ItemStack> drops = target.onSheared(itemstack, player.worldObj, x, y, z,
-                        EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemstack));
-                for (ItemStack stack : drops) {
-                    float f = 0.7F;
-                    double d = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-                    double d1 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-                    double d2 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-                    EntityItem entityitem = new EntityItem(player.worldObj, x + d, y + d1, z + d2, stack);
-                    entityitem.delayBeforeCanPickup = 10;
-                    player.worldObj.spawnEntityInWorld(entityitem);
+    public boolean canOperate(ItemStack stack) {
+        return ElectricItem.manager.canUse(stack, this.energyPerOperation);
+    }
+
+    @Override
+    public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
+        if (IC2.platform.isSimulating()) {
+            if (!canOperate(stack)) {
+                return false;
+            }
+            World world = player.worldObj;
+            Block block = Block.blocksList[world.getBlockId(x, y, z)];
+            if (block instanceof IShearable && readToolMode(stack)) {
+                IShearable target = (IShearable) block;
+                if (target.isShearable(stack, player.worldObj, x, y, z)) {
+                    ArrayList<ItemStack> drops = target.onSheared(stack, player.worldObj, x, y, z,
+                            EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
+                    for (ItemStack drop : drops) {
+                        float f = 0.7F;
+                        double d = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
+                        double d1 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
+                        double d2 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
+                        EntityItem entityitem = new EntityItem(player.worldObj, x + d, y + d1, z + d2, drop);
+                        entityitem.delayBeforeCanPickup = 10;
+                        player.worldObj.spawnEntityInWorld(entityitem);
+                    }
+                    player.addStat(net.minecraft.stats.StatList.mineBlockStatArray[world.getBlockId(x, y, z)], 1);
                 }
-                player.addStat(net.minecraft.stats.StatList.mineBlockStatArray[world.getBlockId(x, y, z)], 1);
             }
         }
         return false;
@@ -130,15 +133,10 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int xPos, int yPos, int zPos, EntityLiving entity) {
-        Block block = Block.blocksList[blockId];
-        if (block.getBlockHardness(world, xPos, yPos, zPos) != 0.0D) {
-            if (canHarvestBlock(block, stack)) {
-                if (entity != null) {
-                    ElectricItem.manager.use(stack, this.energyPerOperation, null);
-                } else {
-                    ElectricItem.manager.discharge(stack, this.energyPerOperation, this.tier, true, false);
-                }
-            }
+        if (entity != null) {
+            ElectricItem.manager.use(stack, this.energyPerOperation, entity);
+        } else {
+            ElectricItem.manager.discharge(stack, this.energyPerOperation, this.tier, true, false);
         }
         return false;
     }
