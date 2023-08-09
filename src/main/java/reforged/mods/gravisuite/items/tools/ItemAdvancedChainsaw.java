@@ -29,6 +29,7 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,6 +43,8 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     public static boolean wasEquipped = false;
     public static AudioSource audioSource;
 
+    public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
+
     public ItemAdvancedChainsaw() {
         super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 45000, EnumRarity.uncommon, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 30.0F;
@@ -54,11 +57,15 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
         super.addInformation(stack, player, tooltip, par4);
-        boolean isShearsOn = readToolMode(stack);
-        String mode = isShearsOn ? Refs.status_on : Refs.status_off;
-        tooltip.add(Refs.tool_mode_shear_gold + " " + mode);
+        boolean isShearsOn = readToolMode(stack, NBT_SHEARS);
+        boolean isCapitatorOn = readToolMode(stack, NBT_TCAPITATOR);
+        String modeShear = isShearsOn ? Refs.status_on : Refs.status_off;
+        String modeCapitator = isCapitatorOn ? Refs.status_on : Refs.status_off;
+        tooltip.add(Refs.tool_mode_shear_gold + " " + modeShear);
+        tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
         if (Helpers.isShiftKeyDown()) {
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", "Right Click", Refs.SHEAR_MODE + ".stat"));
+            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, "Right Click", Refs.CAPITATOR_MODE + ".stat"));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -94,7 +101,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             }
             World world = player.worldObj;
             Block block = Block.blocksList[world.getBlockId(x, y, z)];
-            if (block instanceof IShearable && readToolMode(stack)) {
+            if (block instanceof IShearable && readToolMode(stack, NBT_SHEARS)) {
                 IShearable target = (IShearable) block;
                 if (target.isShearable(stack, player.worldObj, x, y, z)) {
                     ArrayList<ItemStack> drops = target.onSheared(stack, player.worldObj, x, y, z,
@@ -111,6 +118,33 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                     player.addStat(net.minecraft.stats.StatList.mineBlockStatArray[world.getBlockId(x, y, z)], 1);
                 }
             }
+            if (readToolMode(stack, NBT_TCAPITATOR)) {
+                ItemStack blockStack = new ItemStack(block, 1, 32767);
+                boolean isLog = false;
+                for (ItemStack check : Helpers.getStackFromOre("log")) {
+                    if (check.isItemEqual(blockStack)) {
+                        isLog = true;
+                        break;
+                    }
+                }
+
+                if (isLog) {
+                    BlockPos origin = new BlockPos(x, y, z);
+                    for (BlockPos coord : Helpers.veinPos(origin, world, player)) {
+                        if (coord.equals(origin)) {
+                            continue;
+                        }
+                        if (!canOperate(stack)) {
+                            break;
+                        }
+                        if (canOperate(stack)) {
+                            if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
+                                ElectricItem.manager.use(stack, this.energyPerOperation, player);
+                            }
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
@@ -119,13 +153,24 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
-                if (!readToolMode(itemStack)) {
-                    saveToolMode(itemStack, true);
-                    IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + Refs.status_on);
+                boolean shears = false;
+                if (!readToolMode(itemStack, NBT_SHEARS)) {
+                    saveToolMode(itemStack, NBT_SHEARS, true);
+                    shears = true;
                 } else {
-                    saveToolMode(itemStack, false);
-                    IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + Refs.status_off);
+                    saveToolMode(itemStack, NBT_SHEARS, false);
                 }
+                IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + (shears ? Refs.status_on : Refs.status_off));
+            }
+            if (IC2.keyboard.isSneakKeyDown(player)) {
+                boolean capitator = false;
+                if (!readToolMode(itemStack, NBT_TCAPITATOR)) {
+                    saveToolMode(itemStack, NBT_TCAPITATOR, true);
+                    capitator = true;
+                } else {
+                    saveToolMode(itemStack, NBT_TCAPITATOR, false);
+                }
+                IC2.platform.messagePlayer(player, Refs.tool_mode_capitator + " " + (capitator ? Refs.status_on : Refs.status_off));
             }
         }
         return itemStack;
@@ -161,7 +206,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             EntityPlayer player = event.entityPlayer;
             ItemStack itemstack = player.inventory.getStackInSlot(player.inventory.currentItem);
             if ((itemstack != null) && (itemstack.getItem() == this) && ((entity instanceof IShearable))
-                    && (readToolMode(itemstack))
+                    && (readToolMode(itemstack, NBT_SHEARS))
                     && (ElectricItem.manager.use(itemstack, this.energyPerOperation, player))) {
                 IShearable target = (IShearable) entity;
                 if (target.isShearable(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
@@ -213,14 +258,14 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         return true;
     }
 
-    public static boolean readToolMode(ItemStack stack) {
+    public static boolean readToolMode(ItemStack stack, String mode) {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        return tag.getBoolean("shears");
+        return tag.getBoolean(mode);
     }
 
-    public static void saveToolMode(ItemStack stack, boolean value) {
+    public static void saveToolMode(ItemStack stack, String mode, boolean value) {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        tag.setBoolean("shears", value);
+        tag.setBoolean(mode, value);
     }
 
     public void init() {

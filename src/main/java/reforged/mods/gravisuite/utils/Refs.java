@@ -36,6 +36,7 @@ public class Refs {
     public static final String EFF_MODE_FINE = "message.tool.eff.mode.fine";
     public static final String MAGNET_MODE = "message.tool.mode.magnet";
     public static final String SHEAR_MODE = "message.tool.mode.shear";
+    public static final String CAPITATOR_MODE = "message.tool.mode.capitator";
     public static final String MINING_MODE = "message.tool.mining.mode";
     public static final String MODE = "message.tool.mode";
     public static final String MODE_NORMAL = "message.tool.mode.normal";
@@ -87,7 +88,9 @@ public class Refs {
     public static final String tool_mode_magnet = "\247e" + StatCollector.translateToLocal(MAGNET_MODE);
     public static final String tool_mode_magnet_gold = "\2476" + StatCollector.translateToLocal(MAGNET_MODE);
     public static final String tool_mode_shear = "\247e" + StatCollector.translateToLocal(SHEAR_MODE);
+    public static final String tool_mode_capitator = "\247e" + StatCollector.translateToLocal(CAPITATOR_MODE);
     public static final String tool_mode_shear_gold = "\2476" + StatCollector.translateToLocal(SHEAR_MODE);
+    public static final String tool_mode_capitator_gold = "\2476" + StatCollector.translateToLocal(CAPITATOR_MODE);
     public static final String tool_mining_mode = "\247e" + StatCollector.translateToLocal(MINING_MODE);
     public static final String tool_mining_mode_gold = "\2476" + StatCollector.translateToLocal(MINING_MODE);
     public static final String tool_mode = "\247e" + StatCollector.translateToLocal(MODE);
