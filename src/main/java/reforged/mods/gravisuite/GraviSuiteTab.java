@@ -14,6 +14,6 @@ public class GraviSuiteTab extends CreativeTabs {
 
     @Override
     public Item getTabIconItem() {
-        return GraviSuiteData.ADVANCED_DRILL;
+        return GraviSuiteData.ADVANCED_QUANT;
     }
 }
