@@ -43,7 +43,7 @@ dependencies {
 	forge "net.minecraftforge:forge:${forgeVersion}:universal@zip"
 	mappings "net.minecraftforge:forge:${forgeVersion}:src@zip"
 
-	//modImplementation files("libs/")
+//	modImplementation files("libs/")
 	//coremodImplementation files("libs/")
 
 //	coremodImplementation files("libs/CodeChickenCore 0.8.7.3-fix1.jar")
@@ -52,6 +52,8 @@ dependencies {
 	modImplementation files("libs/gregtechmod311.jar")
 	modImplementation files("libs/buildcraft-A-3.7.2.jar")
 	modImplementation files("libs/CraftGuide-1.6.7.3-forge.zip")
+	modImplementation files("libs/extrautils - 0.2.4g.zip")
+//	modImplementation files("libs/mod_zGraviSuite_1_9_3.deobf.zip")
 }
 
 sourceSets {

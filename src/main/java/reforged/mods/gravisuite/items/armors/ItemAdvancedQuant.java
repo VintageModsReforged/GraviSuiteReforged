@@ -21,6 +21,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
 import reforged.mods.gravisuite.proxy.ClientProxy;
+import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -33,9 +34,9 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
     public int USAGE_IN_AIR;
     public int USAGE_ON_GROUND;
     public float BOOST_SPEED;
-    public AudioSource AUDIO_SOURCE;
+    public static AudioSource AUDIO_SOURCE;
     public static byte TOGGLE_TIMER;
-    boolean LAST_USED = false;
+    static boolean LAST_USED = false;
 
     public ItemAdvancedQuant() {
         super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 3, 50000, 10000000, EnumRarity.epic);
@@ -68,12 +69,13 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         }
     }
 
+
+
     @Override
     public void onArmorTickUpdate(World worldObj, EntityPlayer player, ItemStack itemStack) {
         NBTTagCompound tag = Helpers.getOrCreateTag(itemStack);
         byte toggleTimer = tag.getByte("toggleTimer");
         boolean used = false;
-
 
         if (ClientProxy.engine_toggle.pressed && toggleTimer == 0) {
             switchFlyState(player, itemStack);
@@ -94,36 +96,47 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
             if (readWorkMode(itemStack)) {
                 player.capabilities.isFlying = true;
             }
-
-
         } else {
             if (!player.capabilities.isCreativeMode) {
                 player.capabilities.allowFlying = false;
                 player.capabilities.isFlying = false;
+                CommonProxy.isFlyActiveByMod.put(player, true);
                 IC2.platform.resetPlayerInAirTime(player);
             }
         }
+
         if (player.isBurning()) {
             player.extinguish();
         }
         if (IC2.platform.isRendering()) {
-            if (LAST_USED != used) {
-                if (used) {
-                    if (this.AUDIO_SOURCE == null) {
-                        this.AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack, "graviengine.ogg", true, false, IC2.audioManager.defaultVolume);
-                    }
-                    if (this.AUDIO_SOURCE != null) {
-                        this.AUDIO_SOURCE.play();
-                    }
-                } else if (this.AUDIO_SOURCE != null) {
-                    this.AUDIO_SOURCE.remove();
-                    this.AUDIO_SOURCE = null;
+            createSound(player, used);
+        }
+    }
+
+    public static void createSound(EntityPlayer player, boolean used) {
+        if (LAST_USED != used) {
+            if (used) {
+                if (AUDIO_SOURCE == null) {
+                    AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack, "graviengine.ogg", true, false, IC2.audioManager.defaultVolume);
                 }
-                LAST_USED = used ;
+                if (AUDIO_SOURCE != null) {
+                    AUDIO_SOURCE.play();
+                }
+            } else if (AUDIO_SOURCE != null) {
+                AUDIO_SOURCE.remove();
+                AUDIO_SOURCE = null;
             }
-            if (this.AUDIO_SOURCE != null) {
-                this.AUDIO_SOURCE.updatePosition();
-            }
+            LAST_USED = used ;
+        }
+        if (AUDIO_SOURCE != null) {
+            AUDIO_SOURCE.updatePosition();
+        }
+    }
+
+    public static void removeSound() {
+        if (AUDIO_SOURCE != null) {
+            AUDIO_SOURCE.remove();
+            AUDIO_SOURCE = null;
         }
     }
 

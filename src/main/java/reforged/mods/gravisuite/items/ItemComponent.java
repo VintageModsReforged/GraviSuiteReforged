@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.utils.LangHelper;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;

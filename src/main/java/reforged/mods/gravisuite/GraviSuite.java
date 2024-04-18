@@ -3,6 +3,7 @@ package reforged.mods.gravisuite;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.creativetab.CreativeTabs;
@@ -29,6 +30,11 @@ public class GraviSuite {
     public void preInit(FMLPreInitializationEvent e) {
         proxy.preInit(e);
 
+    }
+
+    @Mod.Init
+    public void init(FMLInitializationEvent e) {
+        proxy.init(e);
     }
 
     @Mod.PostInit

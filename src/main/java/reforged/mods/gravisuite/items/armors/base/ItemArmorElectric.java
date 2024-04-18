@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
+import ic2.api.item.IMetalArmor;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -18,7 +19,7 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, IArmorTextureProvider, ISpecialArmor, IHasOverlay {
+public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, IArmorTextureProvider, ISpecialArmor, IHasOverlay, IMetalArmor {
 
     public int tier, transfer, capacity;
     public int energy_per_damage, damage_priority;
@@ -117,5 +118,10 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     @Override
     public int getTransferLimit(ItemStack itemStack) {
         return this.transfer;
+    }
+
+    @Override
+    public boolean isMetalArmor(ItemStack itemStack, EntityPlayer entityPlayer) {
+        return true;
     }
 }

@@ -63,27 +63,34 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
         if (!IC2.keyboard.isModeSwitchKeyDown(player) && !IC2.keyboard.isAltKeyDown(player) && !IC2.keyboard.isSneakKeyDown(player)) {
+            ItemStack torchStack = null;
+            int torchSlot = 0;
             for (int i = 0; i < player.inventory.mainInventory.length; i++) {
-                ItemStack check = player.inventory.mainInventory[i];
-                if (check != null) {
-                    if(check.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch")) {
-                        Item item = check.getItem();
-                        if (item instanceof net.minecraft.item.ItemBlock) {
-                            int oldMeta = check.getItemDamage();
-                            int oldSize = check.stackSize;
-                            boolean result = check.tryPlaceItemIntoWorld(player, world, x, y, z, side, xOffset,
-                                    yOffset, zOffset);
-                            if (player.capabilities.isCreativeMode) {
-                                check.setItemDamage(oldMeta);
-                                check.stackSize = oldSize;
-                            } else if (check.stackSize <= 0) {
-                                ForgeEventFactory.onPlayerDestroyItem(player, check);
-                                player.inventory.mainInventory[i] = null;
-                            }
-                            if (result)
-                                return true;
-                        }
+                ItemStack checkStack = player.inventory.mainInventory[i];
+                if (checkStack != null) {
+                    if (checkStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch") && !checkStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("redstone")) {
+                        torchStack = checkStack;
+                        torchSlot = i;
                     }
+                }
+            }
+
+            if (torchStack != null) {
+                Item torchItem = torchStack.getItem();
+                if (torchItem instanceof net.minecraft.item.ItemBlock) {
+                    int oldMeta = torchStack.getItemDamage();
+                    int oldSize = torchStack.stackSize;
+                    boolean result = torchStack.tryPlaceItemIntoWorld(player, world, x, y, z, side, xOffset,
+                            yOffset, zOffset);
+                    if (player.capabilities.isCreativeMode) {
+                        torchStack.setItemDamage(oldMeta);
+                        torchStack.stackSize = oldSize;
+                    } else if (torchStack.stackSize <= 0) {
+                        ForgeEventFactory.onPlayerDestroyItem(player, torchStack);
+                        player.inventory.mainInventory[torchSlot] = null;
+                    }
+                    if (result)
+                        return true;
                 }
             }
         }

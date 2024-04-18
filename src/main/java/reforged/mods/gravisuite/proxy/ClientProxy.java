@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
+import reforged.mods.gravisuite.ClientTickHandler;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.GraviSuiteOverlay;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -30,6 +31,7 @@ public class ClientProxy extends CommonProxy {
         Minecraft.getMinecraft().gameSettings.keyBindings = Helpers.add(Minecraft.getMinecraft().gameSettings.keyBindings, engine_toggle);
         Minecraft.getMinecraft().gameSettings.keyBindings = Helpers.add(Minecraft.getMinecraft().gameSettings.keyBindings, magnet_toggle);
         TickRegistry.registerTickHandler(new GraviSuiteOverlay(), Side.CLIENT);
+        TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
 
     }
 
