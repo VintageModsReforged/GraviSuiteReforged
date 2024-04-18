@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
+import net.minecraft.entity.item.EntityXPOrb;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.proxy.ClientProxy;
@@ -102,10 +103,10 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 double z = player.posZ;
                 int range = GraviSuiteMainConfig.MAGNET_RANGE;
                 AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x - range, y - range, z - range, x + range, y + range, z + range);
-                List<EntityItem> items = selectEntitiesWithinAABB(world, aabb);
+                List<Entity> items = selectEntitiesWithinAABB(world, aabb);
                 if (items.isEmpty())
                     return;
-                for (EntityItem item : items) {
+                for (Entity item : items) {
                     if (item != null && !player.isSneaking()) {
                         if (ElectricItem.canUse(stack, ENERGY_COST)) {
                             item.onCollideWithPlayer(player);
@@ -119,9 +120,9 @@ public class ItemMagnet extends ItemBaseElectricItem {
         }
     }
 
-    private List<EntityItem> selectEntitiesWithinAABB(World world, AxisAlignedBB bb) {
+    private List<Entity> selectEntitiesWithinAABB(World world, AxisAlignedBB bb) {
         int itemsRemaining = 200;
-        List<EntityItem> arraylist = new ArrayList<EntityItem>(itemsRemaining);
+        List<Entity> arraylist = new ArrayList<Entity>(itemsRemaining);
 
         final int minChunkX = MathHelper.floor_double((bb.minX) / 16.0D);
         final int maxChunkX = MathHelper.floor_double((bb.maxX) / 16.0D);
@@ -136,16 +137,19 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 final int minChunkYClamped = MathHelper.clamp_int(minChunkY, 0, chunk.entityLists.length - 1);
                 final int maxChunkYClamped = MathHelper.clamp_int(maxChunkY, 0, chunk.entityLists.length - 1);
                 for (int chunkY = minChunkYClamped; chunkY <= maxChunkYClamped; ++chunkY) {
-                    List<EntityItem> list = world.getEntitiesWithinAABB(EntityItem.class, bb);
-                    for (EntityItem entity : list) {
-                        if (!entity.isDead) {
-                            if (entity.boundingBox.intersectsWith(bb)) {
-                                arraylist.add(entity);
-                                if (itemsRemaining-- <= 0) {
-                                    return arraylist;
+                    List<Entity> list = world.getEntitiesWithinAABB(Entity.class, bb);
+                    for (Entity entity : list) {
+                        if (entity instanceof EntityItem || entity instanceof EntityXPOrb) {
+                            if (!entity.isDead) {
+                                if (entity.boundingBox.intersectsWith(bb)) {
+                                    arraylist.add(entity);
+                                    if (itemsRemaining-- <= 0) {
+                                        return arraylist;
+                                    }
                                 }
                             }
                         }
+
                     }
                 }
             }
