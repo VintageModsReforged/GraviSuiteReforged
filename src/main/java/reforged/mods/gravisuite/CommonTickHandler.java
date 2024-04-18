@@ -17,6 +17,7 @@ public class CommonTickHandler implements ITickHandler {
         if (type.contains(TickType.PLAYER)) {
             EntityPlayer player = (EntityPlayer) tickData[0];
             ItemStack itemstack = player.getCurrentArmor(2);
+            System.out.println("Server");
             if (itemstack != null) {
                 if(itemstack.getItem() instanceof ItemAdvancedQuant) {
                     if (!ItemAdvancedQuant.readFlyStatus(itemstack)) {
@@ -27,6 +28,7 @@ public class CommonTickHandler implements ITickHandler {
             } else {
                 if (!player.capabilities.isCreativeMode) {
                     if (CommonProxy.checkFlyActiveByMod(player)) {
+                        System.out.println("Server");
                         player.capabilities.allowFlying = false;
                         player.capabilities.isFlying = false;
                     }
@@ -45,6 +47,6 @@ public class CommonTickHandler implements ITickHandler {
 
     @Override
     public String getLabel() {
-        return Refs.id;
+        return Refs.ID;
     }
 }

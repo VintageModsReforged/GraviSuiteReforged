@@ -1,22 +1,22 @@
 package reforged.mods.gravisuite.items.armors;
 
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
 import net.minecraft.item.EnumRarity;
-import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
 
 public class ItemLappack {
 
-    public static class ItemAdvancedLappack extends ItemArmorElectric {
+    public static class ItemAdvancedLappack extends ItemBaseEnergyPack {
 
         public ItemAdvancedLappack() {
-            super(GraviSuiteConfig.ADVANCED_LAPPACK_ID, "advanced_lappack", 3, 1000, 1000000, EnumRarity.uncommon);
+            super(GraviSuiteMainConfig.ADVANCED_LAPPACK_ID,0, "advanced_lappack", EnumRarity.uncommon, 2, 1000, 1000000);
         }
     }
 
-    public static class ItemUltimateLappack extends ItemArmorElectric {
+    public static class ItemUltimateLappack extends ItemBaseEnergyPack {
 
         public ItemUltimateLappack() {
-            super(GraviSuiteConfig.ULTIMATE_LAPPACK_ID, "ultimate_lappack", 3, 50000, 10000000, EnumRarity.rare);
+            super(GraviSuiteMainConfig.ULTIMATE_LAPPACK_ID, 1, "ultimate_lappack", EnumRarity.rare, 3, 20000, 10000000);
         }
     }
- }
+}

@@ -6,9 +6,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
+import reforged.mods.gravisuite.CommonTickHandler;
 import reforged.mods.gravisuite.GraviSuiteData;
 import reforged.mods.gravisuite.GraviSuiteRecipes;
-import reforged.mods.gravisuite.CommonTickHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,6 @@ public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
         TickRegistry.registerTickHandler(new CommonTickHandler(), Side.SERVER);
-        GraviSuiteData.init();
     }
 
     public void init(FMLInitializationEvent e) {}
@@ -29,6 +28,8 @@ public class CommonProxy {
     }
 
     public int addArmor(String armorName) { return 0; }
+
+    public void registerRenderers() {}
 
     public static boolean checkFlyActiveByMod(EntityPlayer player) {
         return isFlyActiveByMod.containsKey(player) ? isFlyActiveByMod.get(player) : false;

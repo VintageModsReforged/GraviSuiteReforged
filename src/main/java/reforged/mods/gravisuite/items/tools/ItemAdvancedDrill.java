@@ -2,12 +2,15 @@ package reforged.mods.gravisuite.items.tools;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import ic2.core.item.ElectricItem;
+import ic2.core.util.StackUtil;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -15,105 +18,96 @@ import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
-public class ItemAdvancedDrill extends ItemToolElectric {
+public class ItemAdvancedDrill extends ItemBaseElectricItem {
 
-    public Set<Material> mineableBlockMaterials = new HashSet<Material>();
     public Set<Block> mineableBlocks = new HashSet<Block>();
+    public Set<Material> mineableBlockMaterials = new HashSet<Material>();
 
-    public ItemAdvancedDrill(int id, String name, int tier, int transfer, int capacity, EnumRarity rarity) {
-        super(id, name, tier, transfer, capacity, rarity, EnumToolMaterial.EMERALD);
+    public ItemAdvancedDrill() {
+        super(GraviSuiteMainConfig.ADVANCED_DRILL_ID, "advanced_diamond_drill", 2, 500, 15000, EnumRarity.uncommon, EnumToolMaterial.EMERALD);
+        this.setIconIndex(Refs.TOOLS_ID);
         init();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
-        super.addInformation(stack, player, tooltip, flag);
+    public void addInformation(ItemStack stack, EntityPlayer player, List toolTips, boolean flag) {
+        super.addInformation(stack, player, toolTips, flag);
         DrillMode mode = readToolMode(stack);
         DrillProps props = readToolProps(stack);
-        tooltip.add(Refs.tool_mining_mode_gold + " " + mode.name);
-        tooltip.add(Refs.eff_tool_mode_gold + " " + props.name);
+        toolTips.add(Refs.tool_mining_mode_gold + " " + mode.NAME);
+        toolTips.add(Refs.eff_tool_mode_gold + " " + props.NAME);
         if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MINING_MODE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", "Right Click", Refs.EFF_MODE + ".stat"));
+            toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MINING_MODE + ".stat"));
+            toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", "Right Click", Refs.EFF_MODE + ".stat"));
         } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+            toolTips.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
     }
 
     @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return Item.pickaxeDiamond.isBookEnchantable(stack, book);
-    }
-
-    @Override
-    public int getItemEnchantability() {
-        return this.toolMaterial.getEnchantability();
-    }
-
-    @Override
-    public boolean canOperate(ItemStack stack) {
-        DrillProps props = readToolProps(stack);
-        return ElectricItem.manager.canUse(stack, props.energy_cost);
-    }
-
-    @Override
     public boolean canHarvestBlock(Block block) {
-        return Item.pickaxeDiamond.canHarvestBlock(block) || Item.shovelDiamond.canHarvestBlock(block) || this.mineableBlocks.contains(block) || this.mineableBlockMaterials.contains(block.blockMaterial);
+        return pickaxeDiamond.canHarvestBlock(block) || shovelDiamond.canHarvestBlock(block) ||
+                this.mineableBlocks.contains(block) || this.mineableBlockMaterials.contains(block.blockMaterial);
     }
 
     @Override
-    public boolean canHarvestBlock(Block block, ItemStack stack) {
-        if (canOperate(stack))
-            return canHarvestBlock(block);
-        return false;
+    public float getStrVsBlock(ItemStack stack, Block block, int meta) {
+        DrillProps props = readToolProps(stack);
+        if (!ElectricItem.canUse(stack, props.ENERGY_COST)) {
+            return 0.5F;
+        }
+        if (canHarvestBlock(block) || ForgeHooks.isToolEffective(stack, block, meta)) {
+            return props.EFFICIENCY;
+        }
+        return 0.5F;
     }
 
     @Override
     public float getStrVsBlock(ItemStack stack, Block block) {
         DrillProps props = readToolProps(stack);
-        if (!canOperate(stack)) {
-            return 0.1F;
+        if (!ElectricItem.canUse(stack, props.ENERGY_COST)) {
+            return 0.5F;
         }
-        if (canHarvestBlock(block, stack)) {
-            return props.efficiency;
+        if (canHarvestBlock(block) || ForgeHooks.isToolEffective(stack, block, 0)) {
+            return props.EFFICIENCY;
         }
-        return 0.0F;
+        return 0.5F;
     }
 
     @Override
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             World world = player.worldObj;
+
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
+
             MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, true, 4.5D);
-            int block = world.getBlockId(x, y, z);
-            int radius = player.isSneaking() ? 0 : 1;
-            float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
+            int block = world.getBlockId(x, y, x);
             if (block == 0)
                 return false;
-            if (!canOperate(stack))
-                return false;
+
             if (mode == DrillMode.BIG_HOLES) {
-                if (mop == null) { // cancel 3x3 when rayTrace fails
-                    return false;
-                }
+                int radius = player.isSneaking() ? 0 : 1;
+                float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
                 if (refStrength != 0.0D) {
+                    int adjBlock;
+                    float strength;
+
                     int xRange = radius, yRange = radius, zRange = radius;
+
                     switch (mop.sideHit) {
                         case 0:
                         case 1:
@@ -128,15 +122,19 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                             xRange = 0;
                             break;
                     }
-                    BlockPos origin = new BlockPos(x, y, z);
-                    for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
-                        Block adjBlock = Block.blocksList[world.getBlockId(pos.getX(), pos.getY(), pos.getZ())];
-                        if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
-                            float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
-                            if (strength > 0f && strength / refStrength <= 8f) {
-                                if (canOperate(stack)) {
-                                    if (canHarvestBlock(adjBlock, stack) && harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
-                                        ElectricItem.manager.use(stack, props.energy_cost, player);
+
+                    for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
+                        for (int yPos = y - yRange; yPos <= y + yRange; yPos++) {
+                            for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
+                                adjBlock = world.getBlockId(xPos, yPos, zPos);
+                                if (adjBlock != 0) {
+                                    strength = Block.blocksList[adjBlock].getBlockHardness(world, xPos, yPos, zPos);
+                                    if (strength > 0f && refStrength / strength <= 10f) {
+                                        if (ElectricItem.canUse(stack, props.ENERGY_COST)) {
+                                            if (canHarvestBlock(Block.blocksList[adjBlock]) && harvestBlock(world, xPos, yPos, zPos, player)) {
+                                                ElectricItem.use(stack, props.ENERGY_COST, player);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -144,11 +142,14 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                     }
                 }
             } else {
-                ElectricItem.manager.use(stack, props.energy_cost, player);
+                ElectricItem.use(stack, props.ENERGY_COST, player);
+                super.onBlockStartBreak(stack, x, y, z, player);
             }
         }
         return false;
     }
+
+
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
@@ -157,13 +158,43 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         if (blockId != 0) {
             return false;
         }
-        if (!canOperate(stack)) {
+        if (!ElectricItem.canUse(stack, props.ENERGY_COST)) {
             return false;
         }
         if (mode == DrillMode.NORMAL) {
-            ElectricItem.manager.use(stack, props.energy_cost, entity);
+            ElectricItem.use(stack, props.ENERGY_COST, null);
         }
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
+        if (!IC2.keyboard.isModeSwitchKeyDown(player) && !IC2.keyboard.isAltKeyDown(player) && !IC2.keyboard.isSneakKeyDown(player)) {
+            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
+                ItemStack check = player.inventory.mainInventory[i];
+                if (check != null) {
+                    if(check.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch")) {
+                        Item item = check.getItem();
+                        if (item instanceof net.minecraft.item.ItemBlock) {
+                            int oldMeta = check.getItemDamage();
+                            int oldSize = check.stackSize;
+                            boolean result = check.tryPlaceItemIntoWorld(player, world, x, y, z, side, xOffset,
+                                    yOffset, zOffset);
+                            if (player.capabilities.isCreativeMode) {
+                                check.setItemDamage(oldMeta);
+                                check.stackSize = oldSize;
+                            } else if (check.stackSize <= 0) {
+                                ForgeEventFactory.onPlayerDestroyItem(player, check);
+                                player.inventory.mainInventory[i] = null;
+                            }
+                            if (result)
+                                return true;
+                        }
+                    }
+                }
+            }
+        }
+        return super.onItemUse(stack, player, world, x, y, z, side, xOffset, yOffset, zOffset);
     }
 
     @Override
@@ -172,44 +203,44 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 DrillMode nextMode = readNextToolMode(stack);
                 saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + nextMode.name);
+                IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + nextMode.NAME);
             }
             if (IC2.keyboard.isAltKeyDown(player)) {
                 DrillProps nextProps = readNextToolProps(stack);
                 saveToolProps(stack, nextProps);
-                IC2.platform.messagePlayer(player, Refs.eff_tool_mode + " " + nextProps.name);
+                IC2.platform.messagePlayer(player, Refs.eff_tool_mode + " " + nextProps.NAME);
             }
         }
         return stack;
     }
 
     public static DrillMode readToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return DrillMode.getFromId(tag.getInteger("toolMode"));
     }
 
     public static DrillMode readNextToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return DrillMode.getFromId(tag.getInteger("toolMode") + 1);
     }
 
     public static void saveToolMode(ItemStack stack, DrillMode mode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         tag.setInteger("toolMode", mode.ordinal());
     }
 
     public static DrillProps readToolProps(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return DrillProps.getFromId(tag.getInteger("toolProps"));
     }
 
     public static DrillProps readNextToolProps(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return DrillProps.getFromId(tag.getInteger("toolProps") + 1);
     }
 
     public static void saveToolProps(ItemStack stack, DrillProps mode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         tag.setInteger("toolProps", mode.ordinal());
     }
 
@@ -217,9 +248,9 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         NORMAL(Refs.tool_mode_normal), BIG_HOLES(Refs.tool_mode_big_holes);
 
         public static final DrillMode[] VALUES = values();
-        public final String name;
+        public final String NAME;
         DrillMode(String name) {
-            this.name = name;
+            this.NAME = name;
         }
 
         public static DrillMode getFromId(int id) {
@@ -232,14 +263,14 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         FINE(10.0F, 50, Refs.eff_tool_mode_fine);
 
         public static final DrillProps[] VALUES = values();
-        public final String name;
-        public final float efficiency;
-        public final int energy_cost;
+        public final String NAME;
+        public final float EFFICIENCY;
+        public final int ENERGY_COST;
 
         DrillProps(float efficiency, int energyCost, String name) {
-            this.name = name;
-            this.efficiency = efficiency;
-            this.energy_cost = energyCost;
+            this.NAME = name;
+            this.EFFICIENCY = efficiency;
+            this.ENERGY_COST = energyCost;
         }
 
         public static DrillProps getFromId(int id) {
@@ -248,11 +279,49 @@ public class ItemAdvancedDrill extends ItemToolElectric {
     }
 
     public void init() {
+        this.mineableBlocks.add(Block.grass);
+        this.mineableBlocks.add(Block.dirt);
+        this.mineableBlocks.add(Block.mycelium);
+        this.mineableBlocks.add(Block.sand);
+        this.mineableBlocks.add(Block.gravel);
+        this.mineableBlocks.add(Block.snow);
+        this.mineableBlocks.add(Block.blockSnow);
+        this.mineableBlocks.add(Block.blockClay);
+        this.mineableBlocks.add(Block.slowSand);
         this.mineableBlocks.add(Block.glass);
         this.mineableBlocks.add(Block.thinGlass);
         this.mineableBlocks.add(Block.glowStone);
         this.mineableBlocks.add(Block.silverfish);
+        this.mineableBlocks.add(Block.cobblestone);
+        this.mineableBlocks.add(Block.stoneSingleSlab);
+        this.mineableBlocks.add(Block.stoneDoubleSlab);
+        this.mineableBlocks.add(Block.stairCompactCobblestone);
+        this.mineableBlocks.add(Block.stone);
+        this.mineableBlocks.add(Block.sandStone);
+        this.mineableBlocks.add(Block.stairsSandStone);
+        this.mineableBlocks.add(Block.cobblestoneMossy);
+        this.mineableBlocks.add(Block.oreIron);
+        this.mineableBlocks.add(Block.blockSteel);
+        this.mineableBlocks.add(Block.oreCoal);
+        this.mineableBlocks.add(Block.blockGold);
+        this.mineableBlocks.add(Block.oreGold);
+        this.mineableBlocks.add(Block.oreDiamond);
+        this.mineableBlocks.add(Block.blockDiamond);
         this.mineableBlocks.add(Block.ice);
+        this.mineableBlocks.add(Block.netherrack);
+        this.mineableBlocks.add(Block.oreLapis);
+        this.mineableBlocks.add(Block.blockLapis);
+        this.mineableBlocks.add(Block.oreRedstone);
+        this.mineableBlocks.add(Block.oreRedstoneGlowing);
+        this.mineableBlocks.add(Block.brick);
+        this.mineableBlocks.add(Block.stairsBrick);
+        this.mineableBlocks.add(Block.tilledField);
+        this.mineableBlocks.add(Block.stoneBrick);
+        this.mineableBlocks.add(Block.stairsStoneBrickSmooth);
+        this.mineableBlocks.add(Block.netherBrick);
+        this.mineableBlocks.add(Block.stairsNetherBrick);
+        this.mineableBlocks.add(Block.obsidian);
+        this.mineableBlocks.add(Block.anvil);
 
         this.mineableBlockMaterials.add(Material.anvil);
         this.mineableBlockMaterials.add(Material.circuits);
@@ -268,121 +337,5 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         this.mineableBlockMaterials.add(Material.rock);
         this.mineableBlockMaterials.add(Material.sand);
         this.mineableBlockMaterials.add(Material.snow);
-    }
-
-    public static class ItemAdvancedDiamondDrill extends ItemAdvancedDrill {
-
-        public ItemAdvancedDiamondDrill() {
-            super(GraviSuiteConfig.ADVANCED_DIAMOND_DRILL, "advanced_diamond_drill", 2, 500, 45000, EnumRarity.uncommon);
-        }
-    }
-
-    public static class ItemAdvancedIridiumDrill extends ItemAdvancedDrill {
-
-        private final int energy_per_use;
-        private final float efficiency;
-
-        public ItemAdvancedIridiumDrill() {
-            super(GraviSuiteConfig.ADVANCED_IRIDIUM_DRILL, "advanced_iridium_drill", 3, 5000, 100000, EnumRarity.rare);
-            this.energy_per_use = 1000;
-            this.efficiency = 24.0F;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        @SideOnly(Side.CLIENT)
-        public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
-            tooltip.add("\2477" + Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier);
-            tooltip.add("\2476" + StatCollector.translateToLocal(Refs.vein_miner));
-            if (Helpers.isShiftKeyDown()) {
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
-            } else {
-                tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-            }
-        }
-
-        @Override
-        public float getStrVsBlock(ItemStack stack, Block block, int meta) {
-            if (!ElectricItem.manager.canUse(stack, this.energy_per_use)) {
-                return 0.1F;
-            }
-            if (canHarvestBlock(block)) {
-                return this.efficiency;
-            }
-            return 0.0F;
-        }
-
-        @Override
-        public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-            if (IC2.platform.isSimulating()) {
-                if (IC2.keyboard.isSneakKeyDown(player)) {
-                    Map<Integer, Integer> enchMap = new IdentityHashMap<Integer, Integer>();
-                    NBTTagList enchTagList = stack.getEnchantmentTagList();
-                    if (EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) == 0) {
-                        enchMap.put(Enchantment.silkTouch.effectId, 1);
-                        IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_silk);
-                    } else {
-                        enchMap.put(Enchantment.fortune.effectId, 3);
-                        IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_fortune);
-                    }
-                    if (enchTagList != null) {
-                        for (int i = 0; i < enchTagList.tagCount(); i++) {
-                            int id = ((NBTTagCompound) enchTagList.tagAt(i)).getShort("id");
-                            int lvl = ((NBTTagCompound) enchTagList.tagAt(i)).getShort("lvl");
-                            if (id != Enchantment.fortune.effectId && id != Enchantment.silkTouch.effectId) {
-                                enchMap.put(id, lvl);
-                            }
-                        }
-                    }
-                    EnchantmentHelper.setEnchantments(enchMap, stack);
-                }
-            }
-            return stack;
-        }
-
-        @Override
-        public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
-            World world = player.worldObj;
-            if (IC2.platform.isSimulating()) {
-                Block block = Block.blocksList[world.getBlockId(x, y, z)];
-                if (block == Block.oreRedstoneGlowing) {
-                    block = Block.oreRedstone;
-                }
-                ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
-                boolean isOre = false;
-                for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
-                    if (oreStack.isItemEqual(blockStack)) {
-                        isOre = true;
-                        break;
-                    }
-                }
-                if (!ElectricItem.manager.canUse(stack, this.energy_per_use))
-                    return false;
-                if (isOre && !player.capabilities.isCreativeMode) {
-                    BlockPos origin = new BlockPos(x, y, z);
-                    for (BlockPos coord : Helpers.veinPos(origin, world, player)) {
-                        if (coord.equals(origin)) {
-                            continue;
-                        }
-                        if (!ElectricItem.manager.canUse(stack, this.energy_per_use)) {
-                            break;
-                        }
-                        if (ElectricItem.manager.canUse(stack, this.energy_per_use)) {
-                            if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
-                                ElectricItem.manager.use(stack, this.energy_per_use, player);
-                            }
-                        }
-                    }
-                } else {
-                    super.onBlockStartBreak(stack, x, y, z, player);
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public boolean hasEffect(ItemStack stack) {
-            return false;
-        }
     }
 }

@@ -2,10 +2,14 @@ package reforged.mods.gravisuite.items.armors.base;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
+import ic2.core.item.ElectricItem;
+import ic2.core.util.StackUtil;
+import reforged.mods.gravisuite.proxy.ClientProxy;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -13,13 +17,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import reforged.mods.gravisuite.proxy.ClientProxy;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemBaseJetpack extends ItemArmorElectric {
+public class ItemBaseJetpack extends ItemBaseEnergyPack {
 
     public static byte TOGGLE_TIMER;
     public boolean LAST_JETPACK_USED = false;
@@ -30,17 +31,17 @@ public class ItemBaseJetpack extends ItemArmorElectric {
     public static final String NBT_HOVER_ACTIVE = "hover_active";
     public static final String NBT_TOGGLE_TIMER = "toggle_timer";
 
-    public ItemBaseJetpack(int id, String name) {
-        super(id, name, 2, 5000, 1000000, EnumRarity.uncommon);
+    public ItemBaseJetpack(int id, int meta, String name) {
+        super(id, meta, name, EnumRarity.uncommon, 2, 5000, 1000000);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked"})
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
-        super.addInformation(stack, player, tooltip, isDebugMode);
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
+        super.addInformation(stack, player, tooltip, par4);
         boolean isHoverMode = readWorkMode(stack);
         boolean isEngineOn = readFlyStatus(stack);
 
@@ -50,7 +51,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         tooltip.add(Refs.jetpack_engine_gold + " " + jetpackStatus);
         tooltip.add(Refs.jetpack_hover_gold + " " + hoverStatus);
         if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.engine_toggle.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
+            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.ENGINE_TOGGLE.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.JETPACK_HOVER + ".stat"));
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
         } else {
@@ -60,13 +61,13 @@ public class ItemBaseJetpack extends ItemArmorElectric {
 
     @Override
     public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         boolean hoverMode = readWorkMode(stack);
 
         byte toggleTimer = tag.getByte(NBT_TOGGLE_TIMER);
         boolean jetpackUsed = false;
 
-        if (ClientProxy.engine_toggle.pressed && toggleTimer <= 0) {
+        if (ClientProxy.ENGINE_TOGGLE.pressed && toggleTimer <= 0) {
             switchFlyState(player, stack);
         }
 
@@ -129,7 +130,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
             if (f2 > 0.0F) {
                 paramEntityPlayer.moveFlying(0.0F, 0.4F * f2 + f3, 0.02F + f3);
                 if (f3 > 0.0F && !paramEntityPlayer.capabilities.isCreativeMode && IC2.platform.isSimulating())
-                    ElectricItem.manager.discharge(stack, 60, Integer.MAX_VALUE, true, false);
+                    ElectricItem.discharge(stack, 60, 2147483647, true, false);
             }
         }
         int i = paramEntityPlayer.worldObj.getHeight();
@@ -152,7 +153,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
                     && IC2.keyboard.isBoostKeyDown(paramEntityPlayer))
                 if (IC2.keyboard.isSneakKeyDown(paramEntityPlayer) || IC2.keyboard.isJumpKeyDown(paramEntityPlayer)) {
                     d *= 2.0D;
-                    ElectricItem.manager.discharge(stack, 60, Integer.MAX_VALUE, true, false);
+                    ElectricItem.discharge(stack, 60, 2147483647, true, false);
                 }
             if (paramEntityPlayer.motionY > d) {
                 paramEntityPlayer.motionY = d;
@@ -161,7 +162,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
             }
         }
         if (!paramEntityPlayer.capabilities.isCreativeMode && !paramEntityPlayer.onGround)
-            ElectricItem.manager.discharge(stack, 12, Integer.MAX_VALUE, true, false);
+            ElectricItem.discharge(stack, 12, 2147483647, true, false);
         paramEntityPlayer.fallDistance = 0.0F;
         paramEntityPlayer.distanceWalkedModified = 0.0F;
         IC2.platform.resetPlayerInAirTime(paramEntityPlayer);
@@ -169,23 +170,23 @@ public class ItemBaseJetpack extends ItemArmorElectric {
     }
 
     public static boolean readWorkMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return tag.getBoolean(NBT_HOVER_ACTIVE);
     }
 
     public static void saveWorkMode(ItemStack stack, boolean workMode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         tag.setBoolean(NBT_HOVER_ACTIVE, workMode);
         tag.setByte(NBT_TOGGLE_TIMER, TOGGLE_TIMER);
     }
 
-    public static void switchWorkMode(EntityPlayer player, ItemStack stack) {
+    public static void switchWorkMode(EntityPlayer player, ItemStack itemstack) {
         String message;
-        if (readWorkMode(stack)) {
-            saveWorkMode(stack, false);
+        if (readWorkMode(itemstack)) {
+            saveWorkMode(itemstack, false);
             message = Refs.jetpack_hover + " " + Refs.status_off;
         } else {
-            saveWorkMode(stack, true);
+            saveWorkMode(itemstack, true);
             message = Refs.jetpack_hover + " " + Refs.status_on;
         }
         if (IC2.platform.isSimulating()) {
@@ -194,23 +195,23 @@ public class ItemBaseJetpack extends ItemArmorElectric {
     }
 
     public static boolean readFlyStatus(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return tag.getBoolean(NBT_ACTIVE);
     }
 
     public static void saveFlyStatus(ItemStack stack, boolean flyMode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         tag.setBoolean(NBT_ACTIVE, flyMode);
         tag.setByte(NBT_TOGGLE_TIMER, TOGGLE_TIMER);
     }
 
-    public static void switchFlyState(EntityPlayer player, ItemStack stack) {
+    public static void switchFlyState(EntityPlayer player, ItemStack itemstack) {
         String message;
-        if (readFlyStatus(stack)) {
-            saveFlyStatus(stack, false);
+        if (readFlyStatus(itemstack)) {
+            saveFlyStatus(itemstack, false);
             message = Refs.jetpack_engine + " " + Refs.status_off;
         } else {
-            saveFlyStatus(stack, true);
+            saveFlyStatus(itemstack, true);
             message = Refs.jetpack_engine + " " + Refs.status_on;
         }
         if (IC2.platform.isSimulating()) {

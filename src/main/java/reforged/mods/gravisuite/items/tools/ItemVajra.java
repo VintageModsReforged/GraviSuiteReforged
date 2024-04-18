@@ -2,8 +2,14 @@ package reforged.mods.gravisuite.items.tools;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import ic2.core.item.ElectricItem;
+import ic2.core.util.StackUtil;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -11,25 +17,28 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
+import net.minecraftforge.event.ForgeEventFactory;
 
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class ItemVajra extends ItemToolElectric {
+public class ItemVajra extends ItemBaseElectricItem {
 
     public ItemVajra() {
-        super(GraviSuiteConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumRarity.epic, EnumToolMaterial.EMERALD);
+        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumRarity.epic, EnumToolMaterial.EMERALD);
+        this.efficiencyOnProperMaterial = 1.0F;
+        this.setIconIndex(Refs.TOOLS_ID + 2);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect(ItemStack par1ItemStack) {
+        return false;
     }
 
     @SideOnly(Side.CLIENT)
@@ -51,24 +60,12 @@ public class ItemVajra extends ItemToolElectric {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public boolean canOperate(ItemStack stack) {
-        VajraProps props = readToolProps(stack);
-        return ElectricItem.manager.canUse(stack, props.energyCost);
-    }
-
-    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 VajraMode nextMode = readNextToolMode(stack);
                 saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + nextMode.name);
+                IC2.platform.messagePlayer(player, Refs.tool_mode + " " + nextMode.name);
 
             }
             if (IC2.keyboard.isAltKeyDown(player)) {
@@ -83,10 +80,10 @@ public class ItemVajra extends ItemToolElectric {
                 NBTTagList enchTagList = stack.getEnchantmentTagList();
                 if (EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) == 0) {
                     enchMap.put(Enchantment.silkTouch.effectId, 1);
-                    IC2.platform.messagePlayer(player, Refs.ench_mode_yellow + " " + Refs.tool_mode_silk);
+                    IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_silk);
                 } else {
                     enchMap.put(Enchantment.fortune.effectId, 3);
-                    IC2.platform.messagePlayer(player, Refs.ench_mode_yellow + " " + Refs.tool_mode_fortune);
+                    IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_fortune);
                 }
                 if (enchTagList != null) {
                     for (int i = 0; i < enchTagList.tagCount(); i++) {
@@ -104,6 +101,36 @@ public class ItemVajra extends ItemToolElectric {
     }
 
     @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
+        if (!IC2.keyboard.isModeSwitchKeyDown(player) && !IC2.keyboard.isAltKeyDown(player) && !IC2.keyboard.isSneakKeyDown(player)) {
+            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
+                ItemStack check = player.inventory.mainInventory[i];
+                if (check != null) {
+                    if(check.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch")) {
+                        Item item = check.getItem();
+                        if (item instanceof net.minecraft.item.ItemBlock) {
+                            int oldMeta = check.getItemDamage();
+                            int oldSize = check.stackSize;
+                            boolean result = check.tryPlaceItemIntoWorld(player, world, x, y, z, side, xOffset,
+                                    yOffset, zOffset);
+                            if (player.capabilities.isCreativeMode) {
+                                check.setItemDamage(oldMeta);
+                                check.stackSize = oldSize;
+                            } else if (check.stackSize <= 0) {
+                                ForgeEventFactory.onPlayerDestroyItem(player, check);
+                                player.inventory.mainInventory[i] = null;
+                            }
+                            if (result)
+                                return true;
+                        }
+                    }
+                }
+            }
+        }
+        return super.onItemUse(stack, player, world, x, y, z, side, xOffset, yOffset, zOffset);
+    }
+
+    @Override
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         World world = player.worldObj;
         VajraMode mode = readToolMode(stack);
@@ -111,30 +138,35 @@ public class ItemVajra extends ItemToolElectric {
 
         if (IC2.platform.isSimulating()) {
             Block block = Block.blocksList[world.getBlockId(x, y, z)];
+            int meta = world.getBlockMetadata(x, y, z);
             if (block == Block.oreRedstoneGlowing) {
                 block = Block.oreRedstone;
             }
-            ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
-            boolean isOre = false;
-            for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
-                if (oreStack.isItemEqual(blockStack)) {
-                    isOre = true;
-                    break;
-                }
-            }
+            ItemStack blockStack = new ItemStack(block, 1, meta);
+            // Ugly check for ore blocks
+            // TODO: register all ores to OreDist;
+            boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("ore");
+//            List<String> oreNames = Utils.getAOreDictNames(blockStack);
+//            for (String name : oreNames) {
+//                if (name.startsWith("ore")) {
+//                    isOre = true;
+//                    break;
+//                }
+//            }
+
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral && !player.capabilities.isCreativeMode) {
                 BlockPos origin = new BlockPos(x, y, z);
-                for (BlockPos coord : Helpers.veinPos(origin, world, player)) {
+                for (BlockPos coord : veinPos(origin, world, player)) {
                     if (coord.equals(origin)) {
                         continue;
                     }
-                    if (!canOperate(stack)) {
+                    if (!ElectricItem.canUse(stack, props.energyCost)) {
                         break;
                     }
-                    if (canOperate(stack)) {
+                    if (ElectricItem.canUse(stack, props.energyCost)) {
                         if (canHarvestBlock(block) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
-                            ElectricItem.manager.use(stack, props.energyCost, player);
+                            ElectricItem.use(stack, props.energyCost, player);
                         }
                     }
                 }
@@ -146,10 +178,44 @@ public class ItemVajra extends ItemToolElectric {
         return false;
     }
 
+    private static List<BlockPos> veinPos(BlockPos origin, World world, EntityPlayer player) {
+        List<BlockPos> found = new ArrayList<BlockPos>();
+        Set<BlockPos> checked = new HashSet<BlockPos>();
+        found.add(origin);
+        Block block = Block.blocksList[world.getBlockId(origin.getX(), origin.getY(), origin.getZ())];
+
+        if (player.isSneaking()) return found;
+
+        for (int i = 0; i < found.size(); i++) {
+            BlockPos pos = found.get(i);
+            checked.add(pos);
+            for (BlockPos foundPos : BlockPos.getAllInBoxMutable(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
+                if (!checked.contains(foundPos)) {
+                    int checkedBlockId = world.getBlockId(foundPos.getX(), foundPos.getY(), foundPos.getZ());
+                    Block checkedBlock = Block.blocksList[checkedBlockId];
+                    if (!(checkedBlockId == 0)) {
+                        if (block == checkedBlock) {
+                            found.add(foundPos.toImmutable());
+                        }
+                        if (block == Block.oreRedstone || block == Block.oreRedstoneGlowing) {
+                            if (checkedBlock == Block.oreRedstone || checkedBlock == Block.oreRedstoneGlowing) {
+                                found.add(foundPos.toImmutable());
+                            }
+                        }
+                        if (found.size() > 127) {
+                            return found;
+                        }
+                    }
+                }
+            }
+        }
+        return found;
+    }
+
     @Override
     public boolean hitEntity(ItemStack stack, EntityLiving entityliving, EntityLiving attacker) {
         VajraProps props = readToolProps(stack);
-        if (ElectricItem.manager.use(stack, props.energyCost * 2, attacker)) {
+        if (ElectricItem.use(stack, props.energyCost * 2, null)) {
             entityliving.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 25);
         } else {
             entityliving.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 1);
@@ -163,12 +229,12 @@ public class ItemVajra extends ItemToolElectric {
         VajraProps props = readToolProps(stack);
         if (block.getBlockHardness(world, xPos, yPos, zPos) != 0.0D) {
             if (entity != null) {
-                ElectricItem.manager.use(stack, props.energyCost, entity);
+                ElectricItem.use(stack, props.energyCost, null);
             } else {
-                ElectricItem.manager.discharge(stack, props.energyCost, this.tier, true, false);
+                ElectricItem.discharge(stack, props.energyCost, this.TIER, true, false);
             }
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -179,7 +245,7 @@ public class ItemVajra extends ItemToolElectric {
     @Override
     public float getStrVsBlock(ItemStack stack, Block block, int meta) {
         VajraProps props = readToolProps(stack);
-        if (!canOperate(stack)) {
+        if (!ElectricItem.canUse(stack, props.energyCost)) {
             return 0.5F;
         }
         if (canHarvestBlock(block)) {
@@ -189,32 +255,32 @@ public class ItemVajra extends ItemToolElectric {
     }
 
     public static VajraMode readToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return VajraMode.getFromId(tag.getInteger("toolMode"));
     }
 
     public static VajraMode readNextToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return VajraMode.getFromId(tag.getInteger("toolMode") + 1);
     }
 
     public static void saveToolMode(ItemStack stack, VajraMode mode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         tag.setInteger("toolMode", mode.ordinal());
     }
 
     public static VajraProps readToolProps(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return VajraProps.getFromId(tag.getInteger("toolProps"));
     }
 
     public static VajraProps readNextToolProps(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         return VajraProps.getFromId(tag.getInteger("toolProps") + 1);
     }
 
     public static void saveToolProps(ItemStack stack, VajraProps mode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
         tag.setInteger("toolProps", mode.ordinal());
     }
 

@@ -5,17 +5,17 @@ import net.minecraft.util.StatCollector;
 
 public class Refs {
 
-    public static final String id = "gravisuite";
-    public static final String name = "GraviSuite - Addon";
-    public static final String version = "1.5.2-2.2.2a";
-    public static final String mc = "[1.5.2]";
-    public static final String deps = "required-after:IC2";
+    public static final String ID = "gravisuite";
+    public static final String NAME = "GraviSuite - Addon";
+    public static final String VERSION = "1.4.7-2.0.4-forge";
+    public static final String MC_VERSION = "1.4.7";
+    public static final String DEPS = "required-after:IC2;after:RedPowerBase;after:AppliedEnergistics";
 
+    public static final String COMMON_PROXY = "reforged.mods.gravisuite.proxy.CommonProxy";
+    public static final String CLIENT_PROXY = "reforged.mods.gravisuite.proxy.ClientProxy";
 
-    public static final String client = "reforged.mods.gravisuite.proxy.ClientProxy";
-    public static final String common = "reforged.mods.gravisuite.proxy.CommonProxy";
-
-    public static final String IDs = "ids", general = "general", hud = "hud";
+    public static final int COMPONENTS_ICON_ID = 0, ARMOR_PACK_ID = 16, TOOLS_ID = 32, GRAVITOOL_ID = 48, HAMMERS_ID = 64;
+    public static final String IDS = "ids", GENERAL = "general", COMPAT = "compat";
 
     public static final String SNEAK_KEY = StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyDescription);
 
@@ -36,7 +36,6 @@ public class Refs {
     public static final String EFF_MODE_FINE = "message.tool.eff.mode.fine";
     public static final String MAGNET_MODE = "message.tool.mode.magnet";
     public static final String SHEAR_MODE = "message.tool.mode.shear";
-    public static final String CAPITATOR_MODE = "message.tool.mode.capitator";
     public static final String MINING_MODE = "message.tool.mining.mode";
     public static final String MODE = "message.tool.mode";
     public static final String MODE_NORMAL = "message.tool.mode.normal";
@@ -62,12 +61,9 @@ public class Refs {
 
     public static final String vein_miner = "message.vein.active";
 
-
-
     // Formatted Messages // \247
 
     public static final String energy_level = "\247f" + StatCollector.translateToLocal(ENERGY_LEVEL);
-    public static final String energy_level_gold = "\2476" + StatCollector.translateToLocal(ENERGY_LEVEL);
     public static final String jetpack_engine = "\247e" + StatCollector.translateToLocal(JETPACK_ENGINE);
     public static final String jetpack_engine_gold = "\2476" + StatCollector.translateToLocal(JETPACK_ENGINE);
     public static final String jetpack_hover = "\247e" + StatCollector.translateToLocal(JETPACK_HOVER);
@@ -86,14 +82,11 @@ public class Refs {
     public static final String tool_mode_magnet = "\247e" + StatCollector.translateToLocal(MAGNET_MODE);
     public static final String tool_mode_magnet_gold = "\2476" + StatCollector.translateToLocal(MAGNET_MODE);
     public static final String tool_mode_shear = "\247e" + StatCollector.translateToLocal(SHEAR_MODE);
-    public static final String tool_mode_capitator = "\247e" + StatCollector.translateToLocal(CAPITATOR_MODE);
     public static final String tool_mode_shear_gold = "\2476" + StatCollector.translateToLocal(SHEAR_MODE);
-    public static final String tool_mode_capitator_gold = "\2476" + StatCollector.translateToLocal(CAPITATOR_MODE);
     public static final String tool_mining_mode = "\247e" + StatCollector.translateToLocal(MINING_MODE);
     public static final String tool_mining_mode_gold = "\2476" + StatCollector.translateToLocal(MINING_MODE);
     public static final String tool_mode = "\247e" + StatCollector.translateToLocal(MODE);
     public static final String tool_mode_gold = "\2476" + StatCollector.translateToLocal(MODE);
-    public static final String ench_mode_yellow = "\247e" + StatCollector.translateToLocal(ENCH_MODE);
     public static final String tool_mode_normal = "\247a" + StatCollector.translateToLocal(MODE_NORMAL);
     public static final String tool_mode_big_holes = "\247d" + StatCollector.translateToLocal(MODE_BIG_HOLES);
     public static final String tool_mode_vein = "\247b" + StatCollector.translateToLocal(MODE_VEIN);
@@ -104,5 +97,4 @@ public class Refs {
     public static final String tool_mode_treetap = "\2476" + StatCollector.translateToLocal(TOOL_MODE_TREETAP);
     public static final String tool_mode_wrench = "\247b" + StatCollector.translateToLocal(TOOL_MODE_WRENCH);
     public static final String tool_mode_screwdriver = "\247d" + StatCollector.translateToLocal(TOOL_MODE_SCREWDRIVER);
-
 }

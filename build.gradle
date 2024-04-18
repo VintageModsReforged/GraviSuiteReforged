@@ -5,23 +5,14 @@ buildscript {
 		maven { url "https://repo.sleeping.town" } //Commented out to use the version of voldeloom in the settings.gradle includeBuild (hopefully??)
 	}
 	dependencies {
-		classpath "agency.highlysuspect:voldeloom:2.4-SNAPSHOT"
+		classpath "agency.highlysuspect:voldeloom:2.2-SNAPSHOT"
 	}
 }
 
 apply plugin: "agency.highlysuspect.voldeloom"
-
-java {
-	toolchain {
-		//Last version able to set a --release as low as 6.
-		languageVersion = JavaLanguageVersion.of(11)
-	}
-}
-
-compileJava {
-	//Forge doesn't understand classes compiled to versions of the class-file format newer than Java 6's.
-	options.release.set(6)
-}
+// make sure SKD is set to 11
+java.toolchain.languageVersion = JavaLanguageVersion.of(11) //Last version able to set a --release as low as 6
+compileJava.options.release.set(6) //Forge doesn't understand classes compiled to versions of the class-file format newer than Java 6's
 
 String minecraftVersion = project.minecraft
 String forgeVersion = project.minecraft_forge
@@ -29,6 +20,10 @@ archivesBaseName = project.modid
 version = project.mod_version
 
 volde {
+	forgeCapabilities {
+		srgsAsFallback = true
+	}
+
 	runs {
 		client {
 			programArg "quaternary"
@@ -38,22 +33,19 @@ volde {
 
 dependencies {
 	implementation 'net.jcip:jcip-annotations:1.0'
-	implementation 'org.jetbrains:annotations-java5:24.0.0'
-	minecraft "com.mojang:minecraft:${minecraftVersion}"
+    implementation 'org.jetbrains:annotations-java5:23.0.0'
+    minecraft "com.mojang:minecraft:${minecraftVersion}"
 	forge "net.minecraftforge:forge:${forgeVersion}:universal@zip"
-	mappings "net.minecraftforge:forge:${forgeVersion}:src@zip"
 
-//	modImplementation files("libs/")
-	//coremodImplementation files("libs/")
+	mappings volde.layered {
+		baseZip "net.minecraftforge:forge:${forgeVersion}:src@zip"
+		unmapClass(["bar", "bas"])
+	}
 
-//	coremodImplementation files("libs/CodeChickenCore 0.8.7.3-fix1.jar")
-//	coremodImplementation files("libs/NotEnoughItems 1.5.2.28.jar")
-	modImplementation files("libs/industrialcraft-2_1.117.385-lf.jar")
-	modImplementation files("libs/gregtechmod311.jar")
-	modImplementation files("libs/buildcraft-A-3.7.2.jar")
-	modImplementation files("libs/CraftGuide-1.6.7.3-forge.zip")
-	modImplementation files("libs/extrautils - 0.2.4g.zip")
-//	modImplementation files("libs/mod_zGraviSuite_1_9_3.deobf.zip")
+	modImplementation files("libs/industrialcraft-2_1.115.207-lf.jar")
+	modImplementation files("libs/appeng-rv9-i.zip")
+//	modImplementation files("libs/mod_zGraviSuite_1_8.zip")
+//	implementation files("libs/mod_zGraviSuite_1_8.zip")
 }
 
 sourceSets {
@@ -63,3 +55,10 @@ sourceSets {
 		}
 	}
 }
+
+jar {
+	exclude ("**/com/**")
+}
+
+
+

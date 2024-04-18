@@ -1,0 +1,75 @@
+package reforged.mods.gravisuite.items.tools.base;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ic2.api.IElectricItem;
+import reforged.mods.gravisuite.utils.Helpers;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.item.ItemStack;
+
+import java.util.List;
+
+public class ItemBaseElectricItem extends ItemBaseTool implements IElectricItem {
+
+    public int TIER, TRANSFER, CAPACITY;
+    public EnumRarity RARITY;
+
+    public ItemBaseElectricItem(int id, String name, int tier, int transfer, int capacity, EnumRarity rarity, EnumToolMaterial material) {
+        super(id, name, material, null);
+        this.setMaxDamage(27);
+        this.TIER = tier;
+        this.TRANSFER = transfer;
+        this.CAPACITY = capacity;
+        this.RARITY = rarity;
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack stack) {
+        return this.RARITY;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubItems(int item, CreativeTabs tab, List items) {
+        Helpers.addChargeVariants(this, items);
+    }
+
+    /**
+     * {@link IElectricItem} start
+     *
+     * */
+
+    @Override
+    public boolean canProvideEnergy() {
+        return false;
+    }
+
+    @Override
+    public int getChargedItemId() {
+        return this.itemID;
+    }
+
+    @Override
+    public int getEmptyItemId() {
+        return this.itemID;
+    }
+
+    @Override
+    public int getMaxCharge() {
+        return this.CAPACITY;
+    }
+
+    @Override
+    public int getTier() {
+        return this.TIER;
+    }
+
+    @Override
+    public int getTransferLimit() {
+        return this.TRANSFER;
+    }
+
+    /********************************/
+}
