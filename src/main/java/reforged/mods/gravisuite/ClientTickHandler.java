@@ -20,8 +20,10 @@ public class ClientTickHandler implements ITickHandler {
             if (itemstack != null) {
                 if(itemstack.getItem() instanceof ItemAdvancedQuant) {
                     if (!ItemAdvancedQuant.readFlyStatus(itemstack)) {
-                        player.capabilities.allowFlying = false;
-                        player.capabilities.isFlying = false;
+                        if (!player.capabilities.isCreativeMode) {
+                            player.capabilities.allowFlying = false;
+                            player.capabilities.isFlying = false;
+                        }
                     }
                 }
             } else {
