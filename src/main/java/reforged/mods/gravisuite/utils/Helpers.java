@@ -111,16 +111,15 @@ public class Helpers {
         return Array.newInstance(newArrayComponentType, 1);
     }
 
-    public static List<String> getAOreDictNames(ItemStack stack) {
-        List<String> returnList = new ArrayList<String>();
-        if (stack == null || stack.getItem() == null) {
-            return new ArrayList<String>();
+    public static List<ItemStack> getStackFromOre(String prefix) {
+        List<ItemStack> stacks = new ArrayList<ItemStack>();
+        for (String name : OreDictionary.getOreNames()) {
+            if (name.startsWith(prefix)) {
+                List<ItemStack> oreDictList = OreDictionary.getOres(name);
+                stacks.addAll(oreDictList);
+            }
         }
-        List<ItemStack> foundIDs = OreDictionary.getOres(stack.getItem().itemID);
-        for (ItemStack oreId : foundIDs) {
-            returnList.add(oreId.getItemName());
-        }
-        return returnList;
+        return stacks;
     }
 
     public static ItemStack getCharged(Item item, int charge) {

@@ -142,17 +142,18 @@ public class ItemVajra extends ItemBaseElectricItem {
             if (block == Block.oreRedstoneGlowing) {
                 block = Block.oreRedstone;
             }
-            ItemStack blockStack = new ItemStack(block, 1, meta);
-            // Ugly check for ore blocks
-            // TODO: register all ores to OreDist;
-            boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("ore");
-//            List<String> oreNames = Utils.getAOreDictNames(blockStack);
-//            for (String name : oreNames) {
-//                if (name.startsWith("ore")) {
+
+//            boolean isOre = false;
+//            for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
+//                if (oreStack.isItemEqual(blockStack)) {
 //                    isOre = true;
 //                    break;
 //                }
 //            }
+//            // Ugly check for ore blocks
+//            // TODO: register all ores to OreDict;
+            ItemStack blockStack = new ItemStack(block, 1, meta);
+            boolean isOre = blockStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("ore");
 
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral && !player.capabilities.isCreativeMode) {
