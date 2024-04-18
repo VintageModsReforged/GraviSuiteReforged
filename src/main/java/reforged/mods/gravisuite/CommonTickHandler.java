@@ -25,7 +25,6 @@ public class CommonTickHandler implements ITickHandler {
                     }
                 }
             } else {
-                ItemAdvancedQuant.removeSound();
                 if (!player.capabilities.isCreativeMode) {
                     if (CommonProxy.checkFlyActiveByMod(player)) {
                         player.capabilities.allowFlying = false;
