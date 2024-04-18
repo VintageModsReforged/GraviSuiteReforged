@@ -3,6 +3,7 @@ package reforged.mods.gravisuite.items.armors.base;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.IElectricItem;
+import net.minecraft.entity.player.EntityPlayer;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteData;
 import reforged.mods.gravisuite.items.armors.IHasOverlay;
@@ -33,6 +34,14 @@ public class ItemBaseEnergyPack extends ItemArmor implements IElectricItem, IHas
         this.TRANSFER = transfer;
         this.CAPACITY = capacity;
         this.META = meta;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
+        super.addInformation(stack, player, tooltip, debugMode);
+        tooltip.add(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier());
     }
 
     @Override

@@ -3,6 +3,7 @@ package reforged.mods.gravisuite.items.tools.base;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.IElectricItem;
+import net.minecraft.entity.player.EntityPlayer;
 import reforged.mods.gravisuite.utils.Helpers;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
@@ -23,6 +24,14 @@ public class ItemBaseElectricItem extends ItemBaseTool implements IElectricItem 
         this.TRANSFER = transfer;
         this.CAPACITY = capacity;
         this.RARITY = rarity;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
+        super.addInformation(stack, player, tooltip, debugMode);
+        tooltip.add(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier());
     }
 
     @Override
