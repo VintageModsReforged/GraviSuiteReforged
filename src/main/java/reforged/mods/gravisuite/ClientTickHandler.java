@@ -5,12 +5,15 @@ import cpw.mods.fml.common.TickType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
+import reforged.mods.gravisuite.proxy.ClientProxy;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.EnumSet;
 
 public class ClientTickHandler implements ITickHandler {
+
+    public static boolean firstLoad = false;
 
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData) {
@@ -19,10 +22,11 @@ public class ClientTickHandler implements ITickHandler {
             ItemStack itemstack = player.getCurrentArmor(2);
             if (itemstack != null) {
                 if(itemstack.getItem() instanceof ItemAdvancedQuant) {
-                    if (!ItemAdvancedQuant.readFlyStatus(itemstack)) {
-                        if (!player.capabilities.isCreativeMode) {
-                            player.capabilities.allowFlying = false;
-                            player.capabilities.isFlying = false;
+                    if (firstLoad) {
+                        ClientProxy.sendPacket("firstLoad", 1);
+                        if (ItemAdvancedQuant.readFlyStatus(itemstack)) {
+                            ItemAdvancedQuant.saveFlyStatus(itemstack, false);
+                            firstLoad = false;
                         }
                     }
                 }
@@ -43,7 +47,7 @@ public class ClientTickHandler implements ITickHandler {
 
     @Override
     public EnumSet<TickType> ticks() {
-        return EnumSet.of(TickType.PLAYER);
+        return EnumSet.of(TickType.PLAYER, TickType.WORLDLOAD);
     }
 
     @Override

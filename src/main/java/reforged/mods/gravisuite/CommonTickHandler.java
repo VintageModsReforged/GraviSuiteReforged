@@ -12,6 +12,8 @@ import java.util.EnumSet;
 
 public class CommonTickHandler implements ITickHandler {
 
+    public static boolean firstLoad = false;
+
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData) {
         if (type.contains(TickType.PLAYER)) {
@@ -19,6 +21,12 @@ public class CommonTickHandler implements ITickHandler {
             ItemStack itemstack = player.getCurrentArmor(2);
             if (itemstack != null) {
                 if(itemstack.getItem() instanceof ItemAdvancedQuant) {
+                    if (firstLoad) {
+                        if (ItemAdvancedQuant.readFlyStatus(itemstack)) {
+                            ItemAdvancedQuant.saveFlyStatus(itemstack, false);
+                            firstLoad = false;
+                        }
+                    }
                     if (!ItemAdvancedQuant.readFlyStatus(itemstack)) {
                         if (!player.capabilities.isCreativeMode) {
                             player.capabilities.allowFlying = false;
@@ -42,7 +50,7 @@ public class CommonTickHandler implements ITickHandler {
 
     @Override
     public EnumSet<TickType> ticks() {
-        return EnumSet.of(TickType.PLAYER);
+        return EnumSet.of(TickType.PLAYER, TickType.WORLDLOAD);
     }
 
     @Override
