@@ -102,9 +102,10 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 double z = player.posZ;
                 int range = GraviSuiteMainConfig.MAGNET_RANGE;
                 AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x - range, y - range, z - range, x + range, y + range, z + range);
-                if (selectEntitiesWithinAABB(world, aabb).isEmpty())
+                List<EntityItem> items = selectEntitiesWithinAABB(world, aabb);
+                if (items.isEmpty())
                     return;
-                for (EntityItem item : selectEntitiesWithinAABB(world, aabb)) {
+                for (EntityItem item : items) {
                     if (item != null && !player.isSneaking()) {
                         if (ElectricItem.canUse(stack, ENERGY_COST)) {
                             item.onCollideWithPlayer(player);
