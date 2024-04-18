@@ -7,7 +7,7 @@ public class Refs {
 
     public static final String id = "gravisuite";
     public static final String name = "GraviSuite - Addon";
-    public static final String version = "1.5.2-2.2.2-forge";
+    public static final String version = "1.5.2-2.2.2a";
     public static final String mc = "[1.5.2]";
     public static final String deps = "required-after:IC2";
 
@@ -51,11 +51,9 @@ public class Refs {
     public static final String TOOL_MODE_SCREWDRIVER = "message.tool.mode.screwdriver";
     public static final String KEY_TOGGLE_DESC = "key.toggle.engine.desc";
     public static final String KEY_MAGNET_TOGGLE_DESC = "key.toggle.magnet.desc";
+
     public static final String ENCH_MODE = "message.ench.mode";
-
     public static final String BOOST_MODE = "message.text.jetpack.boost.stat";
-
-
 
     public static final String to_change_1 = "message.info.press.to1";
     public static final String to_change_2 = "message.info.press.to2";

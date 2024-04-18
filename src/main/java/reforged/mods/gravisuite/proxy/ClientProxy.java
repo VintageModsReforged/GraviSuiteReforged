@@ -32,7 +32,6 @@ public class ClientProxy extends CommonProxy {
         Minecraft.getMinecraft().gameSettings.keyBindings = Helpers.add(Minecraft.getMinecraft().gameSettings.keyBindings, magnet_toggle);
         TickRegistry.registerTickHandler(new GraviSuiteOverlay(), Side.CLIENT);
         TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
-
     }
 
     @Override
