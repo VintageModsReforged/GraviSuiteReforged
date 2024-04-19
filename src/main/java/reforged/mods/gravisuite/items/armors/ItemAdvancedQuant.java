@@ -98,10 +98,12 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
             if (!player.capabilities.isCreativeMode) {
                 player.capabilities.allowFlying = false;
                 player.capabilities.isFlying = false;
-                CommonProxy.isFlyActiveByMod.put(player, true);
+                CommonProxy.isFlyActive.put(player, true);
                 IC2.platform.resetPlayerInAirTime(player);
             }
         }
+
+        CommonProxy.wasUndressed.put(player, false);
         if (player.isBurning()) {
             player.extinguish();
         }
