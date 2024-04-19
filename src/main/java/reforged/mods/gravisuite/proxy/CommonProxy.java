@@ -15,7 +15,8 @@ import java.util.Map;
 
 public class CommonProxy {
 
-    public static Map<EntityPlayer, Boolean> isFlyActiveByMod = new HashMap<EntityPlayer, Boolean>();
+    public static Map<EntityPlayer, Boolean> isFlyActive = new HashMap<EntityPlayer, Boolean>();
+    public static Map<EntityPlayer, Boolean> wasUndressed = new HashMap<EntityPlayer, Boolean>();
 
     public void preInit(FMLPreInitializationEvent e) {
         TickRegistry.registerTickHandler(new CommonTickHandler(), Side.SERVER);
@@ -30,7 +31,11 @@ public class CommonProxy {
 
     public int addArmor(String armorName) { return 0; }
 
-    public static boolean checkFlyActiveByMod(EntityPlayer player) {
-        return isFlyActiveByMod.containsKey(player) ? isFlyActiveByMod.get(player) : false;
+    public static boolean isFlyActive(EntityPlayer player) {
+        return isFlyActive.containsKey(player) ? isFlyActive.get(player) : false;
+    }
+
+    public static boolean wasUndressed(EntityPlayer player) {
+        return wasUndressed.containsKey(player) ? wasUndressed.get(player) : false;
     }
 }

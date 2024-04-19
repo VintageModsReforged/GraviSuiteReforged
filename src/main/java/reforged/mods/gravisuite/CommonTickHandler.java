@@ -21,7 +21,7 @@ public class CommonTickHandler implements ITickHandler {
             ItemStack itemstack = player.getCurrentArmor(2);
             if (itemstack != null) {
                 if(itemstack.getItem() instanceof ItemAdvancedQuant) {
-                    if (firstLoad) {
+                    if (firstLoad && CommonProxy.wasUndressed(player)) {
                         if (ItemAdvancedQuant.readFlyStatus(itemstack)) {
                             ItemAdvancedQuant.saveFlyStatus(itemstack, false);
                             firstLoad = false;
@@ -35,8 +35,9 @@ public class CommonTickHandler implements ITickHandler {
                     }
                 }
             } else {
+                CommonProxy.wasUndressed.put(player, true);
                 if (!player.capabilities.isCreativeMode) {
-                    if (CommonProxy.checkFlyActiveByMod(player)) {
+                    if (CommonProxy.isFlyActive(player)) {
                         player.capabilities.allowFlying = false;
                         player.capabilities.isFlying = false;
                     }
