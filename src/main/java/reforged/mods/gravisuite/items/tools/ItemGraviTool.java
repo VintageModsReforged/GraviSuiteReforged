@@ -1,6 +1,7 @@
 package reforged.mods.gravisuite.items.tools;
 
 import buildcraft.api.tools.IToolWrench;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.energy.tile.IEnergySink;
@@ -33,6 +34,7 @@ import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import universalelectricity.prefab.implement.IToolConfigurator;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -210,6 +212,32 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                             wrenchable.setFacing((short)side);
                         } else if (wrenchable instanceof IEnergySource && wrenchable instanceof IEnergySink) {
                             wrenchable.setFacing((short)side);
+                        }
+                        return true;
+                    }
+                }
+            }
+            if (Loader.isModLoaded("GregTech_Addon")) {
+                if (tile instanceof gregtechmod.api.metatileentity.BaseMetaTileEntity) {
+                    gregtechmod.api.metatileentity.BaseMetaTileEntity baseTileEntity = (gregtechmod.api.metatileentity.BaseMetaTileEntity) tile;
+                    gregtechmod.api.metatileentity.MetaTileEntity metaTileEntity = baseTileEntity.getMetaTileEntity();
+                    if (metaTileEntity != null) {
+                        side = gregtechmod.api.util.GT_Utility.determineWrenchingSide((byte) side, x, y, z);
+                        if (baseTileEntity.isValidFacing((byte) side) && side != baseTileEntity.getFrontFacing()) {
+                            baseTileEntity.setFrontFacing((byte) side);
+                        } else if (metaTileEntity.isWrenchable()) {
+                            ItemStack drop = null;
+                            try {
+                                Method getDropMethod = gregtechmod.api.metatileentity.BaseMetaTileEntity.class.getDeclaredMethod("getDrop");
+                                getDropMethod.setAccessible(true);
+                                drop = (ItemStack) getDropMethod.invoke(baseTileEntity);
+                            } catch (Throwable e) {
+                                e.printStackTrace();
+                            }
+                            if (drop != null) {
+                                world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, drop));
+                                world.setBlockToAir(x, y, z);
+                            }
                         }
                         return true;
                     }

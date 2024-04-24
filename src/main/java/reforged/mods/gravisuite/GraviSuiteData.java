@@ -1,6 +1,5 @@
 package reforged.mods.gravisuite;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,9 +40,6 @@ public class GraviSuiteData {
         magnet = new ItemMagnet();
         gravitool = new ItemGraviTool();
 
-        if (Loader.isModLoaded("GregTech_Addon")) {
-            gregtechmod.api.GregTech_API.registerWrench(new ItemStack(gravitool.itemID, 1, 32767));
-        }
         advanced_lappack = new ItemLappack.ItemAdvancedLappack();
         ultimate_lappack = new ItemLappack.ItemUltimateLappack();
 
