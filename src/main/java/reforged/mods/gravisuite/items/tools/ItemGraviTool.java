@@ -42,7 +42,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
 
     public static Icon[] iconsList = new Icon[4];
-    public int energy_per_use = 150;
+    public int energy_per_use = 10000;
 
     public String CHANGE_SOUND = "Tools/change.ogg";
     public String TOOL_WRENCH = "Tools/wrench.ogg";
@@ -238,7 +238,6 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                                 world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, drop));
                                 world.setBlockToAir(x, y, z);
                             }
-                            this.energy_per_use = 10000;
                         }
                         return true;
                     }
