@@ -42,7 +42,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
 
     public static Icon[] iconsList = new Icon[4];
-    public int energy_per_use = 10000;
+    public int energy_per_use = 150;
 
     public String CHANGE_SOUND = "Tools/change.ogg";
     public String TOOL_WRENCH = "Tools/wrench.ogg";
@@ -145,6 +145,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                 if (mode == ToolMode.WRENCH) {
                     boolean wrench = onWrenchUse(player, world, x, y, z, side);
                     if (wrench) {
+                        this.energy_per_use = 10000;
                         ElectricItem.manager.use(stack, this.energy_per_use, player);
                         IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, true, IC2.audioManager.defaultVolume);
                     }
