@@ -238,6 +238,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                                 world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, drop));
                                 world.setBlockToAir(x, y, z);
                             }
+                            this.energy_per_use = 10000;
                         }
                         return true;
                     }
