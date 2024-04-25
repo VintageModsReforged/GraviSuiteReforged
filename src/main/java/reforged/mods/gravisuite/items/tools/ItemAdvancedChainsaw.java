@@ -130,7 +130,8 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
 
                 if (isLog) {
                     BlockPos origin = new BlockPos(x, y, z);
-                    for (BlockPos coord : Helpers.veinPos(origin, world, player)) {
+                    Set<BlockPos> vein = Helpers.veinPos(world, origin, 128);
+                    for (BlockPos coord : vein) {
                         if (coord.equals(origin)) {
                             continue;
                         }

@@ -22,39 +22,34 @@ import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Helpers {
 
-    public static List<BlockPos> veinPos(BlockPos origin, World world, EntityPlayer player) {
-        List<BlockPos> found = new ArrayList<BlockPos>();
-        Set<BlockPos> checked = new HashSet<BlockPos>();
-        found.add(origin);
-        Block block = Block.blocksList[world.getBlockId(origin.getX(), origin.getY(), origin.getZ())];
-
-        if (player.isSneaking()) return found;
-
-        for (int i = 0; i < found.size(); i++) {
-            BlockPos pos = found.get(i);
-            checked.add(pos);
-            for (BlockPos foundPos : BlockPos.getAllInBoxMutable(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-                if (!checked.contains(foundPos)) {
-                    int checkedBlockId = world.getBlockId(foundPos.getX(), foundPos.getY(), foundPos.getZ());
+    public static Set<BlockPos> veinPos(World world, BlockPos origin, int maxVeinSize) {
+        Block originBlock = Block.blocksList[world.getBlockId(origin.getX(), origin.getY(), origin.getZ())];
+        Set<BlockPos> found = new LinkedHashSet<BlockPos>();
+        Set<BlockPos> openSet = new LinkedHashSet<BlockPos>();
+        openSet.add(origin); // add origin
+        while (!openSet.isEmpty()) { // just in case check if it's not empty
+            BlockPos blockPos = openSet.iterator().next();
+            found.add(blockPos); // add blockPos to found list for return
+            openSet.remove(blockPos); // remove it and continue
+            if (found.size() > maxVeinSize) { // nah, too much
+                return found;
+            }
+            for (BlockPos pos : BlockPos.getAllInBoxMutable(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1))) {
+                if (!found.contains(pos)) { // we check if it's not in the list already
+                    int checkedBlockId = world.getBlockId(pos.getX(), pos.getY(), pos.getZ());
                     Block checkedBlock = Block.blocksList[checkedBlockId];
-                    if (!(checkedBlockId == 0)) {
-                        if (block == checkedBlock) {
-                            found.add(foundPos.toImmutable());
+                    if (checkedBlockId != 0) {
+                        if (originBlock == checkedBlock) {
+                            openSet.add(pos.toImmutable()); // add to openSet so we add it later when !openSet.isEmpty()
                         }
-                        if (block == Block.oreRedstone || block == Block.oreRedstoneGlowing) {
+                        if (originBlock == Block.oreRedstone || originBlock == Block.oreRedstoneGlowing) {
                             if (checkedBlock == Block.oreRedstone || checkedBlock == Block.oreRedstoneGlowing) {
-                                found.add(foundPos.toImmutable());
+                                openSet.add(pos.toImmutable());
                             }
-                        }
-                        if (found.size() > 127) {
-                            return found;
                         }
                     }
                 }

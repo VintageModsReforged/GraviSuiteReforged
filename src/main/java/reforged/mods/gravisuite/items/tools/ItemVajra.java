@@ -125,7 +125,7 @@ public class ItemVajra extends ItemToolElectric {
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral && !player.capabilities.isCreativeMode) {
                 BlockPos origin = new BlockPos(x, y, z);
-                for (BlockPos coord : Helpers.veinPos(origin, world, player)) {
+                for (BlockPos coord : Helpers.veinPos(world, origin, 128)) {
                     if (coord.equals(origin)) {
                         continue;
                     }
