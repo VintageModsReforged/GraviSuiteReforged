@@ -20,11 +20,18 @@ public class GraviSuiteRecipes {
                 'D', Items.getItem("lapPack"),
                 'A', GraviSuiteData.SUPERCONDUCTOR);
 
+        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.ULTIMATE_LAPPACK),
+                "RBR", "RDR", "RAR",
+                'R', Items.getItem("lapotronCrystal"),
+                'B', Items.getItem("iridiumPlate"),
+                'D', GraviSuiteData.ADVANCED_LAPPACK,
+                'A', GraviSuiteData.SUPERCONDUCTOR);
+
         Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.ADVANCED_QUANT),
                 "RAR", "DBD", "RCR",
                 'R', GraviSuiteData.SUPERCONDUCTOR,
                 'A', Items.getItem("quantumBodyarmor"),
-                'D', GraviSuiteData.COOLING_CORE,
+                'D', GraviSuiteData.GRAVI_ENGINE,
                 'B', Items.getItem("hvTransformer"),
                 'C', GraviSuiteData.ULTIMATE_LAPPACK);
 
