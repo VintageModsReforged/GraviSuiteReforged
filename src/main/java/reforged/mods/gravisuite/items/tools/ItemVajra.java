@@ -138,12 +138,10 @@ public class ItemVajra extends ItemBaseElectricItem {
 
         if (IC2.platform.isSimulating()) {
             Block block = Block.blocksList[world.getBlockId(x, y, z)];
-            int meta = world.getBlockMetadata(x, y, z);
-            ItemStack blockStack = new ItemStack(block, 1, meta);
             if (block == Block.oreRedstoneGlowing) {
                 block = Block.oreRedstone;
             }
-
+            ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
             boolean isOre = false;
             for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
                 if (oreStack.isItemEqual(blockStack)) {
@@ -151,11 +149,10 @@ public class ItemVajra extends ItemBaseElectricItem {
                     break;
                 }
             }
-
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral && !player.capabilities.isCreativeMode) {
                 BlockPos origin = new BlockPos(x, y, z);
-                for (BlockPos coord : veinPos(origin, world, player)) {
+                for (BlockPos coord : Helpers.veinPos(world, origin, 128)) {
                     if (coord.equals(origin)) {
                         continue;
                     }
@@ -174,40 +171,6 @@ public class ItemVajra extends ItemBaseElectricItem {
         }
 
         return false;
-    }
-
-    private static List<BlockPos> veinPos(BlockPos origin, World world, EntityPlayer player) {
-        List<BlockPos> found = new ArrayList<BlockPos>();
-        Set<BlockPos> checked = new HashSet<BlockPos>();
-        found.add(origin);
-        Block block = Block.blocksList[world.getBlockId(origin.getX(), origin.getY(), origin.getZ())];
-
-        if (player.isSneaking()) return found;
-
-        for (int i = 0; i < found.size(); i++) {
-            BlockPos pos = found.get(i);
-            checked.add(pos);
-            for (BlockPos foundPos : BlockPos.getAllInBoxMutable(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-                if (!checked.contains(foundPos)) {
-                    int checkedBlockId = world.getBlockId(foundPos.getX(), foundPos.getY(), foundPos.getZ());
-                    Block checkedBlock = Block.blocksList[checkedBlockId];
-                    if (!(checkedBlockId == 0)) {
-                        if (block == checkedBlock) {
-                            found.add(foundPos.toImmutable());
-                        }
-                        if (block == Block.oreRedstone || block == Block.oreRedstoneGlowing) {
-                            if (checkedBlock == Block.oreRedstone || checkedBlock == Block.oreRedstoneGlowing) {
-                                found.add(foundPos.toImmutable());
-                            }
-                        }
-                        if (found.size() > 127) {
-                            return found;
-                        }
-                    }
-                }
-            }
-        }
-        return found;
     }
 
     @Override

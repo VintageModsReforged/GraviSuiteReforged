@@ -22,12 +22,47 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Helpers {
+
+    public static Set<BlockPos> veinPos(World world, BlockPos origin, int maxVeinSize) {
+        Block originBlock = Block.blocksList[world.getBlockId(origin.getX(), origin.getY(), origin.getZ())];
+        Set<BlockPos> found = new LinkedHashSet<BlockPos>();
+        Set<BlockPos> openSet = new LinkedHashSet<BlockPos>();
+        openSet.add(origin); // add origin
+        while (!openSet.isEmpty()) { // just in case check if it's not empty
+            BlockPos blockPos = openSet.iterator().next();
+            found.add(blockPos); // add blockPos to found list for return
+            openSet.remove(blockPos); // remove it and continue
+            if (found.size() > maxVeinSize) { // nah, too much
+                return found;
+            }
+            for (BlockPos pos : BlockPos.getAllInBoxMutable(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1))) {
+                if (!found.contains(pos)) { // we check if it's not in the list already
+                    int checkedBlockId = world.getBlockId(pos.getX(), pos.getY(), pos.getZ());
+                    Block checkedBlock = Block.blocksList[checkedBlockId];
+                    if (checkedBlockId != 0) {
+                        if (originBlock == checkedBlock) {
+                            openSet.add(pos.toImmutable()); // add to openSet so we add it later when !openSet.isEmpty()
+                        }
+                        if (originBlock == Block.oreRedstone || originBlock == Block.oreRedstoneGlowing) {
+                            if (checkedBlock == Block.oreRedstone || checkedBlock == Block.oreRedstoneGlowing) {
+                                openSet.add(pos.toImmutable());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return found;
+    }
 
     public static void removeRecipeByOutput(ItemStack stack) {
         if (stack != null) {

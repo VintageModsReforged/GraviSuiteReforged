@@ -22,6 +22,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.HashSet;
 import java.util.List;
@@ -90,24 +91,22 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             World world = player.worldObj;
-
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
-
             MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, true, 4.5D);
-            int block = world.getBlockId(x, y, x);
+            int block = world.getBlockId(x, y, z);
+            int radius = player.isSneaking() ? 0 : 1;
+            float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
             if (block == 0)
                 return false;
-
+            if (!ElectricItem.canUse(stack, props.ENERGY_COST))
+                return false;
             if (mode == DrillMode.BIG_HOLES) {
-                int radius = player.isSneaking() ? 0 : 1;
-                float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
+                if (mop == null) { // cancel 3x3 when rayTrace fails
+                    return false;
+                }
                 if (refStrength != 0.0D) {
-                    int adjBlock;
-                    float strength;
-
                     int xRange = radius, yRange = radius, zRange = radius;
-
                     switch (mop.sideHit) {
                         case 0:
                         case 1:
@@ -122,19 +121,15 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
                             xRange = 0;
                             break;
                     }
-
-                    for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
-                        for (int yPos = y - yRange; yPos <= y + yRange; yPos++) {
-                            for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
-                                adjBlock = world.getBlockId(xPos, yPos, zPos);
-                                if (adjBlock != 0) {
-                                    strength = Block.blocksList[adjBlock].getBlockHardness(world, xPos, yPos, zPos);
-                                    if (strength > 0f && refStrength / strength <= 10f) {
-                                        if (ElectricItem.canUse(stack, props.ENERGY_COST)) {
-                                            if (canHarvestBlock(Block.blocksList[adjBlock]) && harvestBlock(world, xPos, yPos, zPos, player)) {
-                                                ElectricItem.use(stack, props.ENERGY_COST, player);
-                                            }
-                                        }
+                    BlockPos origin = new BlockPos(x, y, z);
+                    for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
+                        Block adjBlock = Block.blocksList[world.getBlockId(pos.getX(), pos.getY(), pos.getZ())];
+                        if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
+                            float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
+                            if (strength > 0f && strength / refStrength <= 8f) {
+                                if (ElectricItem.canUse(stack, props.ENERGY_COST)) {
+                                    if (canHarvestBlock(adjBlock) && harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
+                                        ElectricItem.use(stack, props.ENERGY_COST, player);
                                     }
                                 }
                             }
@@ -143,7 +138,6 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
                 }
             } else {
                 ElectricItem.use(stack, props.ENERGY_COST, player);
-                super.onBlockStartBreak(stack, x, y, z, player);
             }
         }
         return false;
