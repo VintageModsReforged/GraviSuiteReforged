@@ -121,8 +121,10 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             if (readToolMode(stack, NBT_TCAPITATOR)) {
                 ItemStack blockStack = new ItemStack(block, 1, 32767);
                 boolean isLog = false;
-                for (ItemStack check : Helpers.getStackFromOre("log")) {
-                    if (check.isItemEqual(blockStack)) {
+                List<ItemStack> logs = Helpers.getStackFromOre("log");
+                logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
+                for (ItemStack check : logs) {
+                    if (Helpers.areStacksEqual(check, blockStack)) {
                         isLog = true;
                         break;
                     }
@@ -139,7 +141,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                             break;
                         }
                         if (canOperate(stack)) {
-                            if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
+                            if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
                                 ElectricItem.manager.use(stack, this.energyPerOperation, player);
                             }
                         }

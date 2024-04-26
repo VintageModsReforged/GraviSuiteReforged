@@ -26,8 +26,16 @@ import java.util.*;
 
 public class Helpers {
 
+    public static boolean areStacksEqual(ItemStack aStack, ItemStack bStack) {
+        return aStack != null && bStack != null &&
+                aStack.itemID == bStack.itemID &&
+                (aStack.getTagCompound() == null == (bStack.getTagCompound() == null)) &&
+                (aStack.getTagCompound() == null || aStack.getTagCompound().equals(bStack.getTagCompound()))
+                && (aStack.getItemDamage() == bStack.getItemDamage() || aStack.getItemDamage() == 32767 || bStack.getItemDamage() == 32767);
+    }
+
     public static Set<BlockPos> veinPos(World world, BlockPos origin, int maxVeinSize) {
-        Block originBlock = Block.blocksList[world.getBlockId(origin.getX(), origin.getY(), origin.getZ())];
+        int originID = world.getBlockId(origin.getX(), origin.getY(), origin.getZ());
         Set<BlockPos> found = new LinkedHashSet<BlockPos>();
         Set<BlockPos> openSet = new LinkedHashSet<BlockPos>();
         openSet.add(origin); // add origin
@@ -41,13 +49,12 @@ public class Helpers {
             for (BlockPos pos : BlockPos.getAllInBoxMutable(blockPos.add(-1, -1, -1), blockPos.add(1, 1, 1))) {
                 if (!found.contains(pos)) { // we check if it's not in the list already
                     int checkedBlockId = world.getBlockId(pos.getX(), pos.getY(), pos.getZ());
-                    Block checkedBlock = Block.blocksList[checkedBlockId];
                     if (checkedBlockId != 0) {
-                        if (originBlock == checkedBlock) {
+                        if (originID == checkedBlockId) {
                             openSet.add(pos.toImmutable()); // add to openSet so we add it later when !openSet.isEmpty()
                         }
-                        if (originBlock == Block.oreRedstone || originBlock == Block.oreRedstoneGlowing) {
-                            if (checkedBlock == Block.oreRedstone || checkedBlock == Block.oreRedstoneGlowing) {
+                        if (originID == Block.oreRedstone.blockID || originID == Block.oreRedstoneGlowing.blockID) {
+                            if (checkedBlockId == Block.oreRedstone.blockID || checkedBlockId == Block.oreRedstoneGlowing.blockID) {
                                 openSet.add(pos.toImmutable());
                             }
                         }

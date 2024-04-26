@@ -123,7 +123,7 @@ public class ItemVajra extends ItemToolElectric {
                 }
             }
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
-            if (veinGeneral && !player.capabilities.isCreativeMode) {
+            if (veinGeneral) {
                 BlockPos origin = new BlockPos(x, y, z);
                 for (BlockPos coord : Helpers.veinPos(world, origin, 128)) {
                     if (coord.equals(origin)) {
@@ -133,7 +133,7 @@ public class ItemVajra extends ItemToolElectric {
                         break;
                     }
                     if (canOperate(stack)) {
-                        if (canHarvestBlock(block) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
+                        if (canHarvestBlock(block) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
                             ElectricItem.manager.use(stack, props.energyCost, player);
                         }
                     }
