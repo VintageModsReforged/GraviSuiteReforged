@@ -62,10 +62,14 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         String modeShear = isShearsOn ? Refs.status_on : Refs.status_off;
         String modeCapitator = isCapitatorOn ? Refs.status_on : Refs.status_off;
         tooltip.add(Refs.tool_mode_shear_gold + " " + modeShear);
-        tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
+        if (GraviSuiteConfig.chainsaw_tree_capitator) {
+            tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
+        }
         if (Helpers.isShiftKeyDown()) {
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", "Right Click", Refs.SHEAR_MODE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, "Right Click", Refs.CAPITATOR_MODE + ".stat"));
+            if (GraviSuiteConfig.chainsaw_tree_capitator) {
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, "Right Click", Refs.CAPITATOR_MODE + ".stat"));
+            }
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -118,7 +122,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                     player.addStat(net.minecraft.stats.StatList.mineBlockStatArray[world.getBlockId(x, y, z)], 1);
                 }
             }
-            if (readToolMode(stack, NBT_TCAPITATOR)) {
+            if (GraviSuiteConfig.chainsaw_tree_capitator && readToolMode(stack, NBT_TCAPITATOR)) {
                 ItemStack blockStack = new ItemStack(block, 1, 32767);
                 boolean isLog = false;
                 List<ItemStack> logs = Helpers.getStackFromOre("log");
@@ -165,15 +169,17 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                 }
                 IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + (shears ? Refs.status_on : Refs.status_off));
             }
-            if (IC2.keyboard.isSneakKeyDown(player)) {
-                boolean capitator = false;
-                if (!readToolMode(itemStack, NBT_TCAPITATOR)) {
-                    saveToolMode(itemStack, NBT_TCAPITATOR, true);
-                    capitator = true;
-                } else {
-                    saveToolMode(itemStack, NBT_TCAPITATOR, false);
+            if (GraviSuiteConfig.chainsaw_tree_capitator) {
+                if (IC2.keyboard.isSneakKeyDown(player)) {
+                    boolean capitator = false;
+                    if (!readToolMode(itemStack, NBT_TCAPITATOR)) {
+                        saveToolMode(itemStack, NBT_TCAPITATOR, true);
+                        capitator = true;
+                    } else {
+                        saveToolMode(itemStack, NBT_TCAPITATOR, false);
+                    }
+                    IC2.platform.messagePlayer(player, Refs.tool_mode_capitator + " " + (capitator ? Refs.status_on : Refs.status_off));
                 }
-                IC2.platform.messagePlayer(player, Refs.tool_mode_capitator + " " + (capitator ? Refs.status_on : Refs.status_off));
             }
         }
         return itemStack;

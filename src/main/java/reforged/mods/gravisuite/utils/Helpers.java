@@ -187,10 +187,10 @@ public class Helpers {
     }
 
     public static String pressXForY(String message, String key1, String action) {
-        return "\2477" + StatCollector.translateToLocalFormatted(message, "\2476" + key1 + "\2477", "\2476" + StatCollector.translateToLocal(action));
+        return "\2477" + StatCollector.translateToLocalFormatted(message, "\2476" + key1 + "\2477", "\247e" + StatCollector.translateToLocal(action));
     }
 
     public static String pressXAndYForZ(String message, String key1, String key2, String action) {
-        return "\2477" + StatCollector.translateToLocalFormatted(message, "\2476" + key1 + "\2477", "\2476" + key2 + "\2477", "\2476" + StatCollector.translateToLocal(action));
+        return "\2477" + StatCollector.translateToLocalFormatted(message, "\2476" + key1 + "\2477", "\2476" + key2 + "\2477", "\247e" + StatCollector.translateToLocal(action));
     }
 }
