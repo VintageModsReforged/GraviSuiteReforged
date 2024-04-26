@@ -81,7 +81,7 @@ public class GraviSuiteConfig {
         hud_pos_gravi_x = getInt(Refs.hud, "hud_pos_gravi_x", 0, Integer.MAX_VALUE, hud_pos_gravi_x, "X Pos for Gravitational Chestplate status info.");
         hud_pos_gravi_y = getInt(Refs.hud, "hud_pos_gravi_y", 0, Integer.MAX_VALUE, hud_pos_gravi_y, "Y Pos for Gravitational Chestplate status info.");
 
-        chainsaw_tree_capitator = getBoolean(Refs.general, "chainsaw_tree_capitator", chainsaw_tree_capitator, "Enable TreeCapitator Mode for Advanced Chainsaw. GraviSuite provides builtin compat for TreeCapotator mod. Does this config value make sense then?");
+        chainsaw_tree_capitator = getBoolean(Refs.general, "chainsaw_tree_capitator", chainsaw_tree_capitator, "Enable TreeCapitator Mode for Advanced Chainsaw. GraviSuite provides builtin compat for TreeCapitator mod. Does this config value make sense then?");
         log_wrench = getBoolean(Refs.general, "enable_wrench_logging", log_wrench, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         default_language = getString(Refs.general, "default_language", "en_US", "Default Language. DO NOT CHANGE THIS! Use additional_languages field instead!");
         additional_languages = getString(Refs.general, "additional_languages", "", "Additional supported localizations. Place your <name>.lang file in config/gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
