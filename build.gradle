@@ -58,6 +58,7 @@ dependencies {
 	modImplementation files("libs/CraftGuide-1.6.7.3-forge.zip")
 	modImplementation files("libs/extrautils - 0.2.4g.zip")
 	modImplementation files("libs/Biomes-O-Plenty-0.5.7-1.5.2.zip")
+	modImplementation files("libs/ModularPowersuits-1.5.2-0.7.1-635.jar")
 
 	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 }

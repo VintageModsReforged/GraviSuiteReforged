@@ -4,20 +4,19 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
-import ic2.core.item.armor.ItemArmorBatpack;
-import ic2.core.item.armor.ItemArmorJetpackElectric;
-import ic2.core.item.armor.ItemArmorLappack;
+import ic2.core.Ic2Items;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
-import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 public class GraviSuiteOverlay implements ITickHandler {
 
@@ -27,6 +26,16 @@ public class GraviSuiteOverlay implements ITickHandler {
     int yPosEnergy = offset, yPosEnergyJoint = offset, yPosJetpack = offset, yPosHover = offset, yPosGravi = offset, yPosLevitation = offset;
 
     public static Minecraft mc = Minecraft.getMinecraft();
+
+    static List<ItemStack> IC2_ARMORS = new ArrayList<ItemStack>();
+
+    static {
+        IC2_ARMORS.add(Ic2Items.electricJetpack);
+        IC2_ARMORS.add(Ic2Items.batPack);
+        IC2_ARMORS.add(Ic2Items.lapPack);
+        IC2_ARMORS.add(Ic2Items.nanoBodyarmor);
+        IC2_ARMORS.add(Ic2Items.quantumBodyarmor);
+    }
 
     public GraviSuiteOverlay() {}
 
@@ -44,9 +53,13 @@ public class GraviSuiteOverlay implements ITickHandler {
             ItemStack armor = player.getCurrentArmor(2);
 
             if (armor != null && armor.getItem() instanceof IElectricItem) {
+                IElectricItem electricItem = (IElectricItem) armor.getItem();
                 int curCharge = Helpers.getCharge(armor);
-                int maxCharge = ((IElectricItem) armor.getItem()).getMaxCharge(armor);
-                int charge = curCharge * 100 / maxCharge;
+                int maxCharge = electricItem.getMaxCharge(armor);
+                int charge = 0;
+                if (maxCharge != 0) {
+                    charge = curCharge * 100 / maxCharge;
+                }
 
                 // ENERGY STATUS
                 String energyToDisplay = Refs.energy_level + " " + getEnergyTextColor(charge) + charge + "\247f%";
@@ -115,11 +128,8 @@ public class GraviSuiteOverlay implements ITickHandler {
                     yPosLevitation = yPosGravi + textOffset + mc.fontRenderer.FONT_HEIGHT;
                 }
 
-
-                boolean ic2armor = armor.getItem() instanceof ItemArmorJetpackElectric || armor.getItem() instanceof ItemArmorBatpack || armor.getItem() instanceof ItemArmorLappack;
-
                 if (GraviSuiteConfig.enable_hud) {
-                    if (armor.getItem() instanceof ItemLappack.ItemAdvancedLappack || armor.getItem() instanceof ItemLappack.ItemUltimateLappack || ic2armor) {
+                    if (charge > 0) {
                         mc.ingameGUI.drawString(mc.fontRenderer, energyToDisplay, xPosEnergy, yPosEnergy, 0);
                     }
                     if (armor.getItem() instanceof ItemBaseJetpack) {
