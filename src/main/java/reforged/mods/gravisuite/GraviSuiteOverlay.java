@@ -4,7 +4,6 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
-import ic2.core.Ic2Items;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,10 +12,9 @@ import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.TextFormatter;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 public class GraviSuiteOverlay implements ITickHandler {
 
@@ -26,16 +24,6 @@ public class GraviSuiteOverlay implements ITickHandler {
     int yPosEnergy = offset, yPosEnergyJoint = offset, yPosJetpack = offset, yPosHover = offset, yPosGravi = offset, yPosLevitation = offset;
 
     public static Minecraft mc = Minecraft.getMinecraft();
-
-    static List<ItemStack> IC2_ARMORS = new ArrayList<ItemStack>();
-
-    static {
-        IC2_ARMORS.add(Ic2Items.electricJetpack);
-        IC2_ARMORS.add(Ic2Items.batPack);
-        IC2_ARMORS.add(Ic2Items.lapPack);
-        IC2_ARMORS.add(Ic2Items.nanoBodyarmor);
-        IC2_ARMORS.add(Ic2Items.quantumBodyarmor);
-    }
 
     public GraviSuiteOverlay() {}
 
@@ -57,12 +45,12 @@ public class GraviSuiteOverlay implements ITickHandler {
                 int curCharge = Helpers.getCharge(armor);
                 int maxCharge = electricItem.getMaxCharge(armor);
                 int charge = 0;
-                if (maxCharge != 0) {
+                if (maxCharge > 0) {
                     charge = curCharge * 100 / maxCharge;
                 }
 
                 // ENERGY STATUS
-                String energyToDisplay = Refs.energy_level + " " + getEnergyTextColor(charge) + charge + "\247f%";
+                String energyToDisplay = Refs.energy_level + " " + getEnergyTextColor(charge).literal(String.valueOf(charge)) + TextFormatter.WHITE.literal("%");
 
                 // HOVER MODE STATUS
 
@@ -166,24 +154,24 @@ public class GraviSuiteOverlay implements ITickHandler {
         return xPos;
     }
 
-    public static String getEnergyTextColor(int energyLevel) {
-        String colorCode = "f"; // white
+    public static TextFormatter getEnergyTextColor(int energyLevel) {
+        TextFormatter colorCode = TextFormatter.WHITE; // white
         if (energyLevel >= 90) {
-            colorCode = "a"; // green
+            colorCode = TextFormatter.GREEN; // green
         }
         if ((energyLevel <= 90) && (energyLevel > 75)) {
-            colorCode = "e"; // yellow
+            colorCode = TextFormatter.YELLOW; // yellow
         }
         if ((energyLevel <= 75) && (energyLevel > 50)) {
-            colorCode = "6"; // gold
+            colorCode = TextFormatter.GOLD; // gold
         }
         if ((energyLevel <= 50) && (energyLevel > 35)) {
-            colorCode = "c"; // red
+            colorCode = TextFormatter.RED; // red
         }
         if (energyLevel <= 35) {
-            colorCode = "4"; // dark_red
+            colorCode = TextFormatter.DARK_RED; // dark_red
         }
-        return "\247" + colorCode;
+        return colorCode;
     }
 
     @Override

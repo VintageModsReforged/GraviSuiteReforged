@@ -16,10 +16,11 @@ import net.minecraftforge.common.IArmorTextureProvider;
 import net.minecraftforge.common.ISpecialArmor;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
 
-public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, IArmorTextureProvider, ISpecialArmor, IHasOverlay, IMetalArmor {
+public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, IArmorTextureProvider, ISpecialArmor, IMetalArmor {
 
     public int tier, transfer, capacity;
     public int energy_per_damage, damage_priority;
@@ -70,7 +71,7 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
-        tooltip.add("\2477" + Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier);
+        tooltip.add(TextFormatter.AQUA.format(Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier));
     }
 
     @Override

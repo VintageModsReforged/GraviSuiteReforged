@@ -14,7 +14,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
@@ -183,14 +182,14 @@ public class Helpers {
     }
 
     public static String pressForInfo(String data) {
-        return "\2477" + StatCollector.translateToLocalFormatted("message.info.press", "\2476" + data + "\2477");
+        return TextFormatter.GRAY.format("message.info.press", TextFormatter.GOLD.format(data));
     }
 
     public static String pressXForY(String message, String key1, String action) {
-        return "\2477" + StatCollector.translateToLocalFormatted(message, "\2476" + key1 + "\2477", "\247e" + StatCollector.translateToLocal(action));
+        return TextFormatter.GRAY.format(message, TextFormatter.GOLD.literal(key1), TextFormatter.YELLOW.format(action));
     }
 
     public static String pressXAndYForZ(String message, String key1, String key2, String action) {
-        return "\2477" + StatCollector.translateToLocalFormatted(message, "\2476" + key1 + "\2477", "\2476" + key2 + "\2477", "\247e" + StatCollector.translateToLocal(action));
+        return TextFormatter.GRAY.format(message, TextFormatter.GOLD.literal(key1), TextFormatter.GOLD.literal(key2), TextFormatter.YELLOW.format(action));
     }
 }

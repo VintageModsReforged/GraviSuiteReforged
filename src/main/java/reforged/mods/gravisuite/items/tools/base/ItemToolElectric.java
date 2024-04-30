@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +58,7 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
-        tooltip.add("\2477" + Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier);
+        tooltip.add(TextFormatter.AQUA.format(Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier));
     }
 
     @Override
@@ -71,6 +72,7 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
                     if (checkStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch") && !checkStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("redstone")) {
                         torchStack = checkStack;
                         torchSlot = i;
+                        break;
                     }
                 }
             }
@@ -101,10 +103,8 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
         return false;
     }
 
-    /**
-     * {@link IElectricItem} start
-     *
-     * */
+    // IElectricItem start
+
     @Override
     public boolean canProvideEnergy(ItemStack itemStack) {
         return false;
@@ -135,5 +135,5 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
         return this.transfer;
     }
 
-    /************ end ********************/
+    // end
 }

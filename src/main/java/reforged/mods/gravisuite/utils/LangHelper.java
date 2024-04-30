@@ -2,6 +2,8 @@ package reforged.mods.gravisuite.utils;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringTranslate;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 
@@ -32,6 +34,7 @@ public final class LangHelper {
         } else {
             addEntry(GraviSuiteConfig.default_language);
         }
+        LanguageRegistry.reloadLanguageTable();
     }
 
     private static void addEntry(String lang) {
@@ -71,5 +74,14 @@ public final class LangHelper {
                 }
             }
         }
+    }
+
+    public static String format(String key, Object... args) {
+        return format(null, key, args);
+    }
+
+    public static String format(StringTranslate translator, String key, Object... args) {
+        if (translator == null) return StatCollector.translateToLocalFormatted(key, args);
+        return translator.translateKeyFormat(key, args);
     }
 }

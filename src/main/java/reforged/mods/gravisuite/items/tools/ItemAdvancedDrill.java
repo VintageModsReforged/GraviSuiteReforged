@@ -23,6 +23,7 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.TextFormatter;
 import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.*;
@@ -292,8 +293,8 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         @Override
         @SideOnly(Side.CLIENT)
         public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
-            tooltip.add("\2477" + Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier);
-            tooltip.add("\2476" + StatCollector.translateToLocal(Refs.vein_miner));
+            tooltip.add(TextFormatter.AQUA.format(Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier));
+            tooltip.add(TextFormatter.GOLD.format(Refs.vein_miner));
             if (Helpers.isShiftKeyDown()) {
                 tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
             } else {
