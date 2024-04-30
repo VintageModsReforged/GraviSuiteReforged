@@ -50,7 +50,7 @@ public class GraviSuiteOverlay implements ITickHandler {
                 }
 
                 // ENERGY STATUS
-                String energyToDisplay = Refs.energy_level + " " + getEnergyTextColor(charge).literal(String.valueOf(charge)) + TextFormatter.WHITE.literal("%");
+                String energyToDisplay = Refs.energy_level + " " + getEnergyTextColor(charge) + TextFormatter.WHITE.literal("%");
 
                 // HOVER MODE STATUS
 
@@ -154,7 +154,7 @@ public class GraviSuiteOverlay implements ITickHandler {
         return xPos;
     }
 
-    public static TextFormatter getEnergyTextColor(int energyLevel) {
+    public static String getEnergyTextColor(int energyLevel) {
         TextFormatter colorCode = TextFormatter.WHITE; // white
         if (energyLevel >= 90) {
             colorCode = TextFormatter.GREEN; // green
@@ -171,7 +171,7 @@ public class GraviSuiteOverlay implements ITickHandler {
         if (energyLevel <= 35) {
             colorCode = TextFormatter.DARK_RED; // dark_red
         }
-        return colorCode;
+        return colorCode.literal(String.valueOf(energyLevel));
     }
 
     @Override
