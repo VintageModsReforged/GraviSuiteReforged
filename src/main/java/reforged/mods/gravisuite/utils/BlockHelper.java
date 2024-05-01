@@ -177,7 +177,7 @@ public class BlockHelper {
                 } else if (meta == 6) {
                     return 5 + shift;
                 } else if (meta == 7) {
-                    return 0 + shift;
+                    return shift;
                 } else if (meta == 0) {
                     return 7 + shift;
                 }

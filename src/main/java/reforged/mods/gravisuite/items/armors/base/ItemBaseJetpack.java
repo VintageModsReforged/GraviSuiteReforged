@@ -103,68 +103,68 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         }
     }
 
-    public static boolean useJetpack(EntityPlayer paramEntityPlayer, ItemStack stack, boolean paramBoolean) {
-        double d1 = Helpers.getCharge(stack);
-        if (d1 < 12.0D && !paramEntityPlayer.capabilities.isCreativeMode)
+    public boolean useJetpack(EntityPlayer player, ItemStack stack, boolean hover) {
+        int usage = 12;
+        double charge = Helpers.getCharge(stack);
+        if (charge < usage && !player.capabilities.isCreativeMode)
             return false;
-        float f = 1.0F;
-        double d2 = 0.0010000000474974513D;
-        double d3 = 150000.0D;
-        if (d1 / 3000000.0D <= d2)
-            f = (float) (f * d1 / d3);
-        if (paramEntityPlayer.capabilities.isCreativeMode)
-            f = 1.0F;
-        if (IC2.keyboard.isForwardKeyDown(paramEntityPlayer)) {
-            float f1 = 0.3F;
-            if (paramBoolean)
-                f1 = 0.65F;
-            float f2 = f * f1 * 2.0F;
-            float f3 = 0.0F;
-            if (IC2.keyboard.isBoostKeyDown(paramEntityPlayer)
-                    && (d1 > 60.0D || paramEntityPlayer.capabilities.isCreativeMode)) {
-                f3 = 0.09F;
-                if (paramBoolean)
-                    f3 = 0.07F;
+        float power = 1.0F;
+        double dropPercentage = 0.001D;
+        double dropLimit = this.getMaxCharge(stack) * 0.05D;
+        if (charge / this.getMaxCharge(stack) <= dropPercentage)
+            power = (float) (power * charge / dropLimit);
+        if (player.capabilities.isCreativeMode)
+            power = 1.0F;
+        if (IC2.keyboard.isForwardKeyDown(player)) {
+            float retruster = 0.3F;
+            if (hover)
+                retruster = 0.65F;
+            float forwardPower = power * retruster * 2.0F;
+            float boost = 0.0F;
+            if (IC2.keyboard.isBoostKeyDown(player)
+                    && (charge > 60.0D || player.capabilities.isCreativeMode)) {
+                boost = 0.09F;
+                if (hover)
+                    boost = 0.07F;
             }
-            if (f2 > 0.0F) {
-                paramEntityPlayer.moveFlying(0.0F, 0.4F * f2 + f3, 0.02F + f3);
-                if (f3 > 0.0F && !paramEntityPlayer.capabilities.isCreativeMode && IC2.platform.isSimulating())
+            if (forwardPower > 0.0F) {
+                player.moveFlying(0.0F, 0.4F * forwardPower + boost, 0.02F + boost);
+                if (boost > 0.0F && !player.capabilities.isCreativeMode && IC2.platform.isSimulating())
                     ElectricItem.manager.discharge(stack, 60, Integer.MAX_VALUE, true, false);
             }
         }
-        int i = paramEntityPlayer.worldObj.getHeight();
-        double d4 = paramEntityPlayer.posY;
-        if (d4 > (i - 25)) {
-            if (d4 > i)
-                d4 = i;
-            f = (float) (f * (i - d4) / 25.0D);
+        int worldHeight = player.worldObj.getHeight();
+        double posY = player.posY;
+        if (posY > (worldHeight - 25)) {
+            if (posY > worldHeight)
+                posY = worldHeight;
+            power = (float) (power * (worldHeight - posY) / 25.0D);
         }
-        double d5 = paramEntityPlayer.motionY;
-        paramEntityPlayer.motionY = Math.min(paramEntityPlayer.motionY + (f * 0.2F),
-                0.6000000238418579D);
-        if (paramBoolean) {
-            double d = -0.03D;
-            if (IC2.keyboard.isJumpKeyDown(paramEntityPlayer))
-                d = 0.2D;
-            if (IC2.keyboard.isSneakKeyDown(paramEntityPlayer))
-                d = -0.2D;
-            if ((d1 > 60.0D || paramEntityPlayer.capabilities.isCreativeMode)
-                    && IC2.keyboard.isBoostKeyDown(paramEntityPlayer))
-                if (IC2.keyboard.isSneakKeyDown(paramEntityPlayer) || IC2.keyboard.isJumpKeyDown(paramEntityPlayer)) {
-                    d *= 2.0D;
+        double motionY = player.motionY;
+        player.motionY = Math.min(player.motionY + (power * 0.2F), 0.6D);
+        if (hover) {
+            double maxHoverY = -HOVER_FALL_SPEED;
+            if (IC2.keyboard.isJumpKeyDown(player))
+                maxHoverY = 0.2D;
+            if (IC2.keyboard.isSneakKeyDown(player))
+                maxHoverY = -0.2D;
+            if ((charge > 60.0D || player.capabilities.isCreativeMode)
+                    && IC2.keyboard.isBoostKeyDown(player))
+                if (IC2.keyboard.isSneakKeyDown(player) || IC2.keyboard.isJumpKeyDown(player)) {
+                    maxHoverY *= 2.0D;
                     ElectricItem.manager.discharge(stack, 60, Integer.MAX_VALUE, true, false);
                 }
-            if (paramEntityPlayer.motionY > d) {
-                paramEntityPlayer.motionY = d;
-                if (d5 > paramEntityPlayer.motionY)
-                    paramEntityPlayer.motionY = d5;
+            if (player.motionY > maxHoverY) {
+                player.motionY = maxHoverY;
+                if (motionY > player.motionY)
+                    player.motionY = motionY;
             }
         }
-        if (!paramEntityPlayer.capabilities.isCreativeMode && !paramEntityPlayer.onGround)
-            ElectricItem.manager.discharge(stack, 12, Integer.MAX_VALUE, true, false);
-        paramEntityPlayer.fallDistance = 0.0F;
-        paramEntityPlayer.distanceWalkedModified = 0.0F;
-        IC2.platform.resetPlayerInAirTime(paramEntityPlayer);
+        if (!player.capabilities.isCreativeMode && !player.onGround)
+            ElectricItem.manager.discharge(stack, usage, Integer.MAX_VALUE, true, false);
+        player.fallDistance = 0.0F;
+        player.distanceWalkedModified = 0.0F;
+        IC2.platform.resetPlayerInAirTime(player);
         return true;
     }
 

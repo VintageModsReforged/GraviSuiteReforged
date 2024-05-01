@@ -25,14 +25,19 @@ public enum TextFormatter {
     }
 
     public String literal(String text) {
-        return this.colorCode + text + "\2477";
+        return this.colorCode + text + GRAY;
     }
 
     public String format(String text) {
-        return this.colorCode + LangHelper.format(text) + "\2477";
+        return this.colorCode + LangHelper.format(text) + GRAY;
     }
 
     public String format(String text, Object... args) {
-        return this.colorCode + LangHelper.format(text, args) + "\2477";
+        return this.colorCode + LangHelper.format(text, args) + GRAY;
+    }
+
+    @Override
+    public String toString() {
+        return this.colorCode;
     }
 }
