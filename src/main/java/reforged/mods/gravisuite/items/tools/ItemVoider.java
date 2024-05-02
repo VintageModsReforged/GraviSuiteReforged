@@ -37,7 +37,6 @@ public class ItemVoider extends ItemToolElectric {
         }
     }
 
-    // right click
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
@@ -104,7 +103,6 @@ public class ItemVoider extends ItemToolElectric {
                 if (drop.isItemEqual(filterStack)) {
                     ElectricItem.manager.use(voider, 1, player);
                     e.item.setDead();
-                    System.out.println("voided");
                     e.setCanceled(true);
                 }
             }
