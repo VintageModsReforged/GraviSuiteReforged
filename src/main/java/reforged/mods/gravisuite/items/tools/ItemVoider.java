@@ -98,12 +98,14 @@ public class ItemVoider extends ItemToolElectric {
         }
         if (voider != null && doWork) {
             ItemStack filterStack = ItemStack.loadItemStackFromNBT(Helpers.getOrCreateTag(voider).getCompoundTag("FilterStack"));
-            ItemStack drop = e.item.getEntityItem();
-            if (ElectricItem.manager.canUse(voider, 1)) {
-                if (drop.isItemEqual(filterStack)) {
-                    ElectricItem.manager.use(voider, 1, player);
-                    e.item.setDead();
-                    e.setCanceled(true);
+            if (filterStack != null) {
+                ItemStack drop = e.item.getEntityItem();
+                if (ElectricItem.manager.canUse(voider, 1)) {
+                    if (drop.isItemEqual(filterStack)) {
+                        ElectricItem.manager.use(voider, 1, player);
+                        e.item.setDead();
+                        e.setCanceled(true);
+                    }
                 }
             }
         }
