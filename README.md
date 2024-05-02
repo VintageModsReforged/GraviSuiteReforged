@@ -151,5 +151,22 @@ Very useful helper when mining.
     - Tier: 1
     - Max Transfer: 500 EU/t
     - Max Capacity: 10.000 EU
+---
+### Voider
+<img src="demo/items/voider.png" style="border: solid 5px #CCC">
+
+Another useful helper when mining.
+- Features:
+  - Voids items based on filter. 
+  - `RightClick` with it on block to se the filter. 
+    - Usage: 500 EU/filter
+  - Press `Sneak+RightClick` while in hand to remove items from player inventory.
+    - Usage: 5 EU/item
+  - Keep it in your hotbar to void items on pick up.
+    - Usage: ~8 EU/item
+- Specifications:
+  - Tier: 1
+  - Max Transfer: 500 EU/t
+  - Max Capacity: 10.000 EU
 ## Credits
 I don't own the idea. Full credit for the idea goes to [SeNtiMeL](https://forum.industrial-craft.net/thread/6915-ic2-exp-1-7-10-gravitation-suite-v2-0-3/) and IC2 Dev team. 
