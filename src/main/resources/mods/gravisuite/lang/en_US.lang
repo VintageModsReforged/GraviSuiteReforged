@@ -30,6 +30,7 @@ item.advanced_chainsaw.name=Advanced Chainsaw
 item.gravitool.name=GraviTool
 item.magnet.name=Magnet
 item.vajra.name=Vajra
+item.voider.name=Voider
 item.wooden_hammer.name=Wooden Hammer
 item.stone_hammer.name=Stone Hammer
 item.iron_hammer.name=Iron Hammer
@@ -92,5 +93,7 @@ message.info.press.to2=Press %1$s and %2$s to change %3$s
 message.info.press.to.enable1=Press %1$s to enable %2$s
 message.info.press.to.enable2=Press %1$s and %2$s to enable %3$s
 message.vein.active=Active Vein Miner
+
+message.info.filter=Void Filter: %s
 
 

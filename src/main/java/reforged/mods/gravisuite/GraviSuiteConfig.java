@@ -43,6 +43,7 @@ public class GraviSuiteConfig {
     public static int ADVANCED_JETPACK_ID = 30234;
     public static int ADVANCED_NANO_ID = 30235;
     public static int ADVANCED_QUANT_ID = 30236;
+    public static int VOIDER_ID = 30237;
 
     public static void initConfig() {
 
@@ -63,6 +64,7 @@ public class GraviSuiteConfig {
         ADVANCED_JETPACK_ID = getId("advanced_jetpack_id", ADVANCED_JETPACK_ID, "advanced_jetpack_id");
         ADVANCED_NANO_ID = getId("advanced_nano_id", ADVANCED_NANO_ID, "advanced_nano_id");
         ADVANCED_QUANT_ID = getId("advanced_quant_id", ADVANCED_QUANT_ID, "advanced_quant_id");
+        VOIDER_ID = getId("voider_id", VOIDER_ID, "voider_id");
 
         if (id_config.hasChanged()) id_config.save();
 

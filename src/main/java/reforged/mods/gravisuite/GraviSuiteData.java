@@ -17,7 +17,7 @@ public class GraviSuiteData {
     public static Item component;
     public static ItemStack superconductor_cover, superconductor, cooling_core, gravi_engine, magnetron, vajra_core, engine_booster;
     public static Item advanced_diamond_drill, advanced_iridium_drill, advanced_chainsaw;
-    public static Item vajra, magnet, gravitool, debug;
+    public static Item vajra, magnet, gravitool, voider, debug;
     public static Item advanced_lappack, ultimate_lappack;
     public static Item advanced_jetpack, advanced_nano, advanced_quant;
 
@@ -39,6 +39,7 @@ public class GraviSuiteData {
         vajra = new ItemVajra();
         magnet = new ItemMagnet();
         gravitool = new ItemGraviTool();
+        voider = new ItemVoider();
 
         advanced_lappack = new ItemLappack.ItemAdvancedLappack();
         ultimate_lappack = new ItemLappack.ItemUltimateLappack();

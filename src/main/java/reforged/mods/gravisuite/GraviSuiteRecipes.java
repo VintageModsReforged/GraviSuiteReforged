@@ -156,5 +156,11 @@ public class GraviSuiteRecipes {
                 'C', Items.getItem("advancedCircuit"),
                 'D', Items.getItem("overclockerUpgrade"),
                 'F', Items.getItem("reactorVentDiamond"));
+
+        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.voider),
+                "CLC", "LSL", "CLC",
+                'C', Items.getItem("advancedCircuit"),
+                'L', Items.getItem("lavaCell"),
+                'S', Items.getItem("odScanner"));
     }
 }
