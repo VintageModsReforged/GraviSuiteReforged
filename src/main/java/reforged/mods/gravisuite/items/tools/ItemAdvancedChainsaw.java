@@ -14,7 +14,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -46,7 +45,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
 
     public ItemAdvancedChainsaw() {
-        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 45000, EnumRarity.uncommon, EnumToolMaterial.EMERALD);
+        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 45000, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 30.0F;
         MinecraftForge.EVENT_BUS.register(this);
         init();

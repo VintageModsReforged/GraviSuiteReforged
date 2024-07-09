@@ -17,8 +17,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.proxy.ClientProxy;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
@@ -35,7 +37,7 @@ public class ItemMagnet extends ItemToolElectric {
     public byte MAGNET_TICKER;
 
     public ItemMagnet() {
-        super(GraviSuiteConfig.MAGNET_ID, "magnet", 1, 500, 10000, EnumRarity.uncommon, EnumToolMaterial.WOOD);
+        super(GraviSuiteConfig.MAGNET_ID, "magnet", 1, 500, 10000, EnumToolMaterial.WOOD);
         this.MAGNET_TICKER = 10;
     }
 
@@ -45,7 +47,7 @@ public class ItemMagnet extends ItemToolElectric {
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         super.addInformation(stack, player, tooltip, isDebugMode);
         if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
+            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -84,7 +86,7 @@ public class ItemMagnet extends ItemToolElectric {
                 ticker--;
                 tag.setByte(NBT_TICKER, ticker);
             }
-            if (ClientProxy.magnet_toggle.pressed && ticker <= 0) {
+            if (GraviSuite.keyboard.isMagnetToggleKeyDown(player) && ticker <= 0) {
                 changeMode(stack, player);
                 tag.setByte(NBT_TICKER, MAGNET_TICKER);
             }

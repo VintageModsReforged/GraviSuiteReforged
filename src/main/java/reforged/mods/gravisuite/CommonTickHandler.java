@@ -33,6 +33,14 @@ public class CommonTickHandler implements ITickHandler {
                             player.capabilities.isFlying = false;
                         }
                     }
+                } else {
+                    CommonProxy.wasUndressed.put(player, true);
+                    if (!player.capabilities.isCreativeMode) {
+                        if (CommonProxy.isFlyActive(player)) {
+                            player.capabilities.allowFlying = false;
+                            player.capabilities.isFlying = false;
+                        }
+                    }
                 }
             } else {
                 CommonProxy.wasUndressed.put(player, true);

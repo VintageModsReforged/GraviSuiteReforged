@@ -25,14 +25,12 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     public int tier, transfer, capacity;
     public int energy_per_damage, damage_priority;
     public double base_absorption, damage_absorption;
-    public EnumRarity rarity;
     public String name;
 
-    public ItemArmorElectric(int id, String name, int tier, int transfer, int capacity, EnumRarity rarity) {
+    public ItemArmorElectric(int id, String name, int tier, int transfer, int capacity) {
         super(id, name);
         this.setMaxDamage(27);
         this.name = name;
-        this.rarity = rarity;
         this.tier = tier;
         this.transfer = transfer;
         this.capacity = capacity;
@@ -43,16 +41,16 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
         this.damage_absorption = 0.0D;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack stack) {
+        return EnumRarity.uncommon;
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(int id, CreativeTabs creativeTab, List items) {
         Helpers.addChargeVariants(this, items);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack stack) {
-        return this.rarity;
     }
 
     @SideOnly(Side.CLIENT)

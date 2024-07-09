@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
@@ -33,8 +32,8 @@ public class ItemAdvancedDrill extends ItemToolElectric {
     public Set<Material> mineableBlockMaterials = new HashSet<Material>();
     public Set<Block> mineableBlocks = new HashSet<Block>();
 
-    public ItemAdvancedDrill(int id, String name, int tier, int transfer, int capacity, EnumRarity rarity) {
-        super(id, name, tier, transfer, capacity, rarity, EnumToolMaterial.EMERALD);
+    public ItemAdvancedDrill(int id, String name, int tier, int transfer, int capacity) {
+        super(id, name, tier, transfer, capacity, EnumToolMaterial.EMERALD);
         init();
     }
 
@@ -274,7 +273,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
     public static class ItemAdvancedDiamondDrill extends ItemAdvancedDrill {
 
         public ItemAdvancedDiamondDrill() {
-            super(GraviSuiteConfig.ADVANCED_DIAMOND_DRILL, "advanced_diamond_drill", 2, 500, 45000, EnumRarity.uncommon);
+            super(GraviSuiteConfig.ADVANCED_DIAMOND_DRILL, "advanced_diamond_drill", 2, 500, 45000);
         }
     }
 
@@ -284,9 +283,15 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         private final float efficiency;
 
         public ItemAdvancedIridiumDrill() {
-            super(GraviSuiteConfig.ADVANCED_IRIDIUM_DRILL, "advanced_iridium_drill", 3, 5000, 100000, EnumRarity.rare);
+            super(GraviSuiteConfig.ADVANCED_IRIDIUM_DRILL, "advanced_iridium_drill", 3, 5000, 100000);
             this.energy_per_use = 1000;
             this.efficiency = 24.0F;
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public EnumRarity getRarity(ItemStack stack) {
+            return EnumRarity.rare;
         }
 
         @SuppressWarnings("unchecked")

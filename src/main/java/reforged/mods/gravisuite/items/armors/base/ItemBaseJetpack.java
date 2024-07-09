@@ -8,12 +8,12 @@ import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import reforged.mods.gravisuite.proxy.ClientProxy;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -23,7 +23,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
 
     public static byte TOGGLE_TIMER;
     public boolean LAST_JETPACK_USED = false;
-    public AudioSource AUDIO_SOURCE;
+    public static AudioSource AUDIO_SOURCE;
     public double HOVER_FALL_SPEED;
 
     public static final String NBT_ACTIVE = "fly_active";
@@ -31,7 +31,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
     public static final String NBT_TOGGLE_TIMER = "toggle_timer";
 
     public ItemBaseJetpack(int id, String name) {
-        super(id, name, 2, 5000, 1000000, EnumRarity.uncommon);
+        super(id, name, 2, 5000, 1000000);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }
@@ -50,7 +50,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         tooltip.add(Refs.jetpack_engine_gold + " " + jetpackStatus);
         tooltip.add(Refs.jetpack_hover_gold + " " + hoverStatus);
         if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.engine_toggle.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
+            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.JETPACK_HOVER + ".stat"));
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
         } else {
@@ -66,7 +66,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         byte toggleTimer = tag.getByte(NBT_TOGGLE_TIMER);
         boolean jetpackUsed = false;
 
-        if (ClientProxy.engine_toggle.pressed && toggleTimer <= 0) {
+        if (GraviSuite.keyboard.isEngineToggleKeyDown(player) && toggleTimer <= 0) {
             switchFlyState(player, stack);
         }
 
@@ -82,24 +82,35 @@ public class ItemBaseJetpack extends ItemArmorElectric {
             tag.setByte(NBT_TOGGLE_TIMER, toggleTimer);
         }
         if (IC2.platform.isRendering()) {
-            if (LAST_JETPACK_USED != jetpackUsed) {
-                if (jetpackUsed) {
-                    if (this.AUDIO_SOURCE == null) {
-                        this.AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack,
-                                "Tools/Jetpack/JetpackLoop.ogg", true, false, IC2.audioManager.defaultVolume);
-                    }
-                    if (this.AUDIO_SOURCE != null) {
-                        this.AUDIO_SOURCE.play();
-                    }
-                } else if (this.AUDIO_SOURCE != null) {
-                    this.AUDIO_SOURCE.remove();
-                    this.AUDIO_SOURCE = null;
+            createSound(player, jetpackUsed);
+        }
+    }
+
+    public void createSound(EntityPlayer player, boolean used) {
+        if (LAST_JETPACK_USED != used) {
+            if (used) {
+                if (AUDIO_SOURCE == null) {
+                    this.AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack,
+                            "Tools/Jetpack/JetpackLoop.ogg", true, false, IC2.audioManager.defaultVolume);
                 }
-                LAST_JETPACK_USED = jetpackUsed ;
+                if (AUDIO_SOURCE != null) {
+                    AUDIO_SOURCE.play();
+                }
+            } else if (AUDIO_SOURCE != null) {
+                AUDIO_SOURCE.remove();
+                AUDIO_SOURCE = null;
             }
-            if (this.AUDIO_SOURCE != null) {
-                this.AUDIO_SOURCE.updatePosition();
-            }
+            LAST_JETPACK_USED = used ;
+        }
+        if (AUDIO_SOURCE != null) {
+            AUDIO_SOURCE.updatePosition();
+        }
+    }
+
+    public static void removeSound() {
+        if (AUDIO_SOURCE != null) {
+            AUDIO_SOURCE.remove();
+            AUDIO_SOURCE = null;
         }
     }
 

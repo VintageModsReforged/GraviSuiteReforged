@@ -9,10 +9,8 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.GraviSuiteData;
-import reforged.mods.gravisuite.GraviSuiteRecipes;
-import reforged.mods.gravisuite.CommonTickHandler;
+import reforged.mods.gravisuite.*;
+import reforged.mods.gravisuite.utils.LangHelper;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.HashMap;
@@ -25,7 +23,8 @@ public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
         TickRegistry.registerTickHandler(new CommonTickHandler(), Side.SERVER);
-        GraviSuiteData.init();
+        GraviSuiteConfig.initConfig();
+        LangHelper.init();
     }
 
     public void init(FMLInitializationEvent e) {

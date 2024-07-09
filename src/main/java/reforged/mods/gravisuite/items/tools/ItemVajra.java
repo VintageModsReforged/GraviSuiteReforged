@@ -29,7 +29,13 @@ import java.util.Map;
 public class ItemVajra extends ItemToolElectric {
 
     public ItemVajra() {
-        super(GraviSuiteConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumRarity.epic, EnumToolMaterial.EMERALD);
+        super(GraviSuiteConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumToolMaterial.EMERALD);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack stack) {
+        return EnumRarity.epic;
     }
 
     @SideOnly(Side.CLIENT)

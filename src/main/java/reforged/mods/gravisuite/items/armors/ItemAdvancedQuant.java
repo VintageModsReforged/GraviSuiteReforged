@@ -18,8 +18,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
+import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
+import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.proxy.ClientProxy;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -39,7 +42,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
     static boolean LAST_USED = false;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 3, 50000, 10000000, EnumRarity.epic);
+        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 3, 50000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPEED = 0.2F;
@@ -47,6 +50,12 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         TOGGLE_TIMER = 5;
         MinecraftForge.EVENT_BUS.register(this);
         this.energy_per_damage = 2000;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack stack) {
+        return EnumRarity.epic;
     }
 
     @SideOnly(Side.CLIENT)
@@ -61,7 +70,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         tooltip.add(Refs.gravitation_engine + " " + gravitationEngine);
         tooltip.add(Refs.gravitation_levitation + " " + levitationStatus);
         if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
+            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.LEVITATION + ".stat"));
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
         } else {
@@ -77,7 +86,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         byte toggleTimer = tag.getByte("toggleTimer");
         boolean used = false;
 
-        if (ClientProxy.engine_toggle.pressed && toggleTimer == 0) {
+        if (GraviSuite.keyboard.isEngineToggleKeyDown(player) && toggleTimer == 0) {
             switchFlyState(player, itemStack);
         }
 
@@ -114,7 +123,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         }
     }
 
-    public static void createSound(EntityPlayer player, boolean used) {
+    public void createSound(EntityPlayer player, boolean used) {
         if (LAST_USED != used) {
             if (used) {
                 if (AUDIO_SOURCE == null) {

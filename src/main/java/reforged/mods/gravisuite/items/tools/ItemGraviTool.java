@@ -48,7 +48,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     public String TOOL_WRENCH = "Tools/wrench.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", 2, 5000, 100000, EnumRarity.uncommon, EnumToolMaterial.IRON);
+        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", 2, 5000, 100000, EnumToolMaterial.IRON);
     }
 
     @SideOnly(Side.CLIENT)

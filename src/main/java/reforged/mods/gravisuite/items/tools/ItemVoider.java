@@ -22,7 +22,7 @@ import java.util.List;
 public class ItemVoider extends ItemToolElectric {
 
     public ItemVoider() {
-        super(GraviSuiteConfig.VOIDER_ID, "voider", 1, 500, 10000, EnumRarity.uncommon, EnumToolMaterial.STONE);
+        super(GraviSuiteConfig.VOIDER_ID, "voider", 1, 500, 10000, EnumToolMaterial.STONE);
         MinecraftForge.EVENT_BUS.register(this);
     }
 

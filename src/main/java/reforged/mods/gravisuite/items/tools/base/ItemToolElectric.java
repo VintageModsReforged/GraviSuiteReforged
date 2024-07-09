@@ -23,29 +23,27 @@ import java.util.Locale;
 public class ItemToolElectric extends ItemToolBase implements IElectricItem {
 
     public int tier, transfer, capacity;
-    public EnumRarity rarity;
     public String name;
 
-    protected ItemToolElectric(int id, String name, int tier, int transfer, int capacity, EnumRarity rarity, EnumToolMaterial material) {
+    protected ItemToolElectric(int id, String name, int tier, int transfer, int capacity, EnumToolMaterial material) {
         super(id, name, material);
         this.setMaxDamage(27);
         this.name = name;
         this.tier = tier;
         this.transfer = transfer;
         this.capacity = capacity;
-        this.rarity = rarity;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack stack) {
+        return EnumRarity.uncommon;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister icons) {
         this.itemIcon = icons.registerIcon(Refs.id + ":" + this.name);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack stack) {
-        return this.rarity;
     }
 
     @Override

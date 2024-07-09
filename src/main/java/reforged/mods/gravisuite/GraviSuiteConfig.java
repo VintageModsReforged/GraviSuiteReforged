@@ -1,6 +1,6 @@
 package reforged.mods.gravisuite;
 
-import net.minecraft.client.Minecraft;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import reforged.mods.gravisuite.utils.Refs;
@@ -47,7 +47,7 @@ public class GraviSuiteConfig {
 
     public static void initConfig() {
 
-        id_config = new Configuration(new File(Minecraft.getMinecraftDir(), "/config/gravisuite/ids.cfg"));
+        id_config = new Configuration(new File((File) FMLInjectionData.data()[6], "config/gravisuite/ids.cfg"));
         id_config.load();
 
         COMPONENT_ID = getId("component_id", COMPONENT_ID, "component");
@@ -68,7 +68,7 @@ public class GraviSuiteConfig {
 
         if (id_config.hasChanged()) id_config.save();
 
-        main_config = new Configuration(new File(Minecraft.getMinecraftDir(), "/config/gravisuite/common.cfg"));
+        main_config = new Configuration(new File((File)FMLInjectionData.data()[6], "config/gravisuite/common.cfg"));
 
         enable_hud = getBoolean(Refs.hud, "enable_hud", enable_hud, "Should GraviSuite display the HUD with info about electric armor?");
         use_fixed_values = getBoolean(Refs.hud, "enable_hud_fixed", use_fixed_values, "Should GraviSuite HUD use fixed values from below?");
@@ -91,7 +91,7 @@ public class GraviSuiteConfig {
 
         if (main_config.hasChanged()) main_config.save();
 
-        info = new File(Minecraft.getMinecraftDir(), "/config/gravisuite/langs.md");
+        info = new File((File)FMLInjectionData.data()[6], "config/gravisuite/langs.md");
 
         try {
             FileWriter writer = new FileWriter(info);
