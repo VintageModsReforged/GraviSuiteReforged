@@ -1,11 +1,6 @@
 package reforged.mods.gravisuite.items.tools.base;
 
 import ic2.core.IC2;
-import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.GraviSuiteData;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -18,6 +13,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.GraviSuiteData;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.HashSet;
 import java.util.Locale;

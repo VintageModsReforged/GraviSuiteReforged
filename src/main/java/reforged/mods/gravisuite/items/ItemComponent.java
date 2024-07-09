@@ -2,11 +2,11 @@ package reforged.mods.gravisuite.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 

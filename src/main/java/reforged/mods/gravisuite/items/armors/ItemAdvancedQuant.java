@@ -1,16 +1,12 @@
 package reforged.mods.gravisuite.items.armors;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
-import reforged.mods.gravisuite.proxy.ClientProxy;
-import reforged.mods.gravisuite.proxy.CommonProxy;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +20,13 @@ import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
+import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
+import reforged.mods.gravisuite.proxy.CommonProxy;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
@@ -40,13 +43,19 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     static boolean LAST_USED = false;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", EnumRarity.epic, 3, 50000, 10000000);
+        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 3, 50000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPPED = 0.2F;
         this.BOOST_MULTIPLIER = 3;
         MinecraftForge.EVENT_BUS.register(this);
         this.TOGGLE_TIMER = 5;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack stack) {
+        return EnumRarity.epic;
     }
 
     @SuppressWarnings({"unchecked"})
@@ -60,7 +69,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         tooltip.add(Refs.gravitation_engine + " " + gravitationEngine);
         tooltip.add(Refs.gravitation_levitation + " " + levitationStatus);
         if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.ENGINE_TOGGLE.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
+            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.LEVITATION + ".stat"));
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
         } else {
@@ -75,7 +84,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         boolean used = false;
 
 
-        if (ClientProxy.ENGINE_TOGGLE.pressed && toggleTimer == 0) {
+        if (GraviSuite.KEYBOARD.isEngineToggleKeyDown(player) && toggleTimer == 0) {
             switchFlyState(player, itemStack);
         }
 

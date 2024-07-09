@@ -4,11 +4,11 @@ import cpw.mods.fml.common.Loader;
 import ic2.api.Ic2Recipes;
 import ic2.api.Items;
 import ic2.core.util.StackUtil;
-import reforged.mods.gravisuite.utils.Helpers;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import reforged.mods.gravisuite.utils.Helpers;
 
 public class GraviSuiteRecipes {
 

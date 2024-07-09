@@ -2,15 +2,15 @@ package reforged.mods.gravisuite.items.armors;
 
 import ic2.api.Items;
 import ic2.core.item.ElectricItem;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
-import reforged.mods.gravisuite.utils.Helpers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
+import reforged.mods.gravisuite.utils.Helpers;
 
 public class ItemJetpack {
 

@@ -1,18 +1,18 @@
 package reforged.mods.gravisuite.utils;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraft.util.StatCollector;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import net.minecraft.util.StatCollector;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-public final class I18n {
+public final class LangHelper {
 
-    public I18n() {
+    public LangHelper() {
         throw new UnsupportedOperationException();
     }
 
@@ -31,7 +31,7 @@ public final class I18n {
         InputStream stream = null;
         InputStreamReader reader = null;
         try {
-            stream = I18n.class.getResourceAsStream("/mods/gravisuite/lang/" + lang + ".lang");
+            stream = LangHelper.class.getResourceAsStream("/mods/gravisuite/lang/" + lang + ".lang");
             if (stream == null) {
                 throw new IOException("Couldn't load language file.");
             }

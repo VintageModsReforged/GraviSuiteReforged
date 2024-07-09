@@ -5,7 +5,7 @@ import cpw.mods.fml.common.TickType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
-import reforged.mods.gravisuite.proxy.ClientProxy;
+import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -17,21 +17,47 @@ public class ClientTickHandler implements ITickHandler {
 
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData) {
+        if (type.contains(TickType.CLIENT)) {
+            GraviSuite.KEYBOARD.sendKeyUpdate();
+        }
         if (type.contains(TickType.PLAYER)) {
             EntityPlayer player = (EntityPlayer) tickData[0];
             ItemStack itemstack = player.getCurrentArmor(2);
             if (itemstack != null) {
                 if(itemstack.getItem() instanceof ItemAdvancedQuant) {
                     if (firstLoad && CommonProxy.wasUndressed(player)) {
-                        ClientProxy.sendPacket("firstLoad", 1);
+                        GraviSuite.NETWORK.sendWorldLoadState();
                         if (ItemAdvancedQuant.readFlyStatus(itemstack)) {
                             ItemAdvancedQuant.saveFlyStatus(itemstack, false);
                             firstLoad = false;
                         }
                     }
+                    if (!ItemAdvancedQuant.readFlyStatus(itemstack)) {
+                        if (!player.capabilities.isCreativeMode) {
+                            player.capabilities.allowFlying = false;
+                            player.capabilities.isFlying = false;
+                        }
+                    }
+                } else {
+                    ItemAdvancedQuant.removeSound();
+                    CommonProxy.wasUndressed.put(player, true);
+                    if (!player.capabilities.isCreativeMode) {
+                        if (CommonProxy.isFlyActive(player)) {
+                            player.capabilities.allowFlying = false;
+                            player.capabilities.isFlying = false;
+                        }
+                    }
+                }
+                if (!(itemstack.getItem() instanceof ItemBaseJetpack)) {
+                    ItemBaseJetpack.removeSound();
                 }
             } else {
-                ItemAdvancedQuant.removeSound();
+                if (ItemBaseJetpack.AUDIO_SOURCE != null) {
+                    ItemBaseJetpack.removeSound();
+                }
+                if (ItemAdvancedQuant.AUDIO_SOURCE != null) {
+                    ItemAdvancedQuant.removeSound();
+                }
                 CommonProxy.wasUndressed.put(player, true);
                 if (!player.capabilities.isCreativeMode) {
                     if (CommonProxy.isFlyActive(player)) {
@@ -48,7 +74,7 @@ public class ClientTickHandler implements ITickHandler {
 
     @Override
     public EnumSet<TickType> ticks() {
-        return EnumSet.of(TickType.PLAYER, TickType.WORLDLOAD);
+        return EnumSet.of(TickType.PLAYER, TickType.WORLDLOAD, TickType.CLIENT);
     }
 
     @Override

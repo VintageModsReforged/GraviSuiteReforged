@@ -5,16 +5,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
-import net.minecraft.entity.item.EntityXPOrb;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.proxy.ClientProxy;
-import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.Helpers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +17,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
     public byte MAGNET_TICKER;
 
     public ItemMagnet() {
-        super(GraviSuiteMainConfig.MAGNET_ID, "magnet", 1, 500, 10000, EnumRarity.uncommon, EnumToolMaterial.IRON);
+        super(GraviSuiteMainConfig.MAGNET_ID, "magnet", 1, 500, 10000, EnumToolMaterial.IRON);
         this.setIconIndex(Refs.TOOLS_ID + 3);
         this.MAGNET_TICKER = 10;
     }
@@ -47,7 +47,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
         super.addInformation(stack, player, tooltip, debugMode);
         if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(ClientProxy.MAGNET_TOGGLE.keyDescription), Refs.MAGNET_MODE + ".stat"));
+            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -90,7 +90,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 ticker--;
                 tag.setByte(NBT_TICKER, ticker);
             }
-            if (ClientProxy.MAGNET_TOGGLE.pressed && ticker <= 0) {
+            if (GraviSuite.KEYBOARD.isMagnetToggleKeyDown(player) && ticker <= 0) {
                 changeMode(stack, player);
             }
             if (!tag.getBoolean(NBT_ACTIVE))

@@ -1,16 +1,16 @@
 package reforged.mods.gravisuite;
 
 import cpw.mods.fml.common.Loader;
+import net.minecraft.item.EnumArmorMaterial;
+import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.EnumHelper;
 import reforged.mods.gravisuite.items.ItemComponent;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.ItemJetpack;
 import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.tools.*;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseHammer;
-import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.EnumToolMaterial;
-import net.minecraft.item.Item;
-import net.minecraftforge.common.EnumHelper;
 
 public class GraviSuiteData {
 

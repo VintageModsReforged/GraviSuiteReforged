@@ -1,6 +1,5 @@
 package reforged.mods.gravisuite.utils;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.StatCollector;
 
 public class Refs {
@@ -14,10 +13,16 @@ public class Refs {
     public static final String COMMON_PROXY = "reforged.mods.gravisuite.proxy.CommonProxy";
     public static final String CLIENT_PROXY = "reforged.mods.gravisuite.proxy.ClientProxy";
 
+    public static final String KEYBOARD_CLIENT = "reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient";
+    public static final String KEYBOARD_COMMON = "reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard";
+
+    public static final String NETWORK_CLIENT = "reforged.mods.gravisuite.network.NetworkHandlerClient";
+    public static final String NETWORK_COMMON = "reforged.mods.gravisuite.network.NetworkHandler";
+
     public static final int COMPONENTS_ICON_ID = 0, ARMOR_PACK_ID = 16, TOOLS_ID = 32, GRAVITOOL_ID = 48, HAMMERS_ID = 64;
     public static final String IDS = "ids", GENERAL = "general", COMPAT = "compat";
 
-    public static final String SNEAK_KEY = StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyDescription);
+    public static final String SNEAK_KEY = StatCollector.translateToLocal("key.sneak");
 
     // Messages
 

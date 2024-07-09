@@ -5,11 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -24,15 +19,29 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class ItemVajra extends ItemBaseElectricItem {
 
     public ItemVajra() {
-        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumRarity.epic, EnumToolMaterial.EMERALD);
+        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 1.0F;
         this.setIconIndex(Refs.TOOLS_ID + 2);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack stack) {
+        return EnumRarity.epic;
     }
 
     @Override

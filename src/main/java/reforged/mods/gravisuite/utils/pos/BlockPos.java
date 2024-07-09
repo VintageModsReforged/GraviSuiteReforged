@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 
-
 import java.util.Iterator;
 import java.util.List;
 

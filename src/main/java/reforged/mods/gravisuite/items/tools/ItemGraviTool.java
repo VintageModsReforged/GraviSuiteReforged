@@ -12,15 +12,9 @@ import ic2.core.audio.PositionSpec;
 import ic2.core.block.machine.tileentity.TileEntityTerra;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
-import net.minecraft.entity.item.EntityItem;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.utils.BlockHelper;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,6 +22,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.BlockHelper;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
     public String TOOL_TREETAP = "Tools/Treetap.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", 2, 1000, 100000, EnumRarity.uncommon, EnumToolMaterial.IRON);
+        super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", 2, 1000, 100000, EnumToolMaterial.IRON);
         this.setIconIndex(Refs.GRAVITOOL_ID);
     }
 

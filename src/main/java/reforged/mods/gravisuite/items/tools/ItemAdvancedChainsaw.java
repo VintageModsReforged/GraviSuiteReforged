@@ -7,10 +7,6 @@ import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -19,7 +15,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,6 +25,10 @@ import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,7 +43,7 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
     public static AudioSource audioSource;
 
     public ItemAdvancedChainsaw() {
-        super(GraviSuiteMainConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumRarity.uncommon, EnumToolMaterial.EMERALD);
+        super(GraviSuiteMainConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 30.0F;
         MinecraftForge.EVENT_BUS.register(this);
         this.setIconIndex(Refs.TOOLS_ID + 1);

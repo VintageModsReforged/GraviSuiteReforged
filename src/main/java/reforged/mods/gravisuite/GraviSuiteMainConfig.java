@@ -1,9 +1,9 @@
 package reforged.mods.gravisuite;
 
-import reforged.mods.gravisuite.utils.Refs;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
 

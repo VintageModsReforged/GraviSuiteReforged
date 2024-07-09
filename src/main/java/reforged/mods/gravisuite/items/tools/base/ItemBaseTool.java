@@ -1,6 +1,5 @@
 package reforged.mods.gravisuite.items.tools.base;
 
-import reforged.mods.gravisuite.GraviSuite;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +11,7 @@ import net.minecraft.network.packet.Packet53BlockChange;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.Nullable;
+import reforged.mods.gravisuite.GraviSuite;
 
 public class ItemBaseTool extends ItemTool {
 

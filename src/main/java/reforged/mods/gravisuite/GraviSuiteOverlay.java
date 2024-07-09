@@ -4,17 +4,17 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import ic2.api.IElectricItem;
 import ic2.core.IC2;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.items.armors.IHasOverlay;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 import java.util.EnumSet;
 

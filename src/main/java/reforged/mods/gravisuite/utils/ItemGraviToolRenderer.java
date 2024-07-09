@@ -1,10 +1,10 @@
 package reforged.mods.gravisuite.utils;
 
-import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.items.tools.ItemGraviTool;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.items.tools.ItemGraviTool;
 
 import static reforged.mods.gravisuite.items.tools.ItemGraviTool.readToolMode;
 
