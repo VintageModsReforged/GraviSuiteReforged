@@ -32,6 +32,7 @@ public class ItemBaseElectricItem extends ItemBaseTool implements IElectricItem 
         tooltip.add(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier());
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public EnumRarity getRarity(ItemStack stack) {
         return EnumRarity.uncommon;
