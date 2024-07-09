@@ -1,6 +1,6 @@
 package reforged.mods.gravisuite;
 
-import net.minecraft.client.Minecraft;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import reforged.mods.gravisuite.utils.Refs;
@@ -49,7 +49,7 @@ public class GraviSuiteMainConfig {
     public static int HUD_POSITION = 1;
 
     public static void initMainConfig() {
-        MAIN_CONFIG = new Configuration(new File(Minecraft.getMinecraftDir(), "/config/gravisuite_main.cfg"));
+        MAIN_CONFIG = new Configuration(new File((File) FMLInjectionData.data()[6], "config/gravisuite_main.cfg"));
         MAIN_CONFIG.load();
 
         MAGNET_RANGE = getInt(Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
