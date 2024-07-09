@@ -27,8 +27,8 @@ public class ItemComponent extends Item {
     }
 
     @Override
-    public int getIconIndex(ItemStack stack) {
-        return stack.getItemDamage();
+    public int getIconFromDamage(int index) {
+        return index;
     }
 
     @Override
