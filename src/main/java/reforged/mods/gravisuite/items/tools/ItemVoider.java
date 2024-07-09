@@ -8,13 +8,16 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
@@ -32,6 +35,11 @@ public class ItemVoider extends ItemToolElectric {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         NBTTagCompound filterStackTag = tag.getCompoundTag("FilterStack");
         ItemStack filterStack = ItemStack.loadItemStackFromNBT(filterStackTag);
+        if (Helpers.isShiftKeyDown()) {
+            tooltip.add(Helpers.clickFor("Right Click", "message.info.filter.set"));
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+        }
         if (filterStack != null) {
             tooltip.add(TextFormatter.GOLD.format("message.info.filter", filterStack.getDisplayName()));
         }

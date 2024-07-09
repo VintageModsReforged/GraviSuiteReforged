@@ -192,4 +192,8 @@ public class Helpers {
     public static String pressXAndYForZ(String message, String key1, String key2, String action) {
         return TextFormatter.GRAY.format(message, TextFormatter.GOLD.literal(key1), TextFormatter.GOLD.literal(key2), TextFormatter.YELLOW.format(action));
     }
+
+    public static String clickFor(String key, String message) {
+        return TextFormatter.GRAY.format("message.info.click.block", TextFormatter.GOLD.literal(key), TextFormatter.YELLOW.format(message));
+    }
 }

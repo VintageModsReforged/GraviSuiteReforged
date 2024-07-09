@@ -92,8 +92,10 @@ message.info.press.to1=Press %1$s to change %2$s
 message.info.press.to2=Press %1$s and %2$s to change %3$s
 message.info.press.to.enable1=Press %1$s to enable %2$s
 message.info.press.to.enable2=Press %1$s and %2$s to enable %3$s
-message.vein.active=Active Vein Miner
+message.info.click.block=%1$s on block to %2$s
+message.info.filter.set=Set the filter
 
+message.vein.active=Active Vein Miner
 message.info.filter=Void Filter: %s
 
 
