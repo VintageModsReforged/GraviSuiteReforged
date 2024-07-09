@@ -11,14 +11,7 @@ public class GraviSuiteMainConfig {
 
     public static Configuration MAIN_CONFIG;
 
-    public static int SUPERCONDUCTOR_COVER_ID = 30219;
-    public static int SUPERCONDUCTOR_ID = 30220;
-    public static int COOLING_CORE_ID = 30221;
-    public static int GRAVI_ENGINE_ID = 30222;
-    public static int MAGNETRON_ID = 30223;
-    public static int VAJRA_CORE_ID = 30224;
-    public static int ENGINE_BOOSTER_ID = 30225;
-
+    public static int COMPONENT_ID = 30219;
     public static int ADVANCED_LAPPACK_ID = 30226;
     public static int ULTIMATE_LAPPACK_ID = 30227;
 
@@ -60,13 +53,7 @@ public class GraviSuiteMainConfig {
         LOG_WRENCH = getBoolean(Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         LANGUAGES = getString(Refs.GENERAL, "localization_list", "en_US", "Supported localizations. Place your <name>.lang file in gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
 
-        SUPERCONDUCTOR_COVER_ID = getId(Refs.IDS, "supercondustor_cover", SUPERCONDUCTOR_COVER_ID, "supercondustor_cover");
-        SUPERCONDUCTOR_ID = getId(Refs.IDS, "superconductor", SUPERCONDUCTOR_ID, "superconductor");
-        COOLING_CORE_ID = getId(Refs.IDS, "cooling_core", COOLING_CORE_ID, "cooling_core_id");
-        GRAVI_ENGINE_ID = getId(Refs.IDS, "gravi_engine", GRAVI_ENGINE_ID, "gravi_engine_id");
-        MAGNETRON_ID = getId(Refs.IDS, "magnetron", MAGNETRON_ID, "magnetron_id");
-        VAJRA_CORE_ID = getId(Refs.IDS, "vajra_core", VAJRA_CORE_ID, "vajra_core_id");
-        ENGINE_BOOSTER_ID = getId(Refs.IDS, "engine_booster", ENGINE_BOOSTER_ID, "engine_booster_id");
+        COMPONENT_ID = getId(Refs.IDS, "component_id", COMPONENT_ID, "component");
 
         ADVANCED_LAPPACK_ID = getId(Refs.IDS, "advanced_lappack", ADVANCED_LAPPACK_ID, "advanced_lappack_id");
         ULTIMATE_LAPPACK_ID = getId(Refs.IDS, "utlimate_lappack", ULTIMATE_LAPPACK_ID, "utlimate_lappack_id");

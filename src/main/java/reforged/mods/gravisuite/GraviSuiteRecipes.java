@@ -119,27 +119,27 @@ public class GraviSuiteRecipes {
                 'B', Item.ingotGold,
                 'C', Items.getItem("glassFiberCableItem"));
 
-        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.COOLING_CORE),
+        Ic2Recipes.addCraftingRecipe(GraviSuiteData.COOLING_CORE,
                 "RBR", "CDC", "RBR",
                 'R', Items.getItem("reactorCoolantSix"),
                 'B', Items.getItem("reactorHeatSwitchDiamond"),
                 'C', Items.getItem("reactorPlatingHeat"),
                 'D', Items.getItem("iridiumPlate"));
 
-        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.GRAVI_ENGINE),
+        Ic2Recipes.addCraftingRecipe(GraviSuiteData.GRAVI_ENGINE,
                 "RBR", "CDC", "RBR",
                 'R', Items.getItem("teslaCoil"),
                 'B', GraviSuiteData.SUPERCONDUCTOR,
                 'C', GraviSuiteData.COOLING_CORE,
                 'D', Items.getItem("hvTransformer"));
 
-        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.MAGNETRON),
+        Ic2Recipes.addCraftingRecipe(GraviSuiteData.MAGNETRON,
                 "ABA", "BCB", "ABA",
                 'A', Items.getItem("refinedIronIngot"),
                 'B', Items.getItem("copperIngot"),
                 'C', GraviSuiteData.SUPERCONDUCTOR);
 
-        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.VAJRA_CORE),
+        Ic2Recipes.addCraftingRecipe(GraviSuiteData.VAJRA_CORE,
                 " A ", "BCB", "FDF",
                 'A', GraviSuiteData.MAGNETRON,
                 'B', Items.getItem("iridiumPlate"),
@@ -147,7 +147,7 @@ public class GraviSuiteRecipes {
                 'F', GraviSuiteData.SUPERCONDUCTOR,
                 'D', Items.getItem("hvTransformer"));
 
-        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.ENGINE_BOOSTER),
+        Ic2Recipes.addCraftingRecipe(GraviSuiteData.ENGINE_BOOSTER,
                 "ABA", "CDC", "BFB",
                 'A', Item.lightStoneDust,
                 'B', Items.getItem("advancedAlloy"),
@@ -207,6 +207,10 @@ public class GraviSuiteRecipes {
 
     public static ItemStack count(Item item, int count) {
         ItemStack stack = new ItemStack(item);
+        return StackUtil.copyWithSize(stack, count);
+    }
+
+    public static ItemStack count(ItemStack stack, int count) {
         return StackUtil.copyWithSize(stack, count);
     }
 }

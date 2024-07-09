@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
 import reforged.mods.gravisuite.items.ItemComponent;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
@@ -17,7 +18,8 @@ public class GraviSuiteData {
     public static EnumArmorMaterial GRAVI_MATERIAL = EnumHelper.addArmorMaterial("GRAVI_MATERIAL", 0, new int[] {0, 0, 0, 0}, 0);
     public static EnumToolMaterial GEMS_MATERIAL = EnumHelper.addToolMaterial("GRAVI_TOOL_MATERIAL", 2, 512, 8.0F, 2, 14);
 
-    public static Item SUPERCONDUCTOR_COVER, SUPERCONDUCTOR, COOLING_CORE, GRAVI_ENGINE, MAGNETRON, VAJRA_CORE, ENGINE_BOOSTER;
+    public static Item COMPONENT;
+    public static ItemStack SUPERCONDUCTOR_COVER, SUPERCONDUCTOR, COOLING_CORE, GRAVI_ENGINE, MAGNETRON, VAJRA_CORE, ENGINE_BOOSTER;
 
     public static Item ADVANCED_LAPPACK, ULTIMATE_LAPPACK, ADVANCED_JETPACK, ADVANCED_NANO, ADVANCED_QUANT;
 
@@ -27,13 +29,14 @@ public class GraviSuiteData {
 
     public static void init() {
         // Components
-        SUPERCONDUCTOR_COVER = new ItemComponent(GraviSuiteMainConfig.SUPERCONDUCTOR_COVER_ID, "superconductor_cover", 0);
-        SUPERCONDUCTOR = new ItemComponent(GraviSuiteMainConfig.SUPERCONDUCTOR_ID, "superconductor", 1);
-        COOLING_CORE = new ItemComponent(GraviSuiteMainConfig.COOLING_CORE_ID, "cooling_core", 2);
-        GRAVI_ENGINE = new ItemComponent(GraviSuiteMainConfig.GRAVI_ENGINE_ID, "gravi_engine", 3);
-        MAGNETRON = new ItemComponent(GraviSuiteMainConfig.MAGNETRON_ID, "magnetron", 4);
-        VAJRA_CORE = new ItemComponent(GraviSuiteMainConfig.VAJRA_CORE_ID, "vajra_core", 5);
-        ENGINE_BOOSTER = new ItemComponent(GraviSuiteMainConfig.ENGINE_BOOSTER_ID, "engine_booster", 6);
+        COMPONENT = new ItemComponent();
+        SUPERCONDUCTOR_COVER = new ItemStack(COMPONENT, 1, 0);
+        SUPERCONDUCTOR = new ItemStack(COMPONENT, 1, 1);
+        COOLING_CORE = new ItemStack(COMPONENT, 1, 2);
+        GRAVI_ENGINE = new ItemStack(COMPONENT, 1, 3);
+        MAGNETRON = new ItemStack(COMPONENT, 1, 4);
+        VAJRA_CORE = new ItemStack(COMPONENT, 1, 5);
+        ENGINE_BOOSTER = new ItemStack(COMPONENT, 1, 6);
 
         ADVANCED_LAPPACK = new ItemLappack.ItemAdvancedLappack();
         ULTIMATE_LAPPACK = new ItemLappack.ItemUltimateLappack();
