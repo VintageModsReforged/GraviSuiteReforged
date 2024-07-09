@@ -15,9 +15,15 @@ public class Refs {
     public static final String client = "reforged.mods.gravisuite.proxy.ClientProxy";
     public static final String common = "reforged.mods.gravisuite.proxy.CommonProxy";
 
+    public static final String keyboardClient = "reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient";
+    public static final String keyboardCommon = "reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard";
+
+    public static final String networkClient = "reforged.mods.gravisuite.network.NetworkHandlerClient";
+    public static final String networkCommon = "reforged.mods.gravisuite.network.NetworkHandler";
+
     public static final String IDs = "ids", general = "general", hud = "hud";
 
-    public static final String SNEAK_KEY = StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyDescription);
+    public static final String SNEAK_KEY = StatCollector.translateToLocal("key.sneak");
 
     // Messages
 
