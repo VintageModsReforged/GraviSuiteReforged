@@ -116,10 +116,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                 if (mode == ToolMode.HOE) {
                     return Ic2Items.electricHoe.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 } else if (mode == ToolMode.TREETAP) {
-                    boolean treetap = Ic2Items.treetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
-                    if (treetap) {
-                        ElectricItem.manager.use(stack, this.energy_per_use, player);
-                    }
+                    return Ic2Items.electricTreetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 }
             } else {
                 IC2.platform.messagePlayer(player, Refs.status_low);
