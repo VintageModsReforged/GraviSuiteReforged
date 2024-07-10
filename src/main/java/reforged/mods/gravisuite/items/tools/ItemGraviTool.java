@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +41,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
 
     public static Icon[] iconsList = new Icon[4];
-    public int energy_per_use = 150;
+    public int energy_per_use = 50;
 
     public String CHANGE_SOUND = "Tools/change.ogg";
     public String TOOL_WRENCH = "Tools/wrench.ogg";
@@ -115,16 +114,11 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                 return false;
             } else if (ElectricItem.manager.canUse(stack, this.energy_per_use)) {
                 if (mode == ToolMode.HOE) {
-                    boolean hoe = Ic2Items.electricHoe.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
-                    if (hoe) {
-                        ElectricItem.manager.use(stack, this.energy_per_use, player);
-                        return true;
-                    }
+                    return Ic2Items.electricHoe.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 } else if (mode == ToolMode.TREETAP) {
                     boolean treetap = Ic2Items.treetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                     if (treetap) {
                         ElectricItem.manager.use(stack, this.energy_per_use, player);
-                        return true;
                     }
                 }
             } else {
@@ -141,29 +135,26 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
-            } else if (ElectricItem.manager.canUse(stack, this.energy_per_use)) {
+            } else {
                 if (mode == ToolMode.WRENCH) {
-                    boolean wrench = onWrenchUse(player, world, x, y, z, side);
+                    boolean wrench = onWrenchUse(stack, player, world, x, y, z, side);
                     if (wrench) {
-                        this.energy_per_use = 10000;
-                        ElectricItem.manager.use(stack, this.energy_per_use, player);
                         IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, true, IC2.audioManager.defaultVolume);
                     }
                     return wrench;
                 } else if (mode == ToolMode.SCREWDRIVER) {
-                    boolean screwdriver = onScrewdriverUse(player, world, x, y, z, side);
+                    boolean screwdriver = onScrewdriverUse(stack, player, world, x, y, z, side);
                     if (screwdriver) {
-                        ElectricItem.manager.use(stack, this.energy_per_use, player);
-                        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
-                        return true;
+                        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, true, IC2.audioManager.defaultVolume);
                     }
+                    return screwdriver;
                 }
             }
         }
         return false;
     }
 
-    public boolean onWrenchUse(EntityPlayer player, World world, int x, int y, int z, int side) {
+    public boolean onWrenchUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side) {
         boolean simulating = IC2.platform.isSimulating();
         if (world.isRemote) {
             return false;
@@ -175,6 +166,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
             if (tile instanceof TileEntityTerra && side == 1) {
                 TileEntityTerra terra = (TileEntityTerra) tile;
                 terra.ejectBlueprint();
+                ElectricItem.manager.use(stack, this.energy_per_use, player);
                 return simulating;
             }
 
@@ -187,6 +179,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
                 if (wrenchable.wrenchCanSetFacing(player, side)) {
                     wrenchable.setFacing((short) side);
+                    ElectricItem.manager.use(stack, this.energy_per_use, player);
                     return simulating;
                 }
 
@@ -206,6 +199,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                     }
                     dropAsItem(world, drops, x, y, z);
                     world.setBlockToAir(x, y, z);
+                    ElectricItem.manager.use(stack, 10000, player);
                     return true;
                 } else {
                     if (IC2.platform.isSimulating()) {
@@ -214,6 +208,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                         } else if (wrenchable instanceof IEnergySource && wrenchable instanceof IEnergySink) {
                             wrenchable.setFacing((short)side);
                         }
+                        ElectricItem.manager.use(stack, this.energy_per_use, player);
                         return true;
                     }
                 }
@@ -226,6 +221,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                         side = gregtechmod.api.util.GT_Utility.determineWrenchingSide((byte) side, x, y, z);
                         if (baseTileEntity.isValidFacing((byte) side) && side != baseTileEntity.getFrontFacing()) {
                             baseTileEntity.setFrontFacing((byte) side);
+                            ElectricItem.manager.use(stack, this.energy_per_use, player);
                         } else if (metaTileEntity.isWrenchable()) {
                             ItemStack drop = null;
                             try {
@@ -238,6 +234,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                             if (drop != null) {
                                 world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, drop));
                                 world.setBlockToAir(x, y, z);
+                                ElectricItem.manager.use(stack, 10000, player);
                             }
                         }
                         return true;
@@ -262,7 +259,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
         }
     }
 
-    public boolean onScrewdriverUse(EntityPlayer player, World world, int x, int y, int z, int side) {
+    public boolean onScrewdriverUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side) {
         int blockId = world.getBlockId(x, y, z);
         int blockMeta = world.getBlockMetadata(x, y, z);
         Block block = Block.blocksList[blockId];
@@ -273,11 +270,14 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
             } else {
                 world.setBlockMetadataWithNotify(x, y, z, BlockHelper.rotate(world, blockId, blockMeta, x, y, z), 3);
             }
+            ElectricItem.manager.use(stack, this.energy_per_use, player);
             return IC2.platform.isSimulating();
         } else {
             if (!(tile instanceof IEnergySource)) {
-                if (Block.blocksList[blockId] != null && Block.blocksList[blockId].rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
+                if (Block.blocksList[blockId] != null && Block.blocksList[blockId].rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) {
+                    ElectricItem.manager.use(stack, this.energy_per_use, player);
                     return IC2.platform.isSimulating();
+                }
             }
         }
         return false;

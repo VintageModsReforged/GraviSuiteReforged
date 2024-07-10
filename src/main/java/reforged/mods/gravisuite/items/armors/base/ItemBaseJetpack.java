@@ -31,7 +31,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
     public static final String NBT_TOGGLE_TIMER = "toggle_timer";
 
     public ItemBaseJetpack(int id, String name) {
-        super(id, name, 2, 5000, 1000000);
+        super(id, name, 2, 1000, 1000000);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }
@@ -90,7 +90,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         if (LAST_JETPACK_USED != used) {
             if (used) {
                 if (AUDIO_SOURCE == null) {
-                    this.AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack,
+                    AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack,
                             "Tools/Jetpack/JetpackLoop.ogg", true, false, IC2.audioManager.defaultVolume);
                 }
                 if (AUDIO_SOURCE != null) {

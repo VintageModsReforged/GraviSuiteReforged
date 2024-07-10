@@ -66,6 +66,11 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
     }
 
     @Override
+    public boolean hitEntity(ItemStack stack, EntityLiving attacker, EntityLiving target) {
+        return false;
+    }
+
+    @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
         if (!IC2.keyboard.isModeSwitchKeyDown(player) && !IC2.keyboard.isAltKeyDown(player) && !IC2.keyboard.isSneakKeyDown(player)) {
             ItemStack torchStack = null;

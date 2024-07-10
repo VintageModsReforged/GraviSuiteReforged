@@ -45,8 +45,8 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
 
     public ItemAdvancedChainsaw() {
-        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 45000, EnumToolMaterial.EMERALD);
-        this.efficiencyOnProperMaterial = 30.0F;
+        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumToolMaterial.EMERALD);
+        this.efficiencyOnProperMaterial = 35.0F;
         MinecraftForge.EVENT_BUS.register(this);
         init();
     }

@@ -16,14 +16,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
-import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
-import reforged.mods.gravisuite.proxy.ClientProxy;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
@@ -32,7 +28,7 @@ import java.util.List;
 
 public class ItemAdvancedQuant extends ItemArmorElectric {
 
-    public static int MIN_CHARGE = 10000;
+    public static int MIN_CHARGE = 80000;
     public int BOOST_MULTIPLIER;
     public int USAGE_IN_AIR;
     public int USAGE_ON_GROUND;
@@ -42,14 +38,17 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
     static boolean LAST_USED = false;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 3, 50000, 10000000);
+        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 2, 20000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
-        this.BOOST_SPEED = 0.2F;
+        this.BOOST_SPEED = 0.11F;
         this.BOOST_MULTIPLIER = 3;
         TOGGLE_TIMER = 5;
         MinecraftForge.EVENT_BUS.register(this);
-        this.energy_per_damage = 2000;
+        this.energy_per_damage = 900;
+        this.damage_priority = 8;
+        this.base_absorption = 1.1D;
+        this.damage_absorption = 0.4D;
     }
 
     @Override
@@ -249,43 +248,6 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         }
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);
-        }
-    }
-
-    @Override
-    public ArmorProperties getProperties(EntityLiving entityLiving, ItemStack armor, DamageSource damageSource, double damage, int slot) {
-        int energyPerDamage = energy_per_damage;
-        int damageLimit = Integer.MAX_VALUE;
-        if (energyPerDamage > 0) {
-            damageLimit = Math.min(damageLimit, 25 * Helpers.getCharge(armor) / energyPerDamage);
-        }
-        if (damageSource == DamageSource.fall) {
-            if (this.armorType == 1) {
-                return new ArmorProperties(10, 1.0, damageLimit);
-            }
-        }
-        double absorptionRatio = 1.1D;
-        return new ArmorProperties(8, absorptionRatio, damageLimit);
-    }
-
-    @Override
-    public int getArmorDisplay(EntityPlayer entityPlayer, ItemStack itemStack, int i) {
-        return 9;
-    }
-
-    @ForgeSubscribe
-    public void onEntityLivingFallEvent(LivingFallEvent event) {
-        if (IC2.platform.isSimulating() && event.entity instanceof EntityLiving) {
-            EntityLiving entity = (EntityLiving)event.entity;
-            ItemStack armor = entity.getCurrentArmor(2);
-            if (armor != null && armor.getItem() == this) {
-                int fallDamage = Math.max((int)event.distance - 10, 0);
-                int energyCost = energy_per_damage * fallDamage;
-                if (energyCost <= Helpers.getCharge(armor)) {
-                    ElectricItem.manager.discharge(armor, energyCost, Integer.MAX_VALUE, true, false);
-                    event.setCanceled(true);
-                }
-            }
         }
     }
 }

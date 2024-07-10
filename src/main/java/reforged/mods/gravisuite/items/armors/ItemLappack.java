@@ -12,14 +12,14 @@ public class ItemLappack {
     public static class ItemAdvancedLappack extends ItemArmorElectric {
 
         public ItemAdvancedLappack() {
-            super(GraviSuiteConfig.ADVANCED_LAPPACK_ID, "advanced_lappack", 3, 1000, 1000000);
+            super(GraviSuiteConfig.ADVANCED_LAPPACK_ID, "advanced_lappack", 2, 1000, 1000000);
         }
     }
 
     public static class ItemUltimateLappack extends ItemArmorElectric {
 
         public ItemUltimateLappack() {
-            super(GraviSuiteConfig.ULTIMATE_LAPPACK_ID, "ultimate_lappack", 3, 50000, 10000000);
+            super(GraviSuiteConfig.ULTIMATE_LAPPACK_ID, "ultimate_lappack", 2, 20000, 10000000);
         }
 
         @Override
