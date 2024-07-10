@@ -63,6 +63,11 @@ public class ItemGraviTool extends ItemBaseElectricItem {
     }
 
     @Override
+    public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6) {
+        return true;
+    }
+
+    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.keyboard.isModeSwitchKeyDown(player)) {
             if (IC2.platform.isSimulating()) {
@@ -84,20 +89,12 @@ public class ItemGraviTool extends ItemBaseElectricItem {
                 return false;
             } else if (ElectricItem.canUse(stack, this.ENERGY_PER_USE)) {
                 if (mode == ToolMode.HOE) {
-                    boolean hoe = Ic2Items.electricHoe.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
-                    if (hoe) {
-                        ElectricItem.use(stack, ENERGY_PER_USE, player);
-                        return true;
-                    }
+                    return Ic2Items.electricHoe.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 } else if (mode == ToolMode.TREETAP) {
-                    boolean treetap = Ic2Items.electricTreetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
-                    if (treetap) {
-                        ElectricItem.use(stack, ENERGY_PER_USE, player);
-                        if (IC2.platform.isRendering())
-                            IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_TREETAP, false, IC2.audioManager.defaultVolume);
-                        return true;
-                    }
+                    return Ic2Items.electricTreetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 }
+            } else {
+                IC2.platform.messagePlayer(player, Refs.status_low);
             }
         }
         return false;
@@ -109,31 +106,26 @@ public class ItemGraviTool extends ItemBaseElectricItem {
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
-            } else if (ElectricItem.canUse(stack, this.ENERGY_PER_USE)) {
+            } else {
                 if (mode == ToolMode.WRENCH) {
-                    boolean wrench = onWrenchUse(player, world, x, y, z, side);
+                    boolean wrench = onWrenchUse(stack, player, world, x, y, z, side);
                     if (wrench) {
-                        this.ENERGY_PER_USE = 10000;
-                        ElectricItem.use(stack, this.ENERGY_PER_USE, player);
-                        if (IC2.platform.isRendering())
-                            IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
-                        return true;
+                        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, true, IC2.audioManager.defaultVolume);
                     }
+                    return wrench;
                 } else if (mode == ToolMode.SCREWDRIVER) {
-                    boolean screwdriver = onScrewdriverUseNew(stack, player, world, x, y, z);
+                    boolean screwdriver = onScrewdriverUse(stack, player, world, x, y, z);
                     if (screwdriver) {
-                        ElectricItem.use(stack, this.ENERGY_PER_USE, player);
-                        if (IC2.platform.isRendering())
-                            IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
-                        return true;
+                        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, true, IC2.audioManager.defaultVolume);
                     }
+                    return screwdriver;
                 }
             }
         }
         return false;
     }
 
-    public boolean onWrenchUse(EntityPlayer player, World world, int x, int y, int z, int side) {
+    public boolean onWrenchUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side) {
         boolean simulating = IC2.platform.isSimulating();
         if (world.isRemote) {
             return false;
@@ -145,6 +137,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
             if (tile instanceof TileEntityTerra && side == 1) {
                 TileEntityTerra terra = (TileEntityTerra) tile;
                 terra.ejectBlueprint();
+                ElectricItem.use(stack, this.ENERGY_PER_USE, player);
                 return simulating;
             }
 
@@ -157,6 +150,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
 
                 if (wrenchable.wrenchCanSetFacing(player, side)) {
                     wrenchable.setFacing((short) side);
+                    ElectricItem.use(stack, this.ENERGY_PER_USE, player);
                     return simulating;
                 }
 
@@ -176,6 +170,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
                     }
                     dropAsItem(world, drops, x, y, z);
                     world.setBlock(x, y, z, 0);
+                    ElectricItem.use(stack, 10000, player);
                     return true;
                 } else {
                     if (IC2.platform.isSimulating()) {
@@ -184,6 +179,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
                         } else if (wrenchable instanceof IEnergySource && wrenchable instanceof IEnergySink) {
                             wrenchable.setFacing((short)side);
                         }
+                        ElectricItem.use(stack, this.ENERGY_PER_USE, player);
                         return true;
                     }
                 }
@@ -197,6 +193,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
                         if (drop != null) {
                             world.spawnEntityInWorld(new EntityItem(world, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, drop));
                             world.setBlock(x, y, z, 0);
+                            ElectricItem.use(stack, 10000, player);
                         }
                         return true;
                     }
@@ -220,7 +217,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
         }
     }
 
-    public boolean onScrewdriverUseNew(ItemStack stack, EntityPlayer player, World world, int x, int y, int z) {
+    public boolean onScrewdriverUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z) {
         boolean stack1 = (player != null) && (player.isSneaking());
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
         int stack3 = world.getBlockMetadata(x, y, z);
