@@ -33,7 +33,7 @@ import java.util.Map;
 public class ItemVajra extends ItemBaseElectricItem {
 
     public ItemVajra() {
-        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumToolMaterial.EMERALD);
+        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", 2, 10000, 1000000, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 1.0F;
         this.setIconIndex(Refs.TOOLS_ID + 2);
     }

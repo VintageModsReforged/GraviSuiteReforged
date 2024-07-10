@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ItemGraviTool extends ItemBaseElectricItem {
 
-    public int ENERGY_PER_USE = 150;
+    public int ENERGY_PER_USE = 50;
     public boolean LOW_ENERGY = false;
 
     public String CHANGE_SOUND = "toolchange.ogg";
@@ -41,7 +41,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
     public String TOOL_TREETAP = "Tools/Treetap.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", 2, 1000, 100000, EnumToolMaterial.IRON);
+        super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", 2, 10000, 100000, EnumToolMaterial.IRON);
         this.setIconIndex(Refs.GRAVITOOL_ID);
     }
 

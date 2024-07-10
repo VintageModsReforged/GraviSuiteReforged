@@ -44,7 +44,7 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
 
     public ItemAdvancedChainsaw() {
         super(GraviSuiteMainConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumToolMaterial.EMERALD);
-        this.efficiencyOnProperMaterial = 30.0F;
+        this.efficiencyOnProperMaterial = 35.0F;
         MinecraftForge.EVENT_BUS.register(this);
         this.setIconIndex(Refs.TOOLS_ID + 1);
         init();

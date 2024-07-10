@@ -32,7 +32,7 @@ public class ItemBaseJetpack extends ItemBaseEnergyPack {
     public static final String NBT_TOGGLE_TIMER = "toggle_timer";
 
     public ItemBaseJetpack(int id, int meta, String name) {
-        super(id, meta, name, 2, 5000, 1000000);
+        super(id, meta, name, 2, 1000, 1000000);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }

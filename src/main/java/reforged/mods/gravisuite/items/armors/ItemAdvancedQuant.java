@@ -18,8 +18,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
@@ -32,8 +30,8 @@ import java.util.List;
 
 public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArmor {
 
-    public int ENERGY_PER_DAMAGE = 2000;
-    public static int MIN_CHARGE = 10000;
+    public int ENERGY_PER_DAMAGE = 800;
+    public static int MIN_CHARGE = 80000;
     public int BOOST_MULTIPLIER;
     public int USAGE_IN_AIR;
     public int USAGE_ON_GROUND;
@@ -43,7 +41,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     static boolean LAST_USED = false;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 3, 50000, 10000000);
+        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 2, 20000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPPED = 0.2F;
@@ -257,12 +255,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         if (energyPerDamage > 0) {
             damageLimit = Math.min(damageLimit, 25 * Helpers.getCharge(armor) / energyPerDamage);
         }
-        if (damageSource == DamageSource.fall) {
-            if (this.armorType == 1) {
-                return new ArmorProperties(10, 1.0, damageLimit);
-            }
-        }
-        double absorptionRatio = 1.1D;
+        double absorptionRatio = 1.1D * 0.4D;
         return new ArmorProperties(8, absorptionRatio, damageLimit);
     }
 
@@ -274,21 +267,5 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     @Override
     public void damageArmor(EntityLiving entityLiving, ItemStack stack, DamageSource damageSource, int damage, int slot) {
         ElectricItem.discharge(stack, damage * ENERGY_PER_DAMAGE, Integer.MAX_VALUE, true, false);
-    }
-
-    @ForgeSubscribe
-    public void onEntityLivingFallEvent(LivingFallEvent event) {
-        if (IC2.platform.isSimulating() && event.entity instanceof EntityLiving) {
-            EntityLiving entity = (EntityLiving)event.entity;
-            ItemStack armor = entity.getCurrentArmor(2);
-            if (armor != null && armor.getItem() == this) {
-                int fallDamage = Math.max((int)event.distance - 10, 0);
-                int energyCost = ENERGY_PER_DAMAGE * fallDamage;
-                if (energyCost <= Helpers.getCharge(armor)) {
-                    ElectricItem.discharge(armor, energyCost, Integer.MAX_VALUE, true, false);
-                    event.setCanceled(true);
-                }
-            }
-        }
     }
 }

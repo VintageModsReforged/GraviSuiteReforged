@@ -4,10 +4,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.IElectricItem;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import reforged.mods.gravisuite.utils.Helpers;
 
 import java.util.List;
@@ -22,6 +24,16 @@ public class ItemBaseElectricItem extends ItemBaseTool implements IElectricItem 
         this.TIER = tier;
         this.TRANSFER = transfer;
         this.CAPACITY = capacity;
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockID, int x, int y, int z, EntityLiving user) {
+        return false;
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLiving attacker, EntityLiving target) {
+        return false;
     }
 
     @SideOnly(Side.CLIENT)
