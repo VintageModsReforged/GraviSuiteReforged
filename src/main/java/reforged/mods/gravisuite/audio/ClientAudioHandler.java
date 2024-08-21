@@ -49,6 +49,11 @@ public class ClientAudioHandler implements ITickHandler {
                             this.AUDIO_SOURCE = null;
                         }
                     }
+                } else {
+                    if (this.AUDIO_SOURCE != null) {
+                        this.AUDIO_SOURCE.remove();
+                        this.AUDIO_SOURCE = null;
+                    }
                 }
             }
         }

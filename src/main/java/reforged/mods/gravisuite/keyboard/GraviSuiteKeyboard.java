@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class GraviSuiteKeyboard {
 
-    private Map<EntityPlayer, Boolean> engineToggleKeyState = new HashMap<EntityPlayer, Boolean>();
-    private Map<EntityPlayer, Boolean> magnetToggleKeyState = new HashMap<EntityPlayer, Boolean>();
+    private final Map<EntityPlayer, Boolean> engineToggleKeyState = new HashMap<EntityPlayer, Boolean>();
+    private final Map<EntityPlayer, Boolean> magnetToggleKeyState = new HashMap<EntityPlayer, Boolean>();
 
     public boolean isEngineToggleKeyDown(EntityPlayer player) {
         return engineToggleKeyState.containsKey(player) ? engineToggleKeyState.get(player) : false;
