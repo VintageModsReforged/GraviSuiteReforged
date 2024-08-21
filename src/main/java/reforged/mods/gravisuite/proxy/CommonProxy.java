@@ -42,4 +42,8 @@ public class CommonProxy {
     public static boolean wasUndressed(EntityPlayer player) {
         return wasUndressed.containsKey(player) ? wasUndressed.get(player) : false;
     }
+
+    public boolean isFlying(EntityPlayer player) {
+        return false;
+    }
 }

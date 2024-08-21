@@ -26,8 +26,6 @@ public class CustomRender {
         float var8 = ((float) (textureIndex % 16 * 16) + 15.99F) / 256.0F;
         float var9 = ((float) (textureIndex / 16 * 16) + 0.0F) / 256.0F;
         float var10 = ((float) (textureIndex / 16 * 16) + 15.99F) / 256.0F;
-        float var11 = 0.0F;
-        float var12 = 0.3F;
         renderItemIn2D(var5, var8, var9, var7, var10, 0.0625F);
         if (par2ItemStack != null && par2ItemStack.hasEffect() && par3 == 0) {
             GL11.glDepthFunc(514);

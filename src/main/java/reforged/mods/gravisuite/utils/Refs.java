@@ -65,6 +65,7 @@ public class Refs {
     public static final String to_enable_2 = "message.info.press.to.enable2";
 
     public static final String vein_miner = "message.vein.active";
+    public static final String quick_charge = "message.info.quick_change";
 
     // Formatted Messages // \247
 

@@ -5,7 +5,6 @@ import cpw.mods.fml.common.TickType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
-import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -39,7 +38,6 @@ public class ClientTickHandler implements ITickHandler {
                         }
                     }
                 } else {
-                    ItemAdvancedQuant.removeSound();
                     CommonProxy.wasUndressed.put(player, true);
                     if (!player.capabilities.isCreativeMode) {
                         if (CommonProxy.isFlyActive(player)) {
@@ -48,16 +46,7 @@ public class ClientTickHandler implements ITickHandler {
                         }
                     }
                 }
-                if (!(itemstack.getItem() instanceof ItemBaseJetpack)) {
-                    ItemBaseJetpack.removeSound();
-                }
             } else {
-                if (ItemBaseJetpack.AUDIO_SOURCE != null) {
-                    ItemBaseJetpack.removeSound();
-                }
-                if (ItemAdvancedQuant.AUDIO_SOURCE != null) {
-                    ItemAdvancedQuant.removeSound();
-                }
                 CommonProxy.wasUndressed.put(player, true);
                 if (!player.capabilities.isCreativeMode) {
                     if (CommonProxy.isFlyActive(player)) {

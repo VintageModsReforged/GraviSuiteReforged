@@ -92,5 +92,6 @@ message.info.press.to2=Press %1$s and %2$s to change %3$s
 message.info.press.to.enable1=Press %1$s to enable %2$s
 message.info.press.to.enable2=Press %1$s and %2$s to enable %3$s
 message.vein.active=Active Vein Miner
+message.info.quick_change=[!] Quick Mode Change [!]
 
 

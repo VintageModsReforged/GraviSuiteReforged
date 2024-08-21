@@ -20,6 +20,7 @@ import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.audio.IAudioProvider;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
@@ -28,7 +29,7 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArmor {
+public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArmor, IAudioProvider {
 
     public int ENERGY_PER_DAMAGE = 800;
     public static int MIN_CHARGE = 80000;
@@ -36,9 +37,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public int USAGE_IN_AIR;
     public int USAGE_ON_GROUND;
     public float BOOST_SPPED;
-    public static AudioSource AUDIO_SOURCE;
     public static byte TOGGLE_TIMER;
-    static boolean LAST_USED = false;
 
     public ItemAdvancedQuant() {
         super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 2, 20000, 10000000);
@@ -79,8 +78,6 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public void onArmorTickUpdate(World worldObj, EntityPlayer player, ItemStack itemStack) {
         NBTTagCompound tag = StackUtil.getOrCreateNbtData(itemStack);
         byte toggleTimer = tag.getByte("toggleTimer");
-        boolean used = false;
-
 
         if (GraviSuite.KEYBOARD.isEngineToggleKeyDown(player) && toggleTimer == 0) {
             switchFlyState(player, itemStack);
@@ -96,7 +93,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         }
 
         if (readFlyStatus(itemStack)) {
-            used = use(player, itemStack);
+            use(player, itemStack);
             player.capabilities.allowFlying = true;
             if (readWorkMode(itemStack)) {
                 player.capabilities.isFlying = true;
@@ -114,39 +111,9 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         if (player.isBurning()) {
             player.extinguish();
         }
-        if (IC2.platform.isRendering()) {
-            createSound(player, used);
-        }
     }
 
-    public static void createSound(EntityPlayer player, boolean used) {
-        if (LAST_USED != used) {
-            if (used) {
-                if (AUDIO_SOURCE == null) {
-                    AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack, "graviengine.ogg", true, false, IC2.audioManager.defaultVolume);
-                }
-                if (AUDIO_SOURCE != null) {
-                    AUDIO_SOURCE.play();
-                }
-            } else if (AUDIO_SOURCE != null) {
-                AUDIO_SOURCE.remove();
-                AUDIO_SOURCE = null;
-            }
-            LAST_USED = used ;
-        }
-        if (AUDIO_SOURCE != null) {
-            AUDIO_SOURCE.updatePosition();
-        }
-    }
-
-    public static void removeSound() {
-        if (AUDIO_SOURCE != null) {
-            AUDIO_SOURCE.remove();
-            AUDIO_SOURCE = null;
-        }
-    }
-
-    public boolean use(EntityPlayer player, ItemStack itemStack) {
+    public void use(EntityPlayer player, ItemStack itemStack) {
         double currCharge = Helpers.getCharge(itemStack);
         if (!player.capabilities.isCreativeMode) {
             if (currCharge < USAGE_IN_AIR) {
@@ -176,7 +143,6 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
 
             }
         }
-        return true;
     }
 
     public void boostMode(EntityPlayer player, ItemStack itemstack) {
@@ -267,5 +233,10 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     @Override
     public void damageArmor(EntityLiving entityLiving, ItemStack stack, DamageSource damageSource, int damage, int slot) {
         ElectricItem.discharge(stack, damage * ENERGY_PER_DAMAGE, Integer.MAX_VALUE, true, false);
+    }
+
+    @Override
+    public AudioSource getAudio(EntityPlayer player) {
+        return IC2.audioManager.createSource(player, PositionSpec.Backpack, "graviengine.ogg", true, false, IC2.audioManager.defaultVolume);
     }
 }

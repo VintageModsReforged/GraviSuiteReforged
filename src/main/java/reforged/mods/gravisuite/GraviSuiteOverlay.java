@@ -4,17 +4,21 @@ import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import ic2.api.IElectricItem;
 import ic2.core.IC2;
+import ic2.core.util.StackUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import reforged.mods.gravisuite.items.armors.IHasOverlay;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.LangHelper;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.EnumSet;
 
@@ -53,6 +57,7 @@ public class GraviSuiteOverlay implements ITickHandler {
             }
 
             if (itemArmor instanceof IElectricItem) {
+                NBTTagCompound tag = StackUtil.getOrCreateNbtData(armor);
                 int curCharge = Helpers.getCharge(armor);
                 int maxCharge = ((IElectricItem) armor.getItem()).getMaxCharge();
                 int charge = curCharge * 100 / maxCharge;
@@ -113,6 +118,16 @@ public class GraviSuiteOverlay implements ITickHandler {
                         mc.ingameGUI.drawString(mc.fontRenderer, energyToDisplay, getXOffset(energyToDisplay), yPos1, 0);
                         mc.ingameGUI.drawString(mc.fontRenderer, graviEngineToDisplay, getXOffset(graviEngineToDisplay), yPos2, 0);
                         mc.ingameGUI.drawString(mc.fontRenderer, levitationToDisplay, getXOffset(levitationToDisplay), yPos3, 0);
+                    }
+                }
+
+                if (armor.getItem() instanceof ItemBaseJetpack) {
+                    int xPos = scaledRes.getScaledWidth() / 2;
+                    int yPos = scaledRes.getScaledHeight() - 85;
+                    String quick_change = LangHelper.format(Refs.quick_charge);
+                    int width = mc.fontRenderer.getStringWidth(quick_change);
+                    if (tag.getBoolean(ItemBaseJetpack.NBT_ACTIVE) && IC2.keyboard.isAltKeyDown(player)) {
+                        mc.ingameGUI.drawString(mc.fontRenderer, TextFormatter.GREEN.format(Refs.quick_charge), xPos - width / 2, yPos, 0);
                     }
                 }
             }
