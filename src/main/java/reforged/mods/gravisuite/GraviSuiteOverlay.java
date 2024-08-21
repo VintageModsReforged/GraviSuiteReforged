@@ -8,9 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.LangHelper;
 import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.TextFormatter;
 
@@ -41,6 +43,7 @@ public class GraviSuiteOverlay implements ITickHandler {
             ItemStack armor = player.getCurrentArmor(2);
 
             if (armor != null && armor.getItem() instanceof IElectricItem) {
+                NBTTagCompound tag = Helpers.getOrCreateTag(armor);
                 IElectricItem electricItem = (IElectricItem) armor.getItem();
                 int curCharge = Helpers.getCharge(armor);
                 int maxCharge = electricItem.getMaxCharge(armor);
@@ -129,6 +132,16 @@ public class GraviSuiteOverlay implements ITickHandler {
                         mc.ingameGUI.drawString(mc.fontRenderer, energyToDisplay, xPosEnergy, yPosEnergyJoint, 0);
                         mc.ingameGUI.drawString(mc.fontRenderer, graviEngineToDisplay, xPosGravi, yPosGravi, 0);
                         mc.ingameGUI.drawString(mc.fontRenderer, levitationToDisplay, xPosLevitation, yPosLevitation, 0);
+                    }
+                }
+
+                if (armor.getItem() instanceof ItemBaseJetpack) {
+                    int xPos = scaledRes.getScaledWidth() / 2;
+                    int yPos = scaledRes.getScaledHeight() - 85;
+                    String quick_change = LangHelper.format(Refs.quick_charge);
+                    int width = mc.fontRenderer.getStringWidth(quick_change);
+                    if (tag.getBoolean(ItemBaseJetpack.NBT_ACTIVE) && IC2.keyboard.isAltKeyDown(player)) {
+                        mc.ingameGUI.drawString(mc.fontRenderer, TextFormatter.GREEN.format(Refs.quick_charge), xPos - width / 2, yPos, 0);
                     }
                 }
             }

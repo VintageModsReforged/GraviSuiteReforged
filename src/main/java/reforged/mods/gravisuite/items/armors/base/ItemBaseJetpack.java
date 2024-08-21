@@ -13,16 +13,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.audio.IAudioProvider;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemBaseJetpack extends ItemArmorElectric {
+public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider {
 
     public static byte TOGGLE_TIMER;
-    public boolean LAST_JETPACK_USED = false;
     public static AudioSource AUDIO_SOURCE;
     public double HOVER_FALL_SPEED;
 
@@ -62,9 +62,7 @@ public class ItemBaseJetpack extends ItemArmorElectric {
     public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack stack) {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         boolean hoverMode = readWorkMode(stack);
-
         byte toggleTimer = tag.getByte(NBT_TOGGLE_TIMER);
-        boolean jetpackUsed = false;
 
         if (GraviSuite.keyboard.isEngineToggleKeyDown(player) && toggleTimer <= 0) {
             switchFlyState(player, stack);
@@ -74,51 +72,24 @@ public class ItemBaseJetpack extends ItemArmorElectric {
             switchWorkMode(player, stack);
         }
 
+        if (IC2.keyboard.isAltKeyDown(player)) {
+            hoverMode = !hoverMode;
+        }
+
         if ((IC2.keyboard.isJumpKeyDown(player)
                 || (hoverMode && player.motionY < -HOVER_FALL_SPEED && !player.onGround)) && readFlyStatus(stack))
-            jetpackUsed  = useJetpack(player, stack, hoverMode);
+            useJetpack(player, stack, hoverMode);
         if (IC2.platform.isSimulating() && toggleTimer > 0) {
             toggleTimer--;
             tag.setByte(NBT_TOGGLE_TIMER, toggleTimer);
         }
-        if (IC2.platform.isRendering()) {
-            createSound(player, jetpackUsed);
-        }
     }
 
-    public void createSound(EntityPlayer player, boolean used) {
-        if (LAST_JETPACK_USED != used) {
-            if (used) {
-                if (AUDIO_SOURCE == null) {
-                    AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack,
-                            "Tools/Jetpack/JetpackLoop.ogg", true, false, IC2.audioManager.defaultVolume);
-                }
-                if (AUDIO_SOURCE != null) {
-                    AUDIO_SOURCE.play();
-                }
-            } else if (AUDIO_SOURCE != null) {
-                AUDIO_SOURCE.remove();
-                AUDIO_SOURCE = null;
-            }
-            LAST_JETPACK_USED = used ;
-        }
-        if (AUDIO_SOURCE != null) {
-            AUDIO_SOURCE.updatePosition();
-        }
-    }
-
-    public static void removeSound() {
-        if (AUDIO_SOURCE != null) {
-            AUDIO_SOURCE.remove();
-            AUDIO_SOURCE = null;
-        }
-    }
-
-    public boolean useJetpack(EntityPlayer player, ItemStack stack, boolean hover) {
+    public void useJetpack(EntityPlayer player, ItemStack stack, boolean hover) {
         int usage = 12;
         double charge = Helpers.getCharge(stack);
         if (charge < usage && !player.capabilities.isCreativeMode)
-            return false;
+            return;
         float power = 1.0F;
         double dropPercentage = 0.001D;
         double dropLimit = this.getMaxCharge(stack) * 0.05D;
@@ -176,7 +147,6 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         player.fallDistance = 0.0F;
         player.distanceWalkedModified = 0.0F;
         IC2.platform.resetPlayerInAirTime(player);
-        return true;
     }
 
     public static boolean readWorkMode(ItemStack stack) {
@@ -227,5 +197,11 @@ public class ItemBaseJetpack extends ItemArmorElectric {
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);
         }
+    }
+
+    @Override
+    public AudioSource getAudio(EntityPlayer player) {
+        return IC2.audioManager.createSource(player, PositionSpec.Backpack, "Tools/Jetpack/JetpackLoop.ogg", true, false, IC2.audioManager.defaultVolume);
+
     }
 }

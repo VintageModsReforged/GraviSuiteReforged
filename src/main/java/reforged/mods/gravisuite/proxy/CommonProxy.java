@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import reforged.mods.gravisuite.*;
 import reforged.mods.gravisuite.utils.LangHelper;
@@ -49,5 +50,9 @@ public class CommonProxy {
 
     public static boolean wasUndressed(EntityPlayer player) {
         return wasUndressed.containsKey(player) ? wasUndressed.get(player) : false;
+    }
+
+    public boolean isFlying(EntityPlayer player) {
+        return false;
     }
 }

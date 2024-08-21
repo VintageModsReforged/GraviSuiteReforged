@@ -97,5 +97,6 @@ message.info.filter.set=Set the filter
 
 message.vein.active=Active Vein Miner
 message.info.filter=Void Filter: %s
+message.info.quick_change=[!] Quick Mode Change [!]
 
 

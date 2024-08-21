@@ -7,17 +7,16 @@ import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.audio.IAudioProvider;
 import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
@@ -26,16 +25,14 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemAdvancedQuant extends ItemArmorElectric {
+public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvider {
 
     public static int MIN_CHARGE = 80000;
     public int BOOST_MULTIPLIER;
     public int USAGE_IN_AIR;
     public int USAGE_ON_GROUND;
     public float BOOST_SPEED;
-    public static AudioSource AUDIO_SOURCE;
     public static byte TOGGLE_TIMER;
-    static boolean LAST_USED = false;
 
     public ItemAdvancedQuant() {
         super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 2, 20000, 10000000);
@@ -83,7 +80,6 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
     public void onArmorTickUpdate(World worldObj, EntityPlayer player, ItemStack itemStack) {
         NBTTagCompound tag = Helpers.getOrCreateTag(itemStack);
         byte toggleTimer = tag.getByte("toggleTimer");
-        boolean used = false;
 
         if (GraviSuite.keyboard.isEngineToggleKeyDown(player) && toggleTimer == 0) {
             switchFlyState(player, itemStack);
@@ -99,7 +95,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         }
 
         if (readFlyStatus(itemStack)) {
-            used = use(player, itemStack);
+            use(player, itemStack);
             player.capabilities.allowFlying = true;
             if (readWorkMode(itemStack)) {
                 player.capabilities.isFlying = true;
@@ -117,39 +113,9 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         if (player.isBurning()) {
             player.extinguish();
         }
-        if (IC2.platform.isRendering()) {
-            createSound(player, used);
-        }
     }
 
-    public void createSound(EntityPlayer player, boolean used) {
-        if (LAST_USED != used) {
-            if (used) {
-                if (AUDIO_SOURCE == null) {
-                    AUDIO_SOURCE = IC2.audioManager.createSource(player, PositionSpec.Backpack, "graviengine.ogg", true, false, IC2.audioManager.defaultVolume);
-                }
-                if (AUDIO_SOURCE != null) {
-                    AUDIO_SOURCE.play();
-                }
-            } else if (AUDIO_SOURCE != null) {
-                AUDIO_SOURCE.remove();
-                AUDIO_SOURCE = null;
-            }
-            LAST_USED = used ;
-        }
-        if (AUDIO_SOURCE != null) {
-            AUDIO_SOURCE.updatePosition();
-        }
-    }
-
-    public static void removeSound() {
-        if (AUDIO_SOURCE != null) {
-            AUDIO_SOURCE.remove();
-            AUDIO_SOURCE = null;
-        }
-    }
-
-    public boolean use(EntityPlayer player, ItemStack itemStack) {
+    public void use(EntityPlayer player, ItemStack itemStack) {
         double currCharge = Helpers.getCharge(itemStack);
         if (!player.capabilities.isCreativeMode) {
             if (currCharge < USAGE_IN_AIR) {
@@ -179,7 +145,6 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
 
             }
         }
-        return true;
     }
 
     public void boostMode(EntityPlayer player, ItemStack itemstack) {
@@ -249,5 +214,10 @@ public class ItemAdvancedQuant extends ItemArmorElectric {
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);
         }
+    }
+
+    @Override
+    public AudioSource getAudio(EntityPlayer player) {
+        return IC2.audioManager.createSource(player, PositionSpec.Backpack, "graviengine.ogg", true, false, IC2.audioManager.defaultVolume);
     }
 }

@@ -67,6 +67,7 @@ public class Refs {
     public static final String to_enable_2 = "message.info.press.to.enable2";
 
     public static final String vein_miner = "message.vein.active";
+    public static final String quick_charge = "message.info.quick_change";
 
 
 
@@ -110,5 +111,4 @@ public class Refs {
     public static final String tool_mode_treetap = TextFormatter.GOLD.format(TOOL_MODE_TREETAP);
     public static final String tool_mode_wrench = TextFormatter.AQUA.format(TOOL_MODE_WRENCH);
     public static final String tool_mode_screwdriver = TextFormatter.LIGHT_PURPLE.format(TOOL_MODE_SCREWDRIVER);
-
 }
