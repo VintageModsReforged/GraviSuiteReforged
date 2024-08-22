@@ -1,5 +1,6 @@
 package reforged.mods.gravisuite.proxy;
 
+import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -10,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import reforged.mods.gravisuite.*;
+import reforged.mods.gravisuite.events.tick.server.ServerArmorHandler;
 import reforged.mods.gravisuite.utils.LangHelper;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -22,7 +24,7 @@ public class CommonProxy {
     public static Map<EntityPlayer, Boolean> wasUndressed = new HashMap<EntityPlayer, Boolean>();
 
     public void preInit(FMLPreInitializationEvent e) {
-        TickRegistry.registerTickHandler(new CommonTickHandler(), Side.SERVER);
+        registerTickHandlers(ServerArmorHandler.THIS);
         GraviSuiteConfig.initConfig();
         LangHelper.init();
     }
@@ -53,5 +55,9 @@ public class CommonProxy {
 
     public boolean isFlying(EntityPlayer player) {
         return false;
+    }
+
+    public void registerTickHandlers(ITickHandler handler) {
+        TickRegistry.registerTickHandler(handler, Side.SERVER);
     }
 }

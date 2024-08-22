@@ -1,6 +1,7 @@
 package reforged.mods.gravisuite.proxy;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -14,9 +15,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import reforged.mods.gravisuite.ClientTickHandler;
-import reforged.mods.gravisuite.GraviSuiteOverlay;
-import reforged.mods.gravisuite.audio.ClientAudioHandler;
+import reforged.mods.gravisuite.events.tick.client.AudioHandler;
+import reforged.mods.gravisuite.events.tick.client.ClientArmorHandler;
+import reforged.mods.gravisuite.events.tick.client.KeyboardHandler;
+import reforged.mods.gravisuite.events.tick.client.OverlayHandler;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -26,9 +28,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
-        TickRegistry.registerTickHandler(new GraviSuiteOverlay(), Side.CLIENT);
-        TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
-        TickRegistry.registerTickHandler(new ClientAudioHandler(), Side.CLIENT);
+        registerTickHandlers(OverlayHandler.THIS);
+        registerTickHandlers(AudioHandler.THIS);
+        registerTickHandlers(KeyboardHandler.THIS);
+        registerTickHandlers(ClientArmorHandler.THIS);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -49,7 +52,7 @@ public class ClientProxy extends CommonProxy {
 
     @ForgeSubscribe
     public void onWorldLoad(WorldEvent.Load event) {
-        ClientTickHandler.firstLoad = true;
+        ClientArmorHandler.firstLoad = true;
     }
 
     @Override
@@ -78,5 +81,10 @@ public class ClientProxy extends CommonProxy {
             }
         }
         return false;
+    }
+
+    @Override
+    public void registerTickHandlers(ITickHandler handler) {
+        TickRegistry.registerTickHandler(handler, Side.CLIENT);
     }
 }

@@ -1,6 +1,5 @@
 package reforged.mods.gravisuite.utils;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.StatCollector;
 
 public class Refs {

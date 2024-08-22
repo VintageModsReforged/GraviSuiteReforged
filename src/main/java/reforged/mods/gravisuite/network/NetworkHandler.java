@@ -5,13 +5,12 @@ import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import reforged.mods.gravisuite.ClientTickHandler;
 import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.events.tick.client.ClientArmorHandler;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.security.Key;
 
 public class NetworkHandler implements IPacketHandler {
 
@@ -30,7 +29,7 @@ public class NetworkHandler implements IPacketHandler {
                         GraviSuite.keyboard.processKeyUpdate(player, intData);
                         break;
                     case 2:
-                        ClientTickHandler.firstLoad = true;
+                        ClientArmorHandler.firstLoad = true;
                 }
             } catch (IOException e) {
                 e.printStackTrace();

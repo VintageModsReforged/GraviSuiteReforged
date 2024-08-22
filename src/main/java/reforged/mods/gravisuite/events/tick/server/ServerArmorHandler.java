@@ -1,23 +1,24 @@
-package reforged.mods.gravisuite;
+package reforged.mods.gravisuite.events.tick.server;
 
-import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import reforged.mods.gravisuite.events.tick.base.TickEvents;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.proxy.CommonProxy;
-import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.EnumSet;
 
-public class CommonTickHandler implements ITickHandler {
+public class ServerArmorHandler extends TickEvents.PlayerTickEvent {
+
+    public static final ServerArmorHandler THIS = new ServerArmorHandler();
 
     public static boolean firstLoad = false;
 
     @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData) {
-        if (type.contains(TickType.PLAYER)) {
-            EntityPlayer player = (EntityPlayer) tickData[0];
+    public void tickStart(EnumSet<TickType> enumSet, Object... objects) {
+        if (shouldTick(enumSet)) {
+            EntityPlayer player = (EntityPlayer) objects[0];
             ItemStack itemstack = player.getCurrentArmor(2);
             if (itemstack != null) {
                 if(itemstack.getItem() instanceof ItemAdvancedQuant) {
@@ -52,18 +53,5 @@ public class CommonTickHandler implements ITickHandler {
                 }
             }
         }
-    }
-
-    @Override
-    public void tickEnd(EnumSet<TickType> enumSet, Object... objects) {}
-
-    @Override
-    public EnumSet<TickType> ticks() {
-        return EnumSet.of(TickType.PLAYER, TickType.WORLDLOAD);
-    }
-
-    @Override
-    public String getLabel() {
-        return Refs.id;
     }
 }

@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import reforged.mods.gravisuite.ClientTickHandler;
+import reforged.mods.gravisuite.events.tick.client.ClientArmorHandler;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.*;
@@ -22,7 +22,7 @@ public class NetworkHandlerClient extends NetworkHandler {
                 default:
                     break;
                 case 2:
-                    ClientTickHandler.firstLoad = true;
+                    ClientArmorHandler.firstLoad = true;
             }
         }
     }

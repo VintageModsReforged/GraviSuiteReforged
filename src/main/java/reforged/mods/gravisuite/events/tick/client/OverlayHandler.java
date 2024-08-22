@@ -1,6 +1,5 @@
-package reforged.mods.gravisuite;
+package reforged.mods.gravisuite.events.tick.client;
 
-import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
@@ -9,6 +8,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.events.tick.base.TickEvents;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -18,7 +19,9 @@ import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.EnumSet;
 
-public class GraviSuiteOverlay implements ITickHandler {
+public class OverlayHandler extends TickEvents.RenderTickEvent {
+
+    public static final OverlayHandler THIS = new OverlayHandler();
 
     int offset = 3;
     int textOffset = 2;
@@ -27,12 +30,12 @@ public class GraviSuiteOverlay implements ITickHandler {
 
     public static Minecraft mc = Minecraft.getMinecraft();
 
-    public GraviSuiteOverlay() {}
-
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... objects) {
-        if (type.contains(TickType.RENDER) && GraviSuiteConfig.enable_hud && mc.theWorld != null && mc.inGameHasFocus) {
-            renderOverlay(mc);
+        if (shouldTick(type)) {
+            if (GraviSuiteConfig.enable_hud && mc.theWorld != null && mc.inGameHasFocus) {
+                renderOverlay(mc);
+            }
         }
     }
 
@@ -53,7 +56,7 @@ public class GraviSuiteOverlay implements ITickHandler {
                 }
 
                 // ENERGY STATUS
-                String energyToDisplay = Refs.energy_level + " " + getEnergyTextColor(charge) + TextFormatter.WHITE.literal("%");
+                String energyToDisplay = Refs.energy_level_gold + " " + getEnergyTextColor(charge) + TextFormatter.WHITE.literal("%");
 
                 // HOVER MODE STATUS
 
@@ -186,13 +189,4 @@ public class GraviSuiteOverlay implements ITickHandler {
         }
         return colorCode.literal(String.valueOf(energyLevel));
     }
-
-    @Override
-    public EnumSet<TickType> ticks() { return EnumSet.of(TickType.RENDER); }
-
-    @Override
-    public String getLabel() { return Refs.id; }
-
-    @Override
-    public void tickStart(EnumSet<TickType> enumSet, Object... objects) {}
 }
