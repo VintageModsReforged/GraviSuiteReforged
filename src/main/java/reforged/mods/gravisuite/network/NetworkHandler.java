@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.events.tick.client.ClientArmorHandler;
+import reforged.mods.gravisuite.events.tick.server.ServerArmorHandler;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -29,7 +29,7 @@ public class NetworkHandler implements IPacketHandler {
                         GraviSuite.keyboard.processKeyUpdate(player, intData);
                         break;
                     case 2:
-                        ClientArmorHandler.firstLoad = true;
+                        ServerArmorHandler.firstLoad = true;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
