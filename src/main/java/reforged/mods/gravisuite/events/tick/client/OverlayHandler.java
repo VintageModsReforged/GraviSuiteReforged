@@ -61,24 +61,24 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
                 // HOVER MODE STATUS
 
                 boolean isHoverOn = ItemBaseJetpack.readWorkMode(armor);
-                String hoverS = isHoverOn ? Refs.status_on : Refs.status_off;
+                String hoverS = Helpers.getStatusMessage(isHoverOn);
                 String hoverStatusToDisplay = Refs.jetpack_hover + " " + hoverS;
 
                 // ENGINE STATUS
 
                 boolean isJetpackOn = ItemBaseJetpack.readFlyStatus(armor);
-                String jetpackS = isJetpackOn ? Refs.status_on : Refs.status_off;
+                String jetpackS = Helpers.getStatusMessage(isJetpackOn);
                 String jetpackStatusToDisplay = Refs.jetpack_engine + " " + jetpackS;
 
                 // GRAVITATION ENGINE STATUS
 
                 boolean isGraviEngineOn = ItemAdvancedQuant.readFlyStatus(armor);
-                String graviEngineS = isGraviEngineOn ? Refs.status_on : Refs.status_off;
+                String graviEngineS = Helpers.getStatusMessage(isGraviEngineOn);
                 String graviEngineToDisplay = Refs.gravitation_engine + " " + graviEngineS;
 
                 // LEVITATION STATUS
                 boolean isLevitationOn = ItemAdvancedQuant.readWorkMode(armor);
-                String levitationS = isLevitationOn ? Refs.status_on : Refs.status_off;
+                String levitationS = Helpers.getStatusMessage(isLevitationOn);
                 String levitationToDisplay = Refs.gravitation_levitation + " " + levitationS;
 
                 if (GraviSuiteConfig.use_fixed_values) {

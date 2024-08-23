@@ -44,8 +44,8 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
         boolean isHoverMode = readWorkMode(stack);
         boolean isEngineOn = readFlyStatus(stack);
 
-        String hoverStatus = isHoverMode ? Refs.status_on : Refs.status_off;
-        String jetpackStatus = isEngineOn ? Refs.status_on : Refs.status_off;
+        String hoverStatus = Helpers.getStatusMessage(isHoverMode);
+        String jetpackStatus = Helpers.getStatusMessage(isEngineOn);
 
         tooltip.add(Refs.jetpack_engine_gold + " " + jetpackStatus);
         tooltip.add(Refs.jetpack_hover_gold + " " + hoverStatus);

@@ -196,4 +196,8 @@ public class Helpers {
     public static String clickFor(String key, String message) {
         return TextFormatter.GRAY.format("message.info.click.block", TextFormatter.GOLD.literal(key), TextFormatter.YELLOW.format(message));
     }
+
+    public static String getStatusMessage(boolean status) {
+        return status ? Refs.status_on : Refs.status_off;
+    }
 }

@@ -61,8 +61,8 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
         super.addInformation(stack, player, tooltip, isDebugMode);
         boolean isGraviEngineOn = readFlyStatus(stack);
         boolean isLevitationOn = readWorkMode(stack);
-        String gravitationEngine = isGraviEngineOn ? Refs.status_on : Refs.status_off;
-        String levitationStatus = isLevitationOn ? Refs.status_on : Refs.status_off;
+        String gravitationEngine = Helpers.getStatusMessage(isGraviEngineOn);
+        String levitationStatus = Helpers.getStatusMessage(isLevitationOn);
         tooltip.add(Refs.gravitation_engine + " " + gravitationEngine);
         tooltip.add(Refs.gravitation_levitation + " " + levitationStatus);
         if (Helpers.isShiftKeyDown()) {

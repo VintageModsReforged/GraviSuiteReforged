@@ -58,8 +58,8 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         super.addInformation(stack, player, tooltip, par4);
         boolean isShearsOn = readToolMode(stack, NBT_SHEARS);
         boolean isCapitatorOn = readToolMode(stack, NBT_TCAPITATOR);
-        String modeShear = isShearsOn ? Refs.status_on : Refs.status_off;
-        String modeCapitator = isCapitatorOn ? Refs.status_on : Refs.status_off;
+        String modeShear = Helpers.getStatusMessage(isShearsOn);
+        String modeCapitator = Helpers.getStatusMessage(isCapitatorOn);
         tooltip.add(Refs.tool_mode_shear_gold + " " + modeShear);
         if (GraviSuiteConfig.chainsaw_tree_capitator) {
             tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
@@ -166,7 +166,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                 } else {
                     saveToolMode(itemStack, NBT_SHEARS, false);
                 }
-                IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + (shears ? Refs.status_on : Refs.status_off));
+                IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + Helpers.getStatusMessage(shears));
             }
             if (GraviSuiteConfig.chainsaw_tree_capitator) {
                 if (IC2.keyboard.isSneakKeyDown(player)) {
@@ -177,7 +177,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                     } else {
                         saveToolMode(itemStack, NBT_TCAPITATOR, false);
                     }
-                    IC2.platform.messagePlayer(player, Refs.tool_mode_capitator + " " + (capitator ? Refs.status_on : Refs.status_off));
+                    IC2.platform.messagePlayer(player, Refs.tool_mode_capitator + " " + Helpers.getStatusMessage(capitator));
                 }
             }
         }
