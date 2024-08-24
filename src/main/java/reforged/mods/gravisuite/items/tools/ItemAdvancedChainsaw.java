@@ -30,10 +30,7 @@ import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.pos.BlockPos;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ItemAdvancedChainsaw extends ItemToolElectric {
 
@@ -107,14 +104,9 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             if (block instanceof IShearable && readToolMode(stack, NBT_SHEARS)) {
                 IShearable target = (IShearable) block;
                 if (target.isShearable(stack, player.worldObj, x, y, z)) {
-                    ArrayList<ItemStack> drops = target.onSheared(stack, player.worldObj, x, y, z,
-                            EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
+                    ArrayList<ItemStack> drops = target.onSheared(stack, player.worldObj, x, y, z, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
                     for (ItemStack drop : drops) {
-                        float f = 0.7F;
-                        double d = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-                        double d1 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-                        double d2 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-                        EntityItem entityitem = new EntityItem(player.worldObj, x + d, y + d1, z + d2, drop);
+                        EntityItem entityitem = new EntityItem(player.worldObj, x + 0.5, y + 0.5f, z + 0.5f, drop);
                         entityitem.delayBeforeCanPickup = 10;
                         player.worldObj.spawnEntityInWorld(entityitem);
                     }
