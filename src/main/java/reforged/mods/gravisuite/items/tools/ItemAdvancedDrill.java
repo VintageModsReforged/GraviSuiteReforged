@@ -56,7 +56,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
 
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return Item.pickaxeDiamond.isBookEnchantable(stack, book);
+        return Item.pickaxeDiamond.isBookEnchantable(stack, book) || Item.shovelDiamond.isBookEnchantable(stack, book);
     }
 
     @Override
