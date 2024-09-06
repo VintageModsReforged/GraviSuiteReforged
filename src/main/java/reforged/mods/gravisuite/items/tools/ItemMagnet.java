@@ -113,7 +113,6 @@ public class ItemMagnet extends ItemToolElectric {
                     if (item != null && !player.isSneaking()) {
                         if (ElectricItem.manager.canUse(stack, ENERGY_COST)) {
                             if (this.onCollideWithPlayer(player, item)) {
-                                item.onCollideWithPlayer(player);
                                 ElectricItem.manager.use(stack, ENERGY_COST, player);
                             }
                         } else {
