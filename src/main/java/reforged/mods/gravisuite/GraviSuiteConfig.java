@@ -16,6 +16,7 @@ public class GraviSuiteConfig {
     public static String additional_languages;
     public static String default_language;
     public static int magnet_range = 8;
+    public static int magnet_max_capacity = 200;
     public static boolean log_wrench = false;
     public static boolean enable_hud = true;
     public static boolean use_fixed_values = true;
@@ -88,6 +89,7 @@ public class GraviSuiteConfig {
         default_language = getString(Refs.general, "default_language", "en_US", "Default Language. DO NOT CHANGE THIS! Use additional_languages field instead!");
         additional_languages = getString(Refs.general, "additional_languages", "", "Additional supported localizations. Place your <name>.lang file in config/gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
         magnet_range = getInt(Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
+        magnet_max_capacity = getInt(Refs.general, "magnet_max_capacity", 1, Integer.MAX_VALUE, magnet_max_capacity, "Magnet Attraction Capacity.");
 
         if (main_config.hasChanged()) main_config.save();
 
