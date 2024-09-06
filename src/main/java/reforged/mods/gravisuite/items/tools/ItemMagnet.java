@@ -1,22 +1,29 @@
 package reforged.mods.gravisuite.items.tools;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.AchievementList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
@@ -26,6 +33,7 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ItemMagnet extends ItemBaseElectricItem {
 
@@ -109,8 +117,9 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 for (Entity item : items) {
                     if (item != null && !player.isSneaking()) {
                         if (ElectricItem.canUse(stack, ENERGY_COST)) {
-                            item.onCollideWithPlayer(player);
-                            ElectricItem.use(stack, ENERGY_COST, player);
+                            if (this.onCollideWithPlayer(player, item)) {
+                                ElectricItem.use(stack, ENERGY_COST, player);
+                            }
                         } else {
                             tag.setBoolean(NBT_ACTIVE, false);
                         }
@@ -121,8 +130,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
     }
 
     private List<Entity> selectEntitiesWithinAABB(World world, AxisAlignedBB bb) {
-        int itemsRemaining = 200;
-        List<Entity> arraylist = new ArrayList<Entity>(itemsRemaining);
+        List<Entity> arraylist = new ArrayList<Entity>();
 
         final int minChunkX = MathHelper.floor_double((bb.minX) / 16.0D);
         final int maxChunkX = MathHelper.floor_double((bb.maxX) / 16.0D);
@@ -143,7 +151,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
                             if (!entity.isDead) {
                                 if (entity.boundingBox.intersectsWith(bb)) {
                                     arraylist.add(entity);
-                                    if (itemsRemaining-- <= 0) {
+                                    if (arraylist.size() >= GraviSuiteMainConfig.MAGNET_MAX_CAPACITY) {
                                         return arraylist;
                                     }
                                 }
@@ -155,5 +163,63 @@ public class ItemMagnet extends ItemBaseElectricItem {
             }
         }
         return arraylist;
+    }
+
+    public boolean onCollideWithPlayer(EntityPlayer player, Entity drop) {
+        World world = player.worldObj;
+        Random rand = new Random();
+        if (!world.isRemote) {
+            if (drop instanceof EntityXPOrb) {
+                EntityXPOrb xpOrb = (EntityXPOrb) drop;
+                if (xpOrb.field_70532_c == 0 && player.xpCooldown == 0) {
+                    player.xpCooldown = 2;
+                    xpOrb.playSound("random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
+                    player.onItemPickup(xpOrb, 1);
+                    player.addExperience(xpOrb.getXpValue());
+                    xpOrb.setDead();
+                    return true;
+                }
+            }
+            if (drop instanceof EntityItem) {
+                EntityItem itemDrop = (EntityItem) drop;
+                if (itemDrop.delayBeforeCanPickup > 0) {
+                    return false;
+                }
+
+                EntityItemPickupEvent event = new EntityItemPickupEvent(player, itemDrop);
+                if (MinecraftForge.EVENT_BUS.post(event)) {
+                    return false;
+                }
+
+                ItemStack stack = itemDrop.getEntityItem();
+                int var3 = stack.stackSize;
+                if (itemDrop.delayBeforeCanPickup <= 0 && (event.getResult() == Event.Result.ALLOW || var3 <= 0 || player.inventory.addItemStackToInventory(stack))) {
+                    if (stack.itemID == Block.wood.blockID) {
+                        player.triggerAchievement(AchievementList.mineWood);
+                    }
+
+                    if (stack.itemID == Item.leather.itemID) {
+                        player.triggerAchievement(AchievementList.killCow);
+                    }
+
+                    if (stack.itemID == Item.diamond.itemID) {
+                        player.triggerAchievement(AchievementList.diamonds);
+                    }
+
+                    if (stack.itemID == Item.blazeRod.itemID) {
+                        player.triggerAchievement(AchievementList.blazeRod);
+                    }
+
+                    GameRegistry.onPickupNotification(player, itemDrop);
+                    itemDrop.playSound("random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    player.onItemPickup(itemDrop, var3);
+                    if (stack.stackSize <= 0) {
+                        itemDrop.setDead();
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

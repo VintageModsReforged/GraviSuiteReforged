@@ -6,6 +6,7 @@ import net.minecraftforge.common.Property;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
+import java.sql.Ref;
 
 public class GraviSuiteMainConfig {
 
@@ -35,6 +36,7 @@ public class GraviSuiteMainConfig {
 
     public static String LANGUAGES;
     public static int MAGNET_RANGE = 8;
+    public static int MAGNET_MAX_CAPACITY = 200;
     public static double DURABILITY_FACTOR = 1.0;
     public static boolean LOG_WRENCH = false;
     public static boolean ENABLE_HUD = true;
@@ -46,6 +48,7 @@ public class GraviSuiteMainConfig {
         MAIN_CONFIG.load();
 
         MAGNET_RANGE = getInt(Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
+        MAGNET_MAX_CAPACITY = getInt(Refs.GENERAL, "magnet_max_capacity", 1, Integer.MAX_VALUE, MAGNET_MAX_CAPACITY, "Magnet Attraction Capacity.");
         HUD_POSITION = getInt(Refs.GENERAL, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
         ENABLE_HUD = getBoolean(Refs.GENERAL, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
         DURABILITY_FACTOR = getDouble(Refs.GENERAL, "durability_factor", 0.1, 1.0, 1.0, "Durability factor for Hammers.");
