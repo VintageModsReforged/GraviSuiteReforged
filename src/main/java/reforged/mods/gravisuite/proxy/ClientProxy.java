@@ -1,6 +1,7 @@
 package reforged.mods.gravisuite.proxy;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -17,14 +18,14 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import reforged.mods.gravisuite.ClientTickHandler;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteData;
-import reforged.mods.gravisuite.GraviSuiteOverlay;
-import reforged.mods.gravisuite.audio.ClientAudioHandler;
+import reforged.mods.gravisuite.events.client.AudioHandler;
+import reforged.mods.gravisuite.events.client.ClientArmorHandler;
+import reforged.mods.gravisuite.events.client.KeyboardHandler;
+import reforged.mods.gravisuite.events.client.OverlayHandler;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
-import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.ItemGraviToolRenderer;
 
 @SideOnly(Side.CLIENT)
@@ -34,10 +35,10 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
         MinecraftForgeClient.preloadTexture(GraviSuite.TEXTURE);
-        // Register Keybinds using 1.7.10 method
-        TickRegistry.registerTickHandler(new GraviSuiteOverlay(), Side.CLIENT);
-        TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
-        TickRegistry.registerTickHandler(new ClientAudioHandler(), Side.CLIENT);
+        registerTickHandlers(OverlayHandler.THIS);
+        registerTickHandlers(AudioHandler.THIS);
+        registerTickHandlers(KeyboardHandler.THIS);
+        registerTickHandlers(ClientArmorHandler.THIS);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -63,7 +64,7 @@ public class ClientProxy extends CommonProxy {
 
     @ForgeSubscribe
     public void onWorldLoad(WorldEvent.Load event) {
-        ClientTickHandler.firstLoad = true;
+        ClientArmorHandler.firstLoad = true;
     }
 
     @Override
@@ -92,5 +93,10 @@ public class ClientProxy extends CommonProxy {
             }
         }
         return false;
+    }
+
+    @Override
+    public void registerTickHandlers(ITickHandler handler) {
+        TickRegistry.registerTickHandler(handler, Side.CLIENT);
     }
 }

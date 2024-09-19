@@ -6,7 +6,6 @@ import net.minecraftforge.common.Property;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
-import java.sql.Ref;
 
 public class GraviSuiteMainConfig {
 
@@ -39,9 +38,19 @@ public class GraviSuiteMainConfig {
     public static int MAGNET_MAX_CAPACITY = 200;
     public static double DURABILITY_FACTOR = 1.0;
     public static boolean LOG_WRENCH = false;
-    public static boolean ENABLE_HUD = true;
     public static boolean ENABLE_HAMMERS = true;
+    public static boolean ENABLE_HUD = true;
+    public static boolean USE_FIXED_VALUES = true;
     public static int HUD_POSITION = 1;
+
+    public static int HUD_POS_ENERGY_X = 3;
+    public static int HUD_POS_ENERGY_Y = 3;
+
+    public static int HUD_POS_JETPACK_X = 3;
+    public static int HUD_POS_JETPACK_Y = 15;
+
+    public static int HUD_POS_GRAVI_X = 3;
+    public static int HUD_POS_GRAVI_Y = 15;
 
     public static void initMainConfig() {
         MAIN_CONFIG = new Configuration(new File((File) FMLInjectionData.data()[6], "config/gravisuite_main.cfg"));
@@ -49,8 +58,20 @@ public class GraviSuiteMainConfig {
 
         MAGNET_RANGE = getInt(Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
         MAGNET_MAX_CAPACITY = getInt(Refs.GENERAL, "magnet_max_capacity", 1, Integer.MAX_VALUE, MAGNET_MAX_CAPACITY, "Magnet Attraction Capacity.");
-        HUD_POSITION = getInt(Refs.GENERAL, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
-        ENABLE_HUD = getBoolean(Refs.GENERAL, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
+
+        HUD_POSITION = getInt(Refs.HUD, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
+        ENABLE_HUD = getBoolean(Refs.HUD, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
+        USE_FIXED_VALUES = getBoolean(Refs.HUD, "enable_hud_fixed", USE_FIXED_VALUES, "Should GraviSuite HUD use fixed values from `hud_position`?");
+
+        HUD_POS_ENERGY_X = getInt(Refs.HUD, "hud_pos_energy_x", 0, Integer.MAX_VALUE, HUD_POS_ENERGY_X, "X Pos for energy status info.");
+        HUD_POS_ENERGY_Y = getInt(Refs.HUD, "hud_pos_energy_y", 0, Integer.MAX_VALUE, HUD_POS_ENERGY_Y, "Y Pos for energy status info.");
+
+        HUD_POS_JETPACK_X = getInt(Refs.HUD, "hud_pos_jetpack_x", 0, Integer.MAX_VALUE, HUD_POS_JETPACK_X, "X Pos for jetpack status info.");
+        HUD_POS_JETPACK_Y = getInt(Refs.HUD, "hud_pos_jetpack_y", 0, Integer.MAX_VALUE, HUD_POS_JETPACK_Y, "Y Pos for jetpack status info.");
+
+        HUD_POS_GRAVI_X = getInt(Refs.HUD, "hud_pos_gravi_x", 0, Integer.MAX_VALUE, HUD_POS_GRAVI_X, "X Pos for Gravitational Chestplate status info.");
+        HUD_POS_GRAVI_Y = getInt(Refs.HUD, "hud_pos_gravi_y", 0, Integer.MAX_VALUE, HUD_POS_GRAVI_Y, "Y Pos for Gravitational Chestplate status info.");
+
         DURABILITY_FACTOR = getDouble(Refs.GENERAL, "durability_factor", 0.1, 1.0, 1.0, "Durability factor for Hammers.");
         ENABLE_HAMMERS = getBoolean(Refs.GENERAL, "enable_hammers", ENABLE_HAMMERS, "Enable Hammers.");
         LOG_WRENCH = getBoolean(Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");

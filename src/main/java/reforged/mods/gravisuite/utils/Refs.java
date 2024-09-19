@@ -20,7 +20,7 @@ public class Refs {
     public static final String NETWORK_COMMON = "reforged.mods.gravisuite.network.NetworkHandler";
 
     public static final int COMPONENTS_ICON_ID = 0, ARMOR_PACK_ID = 16, TOOLS_ID = 32, GRAVITOOL_ID = 48, HAMMERS_ID = 64;
-    public static final String IDS = "ids", GENERAL = "general", COMPAT = "compat";
+    public static final String IDS = "ids", GENERAL = "general", COMPAT = "compat", HUD = "hud";
 
     public static final String SNEAK_KEY = StatCollector.translateToLocal("key.sneak");
 
@@ -70,6 +70,7 @@ public class Refs {
     // Formatted Messages // \247
 
     public static final String energy_level = "\247f" + StatCollector.translateToLocal(ENERGY_LEVEL);
+    public static final String energy_level_gold = "\2476" + StatCollector.translateToLocal(ENERGY_LEVEL);
     public static final String jetpack_engine = "\247e" + StatCollector.translateToLocal(JETPACK_ENGINE);
     public static final String jetpack_engine_gold = "\2476" + StatCollector.translateToLocal(JETPACK_ENGINE);
     public static final String jetpack_hover = "\247e" + StatCollector.translateToLocal(JETPACK_HOVER);

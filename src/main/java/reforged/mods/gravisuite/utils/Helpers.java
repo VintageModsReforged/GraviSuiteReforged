@@ -193,4 +193,12 @@ public class Helpers {
     public static String pressXAndYForZ(String message, String key1, String key2, String action) {
         return "\2477" + StatCollector.translateToLocalFormatted(message, "\2476" + key1 + "\2477", "\2476" + key2 + "\2477", "\2476" + StatCollector.translateToLocal(action));
     }
+
+    public static String clickFor(String key, String message) {
+        return TextFormatter.GRAY.format("message.info.click.block", TextFormatter.GOLD.literal(key), TextFormatter.YELLOW.format(message));
+    }
+
+    public static String getStatusMessage(boolean status) {
+        return status ? Refs.status_on : Refs.status_off;
+    }
 }

@@ -1,23 +1,25 @@
-package reforged.mods.gravisuite.audio;
+package reforged.mods.gravisuite.events.client;
 
-import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import ic2.core.audio.AudioSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.audio.IAudioProvider;
+import reforged.mods.gravisuite.events.tick.TickEvents;
 
 import java.util.EnumSet;
 
-public class ClientAudioHandler implements ITickHandler {
+public class AudioHandler extends TickEvents.PlayerTickEvent {
+
+    public static final AudioHandler THIS = new AudioHandler();
 
     boolean USED;
     AudioSource AUDIO_SOURCE;
 
     @Override
     public void tickStart(EnumSet<TickType> enumSet, Object... objects) {
-        if (enumSet.contains(TickType.PLAYER)) {
+        if (shouldTick(enumSet)) {
             EntityPlayer player = (EntityPlayer) objects[0];
             if (player != null) {
                 boolean used = GraviSuite.PROXY.isFlying(player);
@@ -57,18 +59,5 @@ public class ClientAudioHandler implements ITickHandler {
                 }
             }
         }
-    }
-
-    @Override
-    public void tickEnd(EnumSet<TickType> enumSet, Object... objects) {}
-
-    @Override
-    public EnumSet<TickType> ticks() {
-        return EnumSet.of(TickType.PLAYER);
-    }
-
-    @Override
-    public String getLabel() {
-        return Refs.ID;
     }
 }
