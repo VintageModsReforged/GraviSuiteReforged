@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.events.tick.server.ServerArmorHandler;
+import reforged.mods.gravisuite.events.server.ServerArmorHandler;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

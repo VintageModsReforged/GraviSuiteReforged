@@ -72,7 +72,7 @@ public class GraviSuiteConfig {
         main_config = new Configuration(new File((File)FMLInjectionData.data()[6], "config/gravisuite/common.cfg"));
 
         enable_hud = getBoolean(Refs.hud, "enable_hud", enable_hud, "Should GraviSuite display the HUD with info about electric armor?");
-        use_fixed_values = getBoolean(Refs.hud, "enable_hud_fixed", use_fixed_values, "Should GraviSuite HUD use fixed values from below?");
+        use_fixed_values = getBoolean(Refs.hud, "enable_hud_fixed", use_fixed_values, "Should GraviSuite HUD use fixed values from `hud_position`?");
         hud_position = getInt(Refs.hud, "hud_pos", 1, 4, hud_position, "Fixed HUD Position. [1] - TOP_LEFT, [2] - TOP_RIGHT, [3] - BOTTOM_LEFT, [4] - BOTTOM_RIGHT");
 
         hud_pos_energy_x = getInt(Refs.hud, "hud_pos_energy_x", 0, Integer.MAX_VALUE, hud_pos_energy_x, "X Pos for energy status info.");

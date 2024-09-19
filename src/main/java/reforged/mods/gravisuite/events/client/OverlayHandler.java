@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.events.tick.client;
+package reforged.mods.gravisuite.events.client;
 
 import cpw.mods.fml.common.TickType;
 import ic2.api.item.IElectricItem;
@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.events.tick.base.TickEvents;
+import reforged.mods.gravisuite.events.tick.TickEvents;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -123,7 +123,7 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
                 }
 
                 if (GraviSuiteConfig.enable_hud) {
-                    if (charge > 0) {
+                    if (charge > 0 && !(armor.getItem() instanceof ItemBaseJetpack) && !(armor.getItem() instanceof ItemAdvancedQuant)) {
                         mc.ingameGUI.drawString(mc.fontRenderer, energyToDisplay, xPosEnergy, yPosEnergy, 0);
                     }
                     if (armor.getItem() instanceof ItemBaseJetpack) {

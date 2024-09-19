@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.events.tick.client;
+package reforged.mods.gravisuite.events.client;
 
 import cpw.mods.fml.common.TickType;
 import ic2.core.audio.AudioSource;
@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.audio.IAudioProvider;
-import reforged.mods.gravisuite.events.tick.base.TickEvents;
+import reforged.mods.gravisuite.events.tick.TickEvents;
 
 import java.util.EnumSet;
 

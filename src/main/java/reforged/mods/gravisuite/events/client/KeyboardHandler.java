@@ -1,8 +1,8 @@
-package reforged.mods.gravisuite.events.tick.client;
+package reforged.mods.gravisuite.events.client;
 
 import cpw.mods.fml.common.TickType;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.events.tick.base.TickEvents;
+import reforged.mods.gravisuite.events.tick.TickEvents;
 
 import java.util.EnumSet;
 

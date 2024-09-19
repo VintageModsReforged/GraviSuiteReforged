@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import reforged.mods.gravisuite.*;
-import reforged.mods.gravisuite.events.tick.server.ServerArmorHandler;
+import reforged.mods.gravisuite.events.server.ServerArmorHandler;
 import reforged.mods.gravisuite.utils.LangHelper;
 import reforged.mods.gravisuite.utils.Refs;
 

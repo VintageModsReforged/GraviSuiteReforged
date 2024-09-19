@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.events.tick.base;
+package reforged.mods.gravisuite.events.tick;
 
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
