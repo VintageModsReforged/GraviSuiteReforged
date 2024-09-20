@@ -32,7 +32,14 @@ public final class LangHelper {
                 }
             }
         } else {
-            addEntry(GraviSuiteConfig.default_language);
+            String[] LANGS = GraviSuiteConfig.default_language.split(",");
+            if (LANGS.length == 1) {
+                addEntry(GraviSuiteConfig.default_language);
+            } else {
+                for (String lang : LANGS) {
+                    addEntry(lang);
+                }
+            }
         }
         LanguageRegistry.reloadLanguageTable();
     }

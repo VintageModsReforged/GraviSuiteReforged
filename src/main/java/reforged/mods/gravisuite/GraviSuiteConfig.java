@@ -86,7 +86,7 @@ public class GraviSuiteConfig {
 
         chainsaw_tree_capitator = getBoolean(Refs.general, "chainsaw_tree_capitator", chainsaw_tree_capitator, "Enable TreeCapitator Mode for Advanced Chainsaw. GraviSuite provides builtin compat for TreeCapitator mod. Does this config value make sense then?");
         log_wrench = getBoolean(Refs.general, "enable_wrench_logging", log_wrench, "Should GraviTool Wrench be logged? [Debug purposes only!]");
-        default_language = getString(Refs.general, "default_language", "en_US", "Default Language. DO NOT CHANGE THIS! Use additional_languages field instead!");
+        default_language = getString(Refs.general, "default_language", "en_US,ru_RU", "Default Language. DO NOT CHANGE THIS! Use additional_languages field instead!");
         additional_languages = getString(Refs.general, "additional_languages", "", "Additional supported localizations. Place your <name>.lang file in config/gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
         magnet_range = getInt(Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
         magnet_max_capacity = getInt(Refs.general, "magnet_max_capacity", 1, Integer.MAX_VALUE, magnet_max_capacity, "Magnet Attraction Capacity.");
