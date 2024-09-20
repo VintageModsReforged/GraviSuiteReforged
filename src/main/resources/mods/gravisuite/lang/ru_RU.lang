@@ -92,8 +92,8 @@ message.info.press.to1=Зажмите %1$s, чтобы сменить %2$s
 message.info.press.to2=Зажмите %1$s и %2$s, чтобы сменить %3$s
 message.info.press.to.enable1=Зажмите %1$s, чтобы включить %2$s
 message.info.press.to.enable2=Зажмите %1$s и %2$s, чтобы включить %3$s
-message.info.click.block=%1$s по блоку %2$s
-message.info.filter.set=, чтобы установить фильтр
+message.info.click.block=%1$s по блоку, %2$s
+message.info.filter.set=чтобы установить фильтр
 
 message.vein.active=Активный режим добычи рудной жилы
 message.info.filter=Уничтожать предмет: %s
