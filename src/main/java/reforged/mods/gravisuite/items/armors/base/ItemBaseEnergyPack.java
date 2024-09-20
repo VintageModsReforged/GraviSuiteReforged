@@ -13,6 +13,7 @@ import reforged.mods.gravisuite.GraviSuiteData;
 import reforged.mods.gravisuite.items.armors.IHasOverlay;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class ItemBaseEnergyPack extends ItemArmor implements IElectricItem, IHas
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
         super.addInformation(stack, player, tooltip, debugMode);
-        tooltip.add(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier());
+        tooltip.add(TextFormatter.AQUA.literal(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier()));
     }
 
     @Override
