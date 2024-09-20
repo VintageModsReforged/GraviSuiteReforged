@@ -1,0 +1,100 @@
+####################
+# armors
+####################
+
+item.advanced_lappack.name=Улучшенный мультиранец
+item.ultimate_lappack.name=Совершенный мультиранец
+item.advanced_jetpack.name=Улучшенный электрический реактивный ранец
+item.advanced_nano.name=Улучшенная нано-кираса
+item.advanced_quant.name=Гравитационный нагрудник
+
+####################
+# components
+####################
+
+item.component.superconductor_cover.name=Изоляция сверхпроводника
+item.component.superconductor.name=Сверхпроводник
+item.component.cooling_core.name=Охлаждающий элемент
+item.component.gravi_engine.name=Гравитационный двигатель
+item.component.magnetron.name=Магнетрон
+item.component.vajra_core.name=Ядро Ваджры
+item.component.engine_booster.name=Ускоритель двигателя
+
+####################
+# tools
+###################
+
+item.advanced_diamond_drill.name=Улучшенный алмазный бур
+item.advanced_iridium_drill.name=Иридиевый бур
+item.advanced_chainsaw.name=Улучшенная электропила
+item.gravitool.name=Грави-инструмент
+item.magnet.name=Магнит
+item.vajra.name=Ваджра
+item.voider.name=Опустошитель
+item.wooden_hammer.name=Деревянный молот
+item.stone_hammer.name=Каменный молот
+item.iron_hammer.name=Железный молот
+item.diamond_hammer.name=Алмазный молот
+item.bronze_hammer.name=Бронзовый молот
+item.quartz_hammer.name=Кварцевый молот
+
+####################
+# messages
+####################
+
+key.toggle.engine.desc=[GraviSuite] Клавиша переключения брони
+key.toggle.magnet.desc=[GraviSuite] Клавиша переключения магнита
+message.gravitation.engine=Гравитационный двигатель:
+message.gravitation.levitation=Режим левитации:
+message.text.energy_level=Уровень заряда:
+message.text.jetpack.engine=Реактивный двигатель:
+message.text.jetpack.hover=Режим парения:
+message.text.low_energy=Не хватает энергии для этой операции!
+message.text.off=Выключено
+message.text.on=Включено
+message.text.shutdown=Мало энергии! Отключение!
+message.tool.eff.mode=Скорость добычи:
+message.tool.eff.mode.stat=Скорость добычи
+message.tool.eff.mode.fine=Наименьшая
+message.tool.eff.mode.low_power=Средняя
+message.tool.eff.mode.normal=Быстрая
+message.tool.mining.mode=Режим добычи:
+message.tool.mining.mode.stat=Режим добычи
+message.tool.mode=Режим инструмента:
+message.tool.mode.stat=Режим инструмента
+message.tool.mode.big_holes=3 на 3
+message.tool.mode.fortune=Удача III
+message.tool.mode.hoe=Мотыга
+message.tool.mode.magnet=Режим магнита:
+message.tool.mode.normal=В 1 блок
+message.tool.mode.screwdriver=Отвёртка
+message.tool.mode.shear=Режим ножниц:
+message.tool.mode.capitator=Срубание всего дерева:
+message.tool.mode.silk=Шёлковое касание
+message.tool.mode.treetap=Краник
+message.tool.mode.vein=Рудная жила
+message.tool.mode.vein_extended=Расширенная жила
+message.tool.mode.wrench=Гаечный ключ
+
+message.ench.mode=Режим зачарования:
+message.ench.mode.stat=Режим зачарования
+message.tool.mode.shear.stat=Режим ножниц
+message.tool.mode.capitator.stat=Срубание всего дерева
+message.tool.mode.magnet.stat=Режим магнита
+message.text.jetpack.engine.stat=Реактивный двигатель
+message.text.jetpack.hover.stat=Режим парения
+message.text.jetpack.boost.stat=Режим ускорения
+message.gravitation.engine.stat=Гравитационный двигатель
+message.gravitation.levitation.stat=Режим левитации
+
+message.info.press=Зажмите %1$s для дополнительной информации
+message.info.press.to1=Зажмите %1$s, чтобы сменить %2$s
+message.info.press.to2=Зажмите %1$s и %2$s, чтобы сменить %3$s
+message.info.press.to.enable1=Зажмите %1$s, чтобы включить %2$s
+message.info.press.to.enable2=Зажмите %1$s и %2$s, чтобы включить %3$s
+message.info.click.block=%1$s по блоку %2$s
+message.info.filter.set=, чтобы установить фильтр
+
+message.vein.active=Активный режим добычи рудной жилы
+message.info.filter=Уничтожать предмет: %s
+message.info.quick_change=[!] Быстрое переключение режимов [!]

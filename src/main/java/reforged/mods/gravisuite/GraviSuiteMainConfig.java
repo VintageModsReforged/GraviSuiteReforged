@@ -75,7 +75,7 @@ public class GraviSuiteMainConfig {
         DURABILITY_FACTOR = getDouble(Refs.GENERAL, "durability_factor", 0.1, 1.0, 1.0, "Durability factor for Hammers.");
         ENABLE_HAMMERS = getBoolean(Refs.GENERAL, "enable_hammers", ENABLE_HAMMERS, "Enable Hammers.");
         LOG_WRENCH = getBoolean(Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
-        LANGUAGES = getString(Refs.GENERAL, "localization_list", "en_US", "Supported localizations. Place your <name>.lang file in gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
+        LANGUAGES = getString(Refs.GENERAL, "localization_list", "en_US,ru_RU", "Supported localizations. Place your <name>.lang file in gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
 
         COMPONENT_ID = getId(Refs.IDS, "component_id", COMPONENT_ID, "component");
 
