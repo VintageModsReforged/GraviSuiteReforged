@@ -30,7 +30,10 @@ import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.pos.BlockPos;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ItemAdvancedChainsaw extends ItemToolElectric {
 

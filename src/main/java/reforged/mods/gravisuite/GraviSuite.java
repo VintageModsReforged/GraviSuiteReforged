@@ -33,10 +33,7 @@ public class GraviSuite {
     @SidedProxy(clientSide = Refs.networkClient, serverSide = Refs.networkCommon)
     public static NetworkHandler network;
 
-//    public static final CreativeTabs graviTab = new GraviSuiteTab();
-
-    public static final CreativeTabs graviTab = new CreativeTabs(Refs.id) {
-        {
+    public static final CreativeTabs graviTab = new CreativeTabs(Refs.id) {{
             LanguageRegistry.instance().addStringLocalization("itemGroup." + Refs.id, Refs.name);
         }
 

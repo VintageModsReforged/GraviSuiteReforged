@@ -9,7 +9,9 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import reforged.mods.gravisuite.events.client.ClientArmorHandler;
 import reforged.mods.gravisuite.utils.Refs;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class NetworkHandlerClient extends NetworkHandler {
