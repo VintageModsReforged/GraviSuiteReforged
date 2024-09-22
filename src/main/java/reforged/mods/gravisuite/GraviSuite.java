@@ -7,7 +7,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
@@ -31,10 +33,15 @@ public class GraviSuite {
     @SidedProxy(clientSide = Refs.KEYBOARD_CLIENT, serverSide = Refs.KEYBOARD_COMMON)
     public static GraviSuiteKeyboard KEYBOARD;
 
-    @Mod.Instance(Refs.ID)
-    public static GraviSuite INSTANCE;
+    public static final CreativeTabs TAB = new CreativeTabs(Refs.ID) {{
+            LanguageRegistry.instance().addStringLocalization("itemGroup." +Refs.ID, Refs.NAME);
+    }
+        @Override
+        public Item getTabIconItem() {
+            return GraviSuiteData.ADVANCED_QUANT;
+        }
+    };
 
-    public static CreativeTabs TAB = new GraviSuiteTab();
     public static final Logger LOGGER = Logger.getLogger(Refs.NAME);
     public static final String TEXTURE = "/mods/gravisuite/textures/item_components.png";
 
