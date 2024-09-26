@@ -180,7 +180,7 @@ public class GraviSuiteRecipes {
                     "PPP", "PSP", " S ",
                     'P', Items.getItem("bronzeIngot"),
                     'S', Item.stick);
-
+            // excavators
             Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.WOOD_EXCAVATOR),
                     " P ", "PSP", " S ",
                     'P', Block.planks,
@@ -212,7 +212,7 @@ public class GraviSuiteRecipes {
                         "PPP", "PSP", " S ",
                         'P', "crystalCertusQuartz",
                         'S', Item.stick);
-
+                // excavators
                 Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.QUARTZ_EXCAVATOR),
                         " P ", "PSP", " S ",
                         'P', "crystalCertusQuartz",
@@ -231,7 +231,7 @@ public class GraviSuiteRecipes {
                         "PPP", "PSP", " S ",
                         'P', "gemGreenSapphire",
                         'S', Item.stick);
-
+                // excavators
                 Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.RUBY_EXCAVATOR),
                         " P ", "PSP", " S ",
                         'P', "gemRuby",

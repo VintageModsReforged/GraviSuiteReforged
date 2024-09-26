@@ -33,15 +33,15 @@ public class GraviSuiteMainConfig {
     public static int GREEN_SAPPHIRE_HAMMER_ID = 30243;
     public static int BRONZE_HAMMER_ID = 30244;
 
-    public static int WOOD_EXCAVATOR_ID = 30244;
-    public static int STONE_EXCAVATOR_ID = 30245;
-    public static int IRON_EXCAVATOR_ID = 30246;
-    public static int DIAMOND_EXCAVATOR_ID = 30247;
-    public static int QUARTZ_EXCAVATOR_ID = 30248;
-    public static int RUBY_EXCAVATOR_ID = 30249;
-    public static int SAPPHIRE_EXCAVATOR_ID = 30250;
-    public static int GREEN_SAPPHIRE_EXCAVATOR_ID = 30251;
-    public static int BRONZE_EXCAVATOR_ID = 30252;
+    public static int WOOD_EXCAVATOR_ID = 30245;
+    public static int STONE_EXCAVATOR_ID = 30246;
+    public static int IRON_EXCAVATOR_ID = 30247;
+    public static int DIAMOND_EXCAVATOR_ID = 30248;
+    public static int QUARTZ_EXCAVATOR_ID = 30249;
+    public static int RUBY_EXCAVATOR_ID = 30250;
+    public static int SAPPHIRE_EXCAVATOR_ID = 30251;
+    public static int GREEN_SAPPHIRE_EXCAVATOR_ID = 30252;
+    public static int BRONZE_EXCAVATOR_ID = 30253;
 
     public static String LANGUAGES;
     public static int MAGNET_RANGE = 8;
