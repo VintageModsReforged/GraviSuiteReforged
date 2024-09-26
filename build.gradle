@@ -45,6 +45,9 @@ dependencies {
 	modImplementation files("libs/industrialcraft-2_1.115.207-lf.jar")
 	modImplementation files("libs/appeng-rv9-i.zip")
 	modImplementation files("libs/gregtechmod290h.zip")
+	modImplementation files("libs/redpowercore.zip")
+	modImplementation files("libs/redpowerdigital.zip")
+	modImplementation files("libs/redpowermechanical.zip")
 //	modImplementation files("libs/mod_zGraviSuite_1_8.zip")
 //	implementation files("libs/mod_zGraviSuite_1_8.zip")
 }

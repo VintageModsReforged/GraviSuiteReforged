@@ -42,9 +42,7 @@ public class ItemBaseTool extends ItemTool {
 
             Block block = Block.blocksList[world.getBlockId(x, y, z)];
             int blockMetadata = world.getBlockMetadata(x, y, z);
-            if (!ForgeHooks.canHarvestBlock(block, player, 0)) {
-                return false;
-            } else if (!ForgeHooks.canHarvestBlock(block, player, blockMetadata)) {
+            if (!ForgeHooks.canHarvestBlock(block, player, blockMetadata)) {
                 return false;
             } else {
                 if (player.capabilities.isCreativeMode) {
@@ -86,8 +84,4 @@ public class ItemBaseTool extends ItemTool {
             }
         }
     }
-
-//    public boolean canHarvestBlock(Block block, ItemStack stack) {
-//        return false;
-//    }
 }
