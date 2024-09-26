@@ -23,7 +23,7 @@ import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.TextFormatter;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
+import reforged.mods.gravisuite.utils.BlockPos;
 
 import java.util.*;
 
