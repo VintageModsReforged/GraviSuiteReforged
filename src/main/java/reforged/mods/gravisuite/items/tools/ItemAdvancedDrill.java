@@ -100,7 +100,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             World world = player.worldObj;
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
-            MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, true, 4.5D);
+            MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, false, 4.5D);
             int block = world.getBlockId(x, y, z);
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
