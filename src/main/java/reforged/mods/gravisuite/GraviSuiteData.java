@@ -11,6 +11,7 @@ import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.ItemJetpack;
 import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.tools.*;
+import reforged.mods.gravisuite.items.tools.base.ItemBaseExcavator;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseHammer;
 
 public class GraviSuiteData {
@@ -24,8 +25,9 @@ public class GraviSuiteData {
     public static Item ADVANCED_LAPPACK, ULTIMATE_LAPPACK, ADVANCED_JETPACK, ADVANCED_NANO, ADVANCED_QUANT;
 
     public static Item ADVANCED_DRILL, ADVANCED_CHAINSAW, VAJRA, MAGNET, GRAVI_TOOL;
-    public static Item WOOD_HAMMER, STONE_HAMMER, IRON_HAMMER, DIAMOND_HAMMER;
-    public static Item QUARTZ_HAMMER, RUBY_HAMMER, SAPPHIRE_HAMMER, GREEN_SAPPHIRE_HAMMER, BRONZE_HAMMER;
+    public static Item WOOD_HAMMER, STONE_HAMMER, IRON_HAMMER, DIAMOND_HAMMER, QUARTZ_HAMMER, RUBY_HAMMER, SAPPHIRE_HAMMER, GREEN_SAPPHIRE_HAMMER, BRONZE_HAMMER;
+    public static Item WOOD_EXCAVATOR, STONE_EXCAVATOR, IRON_EXCAVATOR, DIAMOND_EXCAVATOR, QUARTZ_EXCAVATOR, RUBY_EXCAVATOR, SAPPHIRE_EXCAVATOR, GREEN_SAPPHIRE_EXCAVATOR, BRONZE_EXCAVATOR;
+
 
     public static void init() {
         // Components
@@ -60,6 +62,22 @@ public class GraviSuiteData {
                 RUBY_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.RUBY_HAMMER_ID, GEMS_MATERIAL, 6, "ruby");
                 SAPPHIRE_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.SAPPHIRE_HAMMER_ID, GEMS_MATERIAL, 7, "sapphire");
                 GREEN_SAPPHIRE_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.GREEN_SAPPHIRE_HAMMER_ID, GEMS_MATERIAL, 8, "green_sapphire");
+            }
+        }
+
+        if (GraviSuiteMainConfig.ENABLE_EXCAVATORS) {
+            WOOD_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.WOOD_EXCAVATOR_ID, EnumToolMaterial.WOOD, 0, "wooden");
+            STONE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.STONE_EXCAVATOR_ID, EnumToolMaterial.STONE, 1, "stone");
+            IRON_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.IRON_EXCAVATOR_ID, EnumToolMaterial.IRON, 2, "iron");
+            DIAMOND_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.DIAMOND_EXCAVATOR_ID, EnumToolMaterial.EMERALD, 3, "diamond");
+            BRONZE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.BRONZE_EXCAVATOR_ID, EnumToolMaterial.IRON, 4, "bronze");
+            if (Loader.isModLoaded("AppliedEnergistics")) {
+                QUARTZ_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.QUARTZ_EXCAVATOR_ID, EnumToolMaterial.IRON, 5, "quartz");
+            }
+            if (Loader.isModLoaded("RedPowerBase")) {
+                RUBY_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.RUBY_EXCAVATOR_ID, GEMS_MATERIAL, 6, "ruby");
+                SAPPHIRE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.SAPPHIRE_EXCAVATOR_ID, GEMS_MATERIAL, 7, "sapphire");
+                GREEN_SAPPHIRE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.GREEN_SAPPHIRE_EXCAVATOR_ID, GEMS_MATERIAL, 8, "green_sapphire");
             }
         }
 

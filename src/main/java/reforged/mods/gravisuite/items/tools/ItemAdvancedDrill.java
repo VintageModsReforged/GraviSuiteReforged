@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
@@ -36,6 +37,8 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
     public ItemAdvancedDrill() {
         super(GraviSuiteMainConfig.ADVANCED_DRILL_ID, "advanced_diamond_drill", 2, 500, 15000, EnumToolMaterial.EMERALD);
         this.setIconIndex(Refs.TOOLS_ID);
+        MinecraftForge.setToolClass(this, "pickaxe", 4);
+        MinecraftForge.setToolClass(this, "shovel", 4);
         init();
     }
 

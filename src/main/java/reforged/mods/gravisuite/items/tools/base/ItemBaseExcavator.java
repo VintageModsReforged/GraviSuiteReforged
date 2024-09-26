@@ -2,7 +2,6 @@ package reforged.mods.gravisuite.items.tools.base;
 
 import ic2.core.IC2;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
@@ -19,43 +18,33 @@ import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
-public class ItemBaseHammer extends ItemBaseTool {
+public class ItemBaseExcavator extends ItemBaseTool {
 
-    public Set<Block> mineableBlocks = new HashSet<Block>();
-    public Set<Material> mineableBlockMaterials = new HashSet<Material>();
-
-    public ItemBaseHammer(int id, EnumToolMaterial enumToolMaterial, int meta, String name) {
-        super(id, name + "_hammer", enumToolMaterial, meta);
+    public ItemBaseExcavator(int id, EnumToolMaterial enumToolMaterial, int meta, String name) {
+        super(id, name + "_excavator", enumToolMaterial, meta);
         this.setCreativeTab(GraviSuite.TAB);
-        MinecraftForge.setToolClass(this, "pickaxe", enumToolMaterial.getHarvestLevel());
-        this.setIconIndex(Refs.HAMMERS_ID + this.meta);
-        init();
+        MinecraftForge.setToolClass(this, "shovel", enumToolMaterial.getHarvestLevel());
+        this.setIconIndex(Refs.EXCAVATOR_ID + this.meta);
     }
 
     @Override
     public float getStrVsBlock(ItemStack stack, Block block) {
-        if (this.mineableBlocks.contains(block) || this.mineableBlockMaterials.contains(block.blockMaterial)) {
-            return this.toolMaterial.getEfficiencyOnProperMaterial();
-        }
-        return 0.2F;
+        return this.toolMaterial.getEfficiencyOnProperMaterial();
     }
 
     @Override
     public boolean canHarvestBlock(Block block) {
         EnumToolMaterial mat = this.toolMaterial;
-        boolean effectiveOn = this.mineableBlocks.contains(block) || this.mineableBlockMaterials.contains(block.blockMaterial);
         if (mat.equals(EnumToolMaterial.WOOD)) {
-            return pickaxeWood.canHarvestBlock(block) && effectiveOn;
+            return shovelWood.canHarvestBlock(block);
         } else if (mat.equals(EnumToolMaterial.STONE)) {
-            return pickaxeStone.canHarvestBlock(block) && effectiveOn;
+            return shovelStone.canHarvestBlock(block);
         } else if (mat.equals(EnumToolMaterial.IRON) || mat.equals(GraviSuiteData.GEMS_MATERIAL)) {
-            return pickaxeSteel.canHarvestBlock(block) && effectiveOn;
+            return shovelSteel.canHarvestBlock(block);
         } else {
-            return effectiveOn;
+            return shovelDiamond.canHarvestBlock(block);
         }
     }
 
@@ -146,51 +135,5 @@ public class ItemBaseHammer extends ItemBaseTool {
             }
         }
         return super.onItemUse(stack, player, world, x, y, z, side, xOffset, yOffset, zOffset);
-    }
-
-
-    public void init() {
-        this.mineableBlocks.add(Block.glass);
-        this.mineableBlocks.add(Block.thinGlass);
-        this.mineableBlocks.add(Block.glowStone);
-        this.mineableBlocks.add(Block.silverfish);
-        this.mineableBlocks.add(Block.cobblestone);
-        this.mineableBlocks.add(Block.stoneSingleSlab);
-        this.mineableBlocks.add(Block.stoneDoubleSlab);
-        this.mineableBlocks.add(Block.stairCompactCobblestone);
-        this.mineableBlocks.add(Block.stone);
-        this.mineableBlocks.add(Block.sandStone);
-        this.mineableBlocks.add(Block.stairsSandStone);
-        this.mineableBlocks.add(Block.cobblestoneMossy);
-        this.mineableBlocks.add(Block.oreIron);
-        this.mineableBlocks.add(Block.blockSteel);
-        this.mineableBlocks.add(Block.oreCoal);
-        this.mineableBlocks.add(Block.blockGold);
-        this.mineableBlocks.add(Block.oreGold);
-        this.mineableBlocks.add(Block.oreDiamond);
-        this.mineableBlocks.add(Block.blockDiamond);
-        this.mineableBlocks.add(Block.ice);
-        this.mineableBlocks.add(Block.netherrack);
-        this.mineableBlocks.add(Block.oreLapis);
-        this.mineableBlocks.add(Block.blockLapis);
-        this.mineableBlocks.add(Block.oreRedstone);
-        this.mineableBlocks.add(Block.oreRedstoneGlowing);
-        this.mineableBlocks.add(Block.brick);
-        this.mineableBlocks.add(Block.stairsBrick);
-        this.mineableBlocks.add(Block.stoneBrick);
-        this.mineableBlocks.add(Block.stairsStoneBrickSmooth);
-        this.mineableBlocks.add(Block.netherBrick);
-        this.mineableBlocks.add(Block.stairsNetherBrick);
-        this.mineableBlocks.add(Block.obsidian);
-        this.mineableBlocks.add(Block.anvil);
-
-        this.mineableBlockMaterials.add(Material.anvil);
-        this.mineableBlockMaterials.add(Material.circuits);
-        this.mineableBlockMaterials.add(Material.dragonEgg);
-        this.mineableBlockMaterials.add(Material.glass);
-        this.mineableBlockMaterials.add(Material.iron);
-        this.mineableBlockMaterials.add(Material.piston);
-        this.mineableBlockMaterials.add(Material.redstoneLight);
-        this.mineableBlockMaterials.add(Material.rock);
     }
 }

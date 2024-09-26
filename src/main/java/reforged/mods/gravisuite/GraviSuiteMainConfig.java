@@ -33,12 +33,23 @@ public class GraviSuiteMainConfig {
     public static int GREEN_SAPPHIRE_HAMMER_ID = 30243;
     public static int BRONZE_HAMMER_ID = 30244;
 
+    public static int WOOD_EXCAVATOR_ID = 30244;
+    public static int STONE_EXCAVATOR_ID = 30245;
+    public static int IRON_EXCAVATOR_ID = 30246;
+    public static int DIAMOND_EXCAVATOR_ID = 30247;
+    public static int QUARTZ_EXCAVATOR_ID = 30248;
+    public static int RUBY_EXCAVATOR_ID = 30249;
+    public static int SAPPHIRE_EXCAVATOR_ID = 30250;
+    public static int GREEN_SAPPHIRE_EXCAVATOR_ID = 30251;
+    public static int BRONZE_EXCAVATOR_ID = 30252;
+
     public static String LANGUAGES;
     public static int MAGNET_RANGE = 8;
     public static int MAGNET_MAX_CAPACITY = 200;
     public static double DURABILITY_FACTOR = 1.0;
     public static boolean LOG_WRENCH = false;
     public static boolean ENABLE_HAMMERS = true;
+    public static boolean ENABLE_EXCAVATORS = true;
     public static boolean ENABLE_HUD = true;
     public static boolean USE_FIXED_VALUES = true;
     public static int HUD_POSITION = 1;
@@ -74,6 +85,7 @@ public class GraviSuiteMainConfig {
 
         DURABILITY_FACTOR = getDouble(Refs.GENERAL, "durability_factor", 0.1, 1.0, 1.0, "Durability factor for Hammers.");
         ENABLE_HAMMERS = getBoolean(Refs.GENERAL, "enable_hammers", ENABLE_HAMMERS, "Enable Hammers.");
+        ENABLE_EXCAVATORS = getBoolean(Refs.GENERAL, "enable_excavators", ENABLE_EXCAVATORS, "Enable Excavators.");
         LOG_WRENCH = getBoolean(Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         LANGUAGES = getString(Refs.GENERAL, "localization_list", "en_US,ru_RU", "Supported localizations. Place your <name>.lang file in gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
 

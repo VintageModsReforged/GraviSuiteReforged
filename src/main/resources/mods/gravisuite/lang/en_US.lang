@@ -36,6 +36,19 @@ item.iron_hammer.name=Iron Hammer
 item.diamond_hammer.name=Diamond Hammer
 item.bronze_hammer.name=Bronze Hammer
 item.quartz_hammer.name=Quartz Hammer
+item.ruby_hammer.name=Ruby Hammer
+item.sapphire_hammer.name=Sapphire Hammer
+item.green_sapphire_hammer.name=Green Sapphire Hammer
+
+item.wooden_excavator.name=Wooden Excavator
+item.stone_excavator.name=Stone Excavator
+item.iron_excavator.name=Iron Excavator
+item.diamond_excavator.name=Diamond Excavator
+item.bronze_excavator.name=Bronze Excavator
+item.quartz_excavator.name=Quartz Excavator
+item.ruby_excavator.name=Ruby Excavator
+item.sapphire_excavator.name=Sapphire Excavator
+item.green_sapphire_excavator.name=Green Sapphire Excavator
 
 ####################
 # messages

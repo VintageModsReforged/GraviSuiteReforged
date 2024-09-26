@@ -180,11 +180,41 @@ public class GraviSuiteRecipes {
                     "PPP", "PSP", " S ",
                     'P', Items.getItem("bronzeIngot"),
                     'S', Item.stick);
+
+            Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.WOOD_EXCAVATOR),
+                    " P ", "PSP", " S ",
+                    'P', Block.planks,
+                    'S', Item.stick);
+
+            Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.STONE_EXCAVATOR),
+                    " P ", "PSP", " S ",
+                    'P', Block.cobblestone,
+                    'S', Item.stick);
+
+            Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.IRON_EXCAVATOR),
+                    " P ", "PSP", " S ",
+                    'P', Item.ingotIron,
+                    'S', Item.stick);
+
+            Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.DIAMOND_EXCAVATOR),
+                    " P ", "PSP", " S ",
+                    'P', Item.diamond,
+                    'S', Item.stick);
+
+            Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.BRONZE_EXCAVATOR),
+                    " P ", "PSP", " S ",
+                    'P', Items.getItem("bronzeIngot"),
+                    'S', Item.stick);
             if (Loader.isModLoaded("AppliedEnergistics")) {
                 OreDictionary.registerOre("crystalCertusQuartz", appeng.api.Materials.matQuartz);
 
                 Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.QUARTZ_HAMMER),
                         "PPP", "PSP", " S ",
+                        'P', "crystalCertusQuartz",
+                        'S', Item.stick);
+
+                Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.QUARTZ_EXCAVATOR),
+                        " P ", "PSP", " S ",
                         'P', "crystalCertusQuartz",
                         'S', Item.stick);
             }
@@ -199,6 +229,19 @@ public class GraviSuiteRecipes {
                         'S', Item.stick);
                 Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.GREEN_SAPPHIRE_HAMMER),
                         "PPP", "PSP", " S ",
+                        'P', "gemGreenSapphire",
+                        'S', Item.stick);
+
+                Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.RUBY_EXCAVATOR),
+                        " P ", "PSP", " S ",
+                        'P', "gemRuby",
+                        'S', Item.stick);
+                Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.SAPPHIRE_EXCAVATOR),
+                        " P ", "PSP", " S ",
+                        'P', "gemSapphire",
+                        'S', Item.stick);
+                Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.GREEN_SAPPHIRE_EXCAVATOR),
+                        " P ", "PSP", " S ",
                         'P', "gemGreenSapphire",
                         'S', Item.stick);
             }

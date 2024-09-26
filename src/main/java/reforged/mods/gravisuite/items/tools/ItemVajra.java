@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
@@ -36,6 +37,9 @@ public class ItemVajra extends ItemBaseElectricItem {
         super(GraviSuiteMainConfig.VAJRA_ID, "vajra", 2, 10000, 1000000, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 1.0F;
         this.setIconIndex(Refs.TOOLS_ID + 2);
+        MinecraftForge.setToolClass(this, "pickaxe", 4);
+        MinecraftForge.setToolClass(this, "shovel", 4);
+        MinecraftForge.setToolClass(this, "axe", 4);
     }
 
     @Override

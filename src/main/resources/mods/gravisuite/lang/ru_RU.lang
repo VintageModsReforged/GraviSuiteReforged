@@ -37,6 +37,19 @@ item.iron_hammer.name=Железный молот
 item.diamond_hammer.name=Алмазный молот
 item.bronze_hammer.name=Бронзовый молот
 item.quartz_hammer.name=Кварцевый молот
+item.ruby_hammer.name=Рубиноый молот
+item.sapphire_hammer.name=Сапфировый молот
+item.green_sapphire_hammer.name=Молот из зелёного сапфира
+
+item.wooden_excavator.name=Деревянный заступ
+item.stone_excavator.name=Каменный заступ
+item.iron_excavator.name=Железный заступ
+item.diamond_excavator.name=Алмазный заступ
+item.bronze_excavator.name=Бронзовый заступ
+item.quartz_excavator.name=Кварцевый заступ
+item.ruby_excavator.name=Рубиноый заступ
+item.sapphire_excavator.name=Сапфировый заступ
+item.green_sapphire_excavator.name=Заступ из зелёного сапфира
 
 ####################
 # messages
