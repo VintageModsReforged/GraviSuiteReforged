@@ -33,7 +33,6 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ItemMagnet extends ItemBaseElectricItem {
 
@@ -103,6 +102,13 @@ public class ItemMagnet extends ItemBaseElectricItem {
             }
             if (!tag.getBoolean(NBT_ACTIVE))
                 return;
+            if (world.getTotalWorldTime() % 20 == 0) {
+                if (ElectricItem.canUse(stack, ENERGY_COST)) {
+                    ElectricItem.use(stack, ENERGY_COST, player);
+                } else {
+                    tag.setBoolean(NBT_ACTIVE, false);
+                }
+            }
             if (world.getTotalWorldTime() % 2 != 0)
                 return;
             if (world.getChunkProvider().chunkExists(player.chunkCoordX, player.chunkCoordZ)) {
@@ -116,13 +122,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
                     return;
                 for (Entity item : items) {
                     if (item != null && !player.isSneaking()) {
-                        if (ElectricItem.canUse(stack, ENERGY_COST)) {
-                            if (this.onCollideWithPlayer(player, item)) {
-                                ElectricItem.use(stack, ENERGY_COST, player);
-                            }
-                        } else {
-                            tag.setBoolean(NBT_ACTIVE, false);
-                        }
+                        this.onCollideWithPlayer(player, item);
                     }
                 }
             }
@@ -167,13 +167,12 @@ public class ItemMagnet extends ItemBaseElectricItem {
 
     public boolean onCollideWithPlayer(EntityPlayer player, Entity drop) {
         World world = player.worldObj;
-        Random rand = new Random();
         if (!world.isRemote) {
             if (drop instanceof EntityXPOrb) {
                 EntityXPOrb xpOrb = (EntityXPOrb) drop;
                 if (xpOrb.field_70532_c == 0 && player.xpCooldown == 0) {
                     player.xpCooldown = 2;
-                    xpOrb.playSound("random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
+                    xpOrb.playSound("random.pop", 0.02F, 1F);
                     player.onItemPickup(xpOrb, 1);
                     player.addExperience(xpOrb.getXpValue());
                     xpOrb.setDead();
@@ -192,8 +191,8 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 }
 
                 ItemStack stack = itemDrop.getEntityItem();
-                int var3 = stack.stackSize;
-                if (itemDrop.delayBeforeCanPickup <= 0 && (event.getResult() == Event.Result.ALLOW || var3 <= 0 || player.inventory.addItemStackToInventory(stack))) {
+                int stackSize = stack.stackSize;
+                if (itemDrop.delayBeforeCanPickup <= 0 && (event.getResult() == Event.Result.ALLOW || stackSize <= 0 || player.inventory.addItemStackToInventory(stack))) {
                     if (stack.itemID == Block.wood.blockID) {
                         player.triggerAchievement(AchievementList.mineWood);
                     }
@@ -211,8 +210,8 @@ public class ItemMagnet extends ItemBaseElectricItem {
                     }
 
                     GameRegistry.onPickupNotification(player, itemDrop);
-                    itemDrop.playSound("random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                    player.onItemPickup(itemDrop, var3);
+                    itemDrop.playSound("random.pop", 0.02F, 1F);
+                    player.onItemPickup(itemDrop, stackSize);
                     if (stack.stackSize <= 0) {
                         itemDrop.setDead();
                     }
