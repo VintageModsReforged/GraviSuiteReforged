@@ -28,7 +28,7 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.BlockPos;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -130,7 +130,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
 
                 if (isLog) {
                     BlockPos origin = new BlockPos(x, y, z);
-                    Set<BlockPos> vein = Helpers.veinPos(world, origin, 128);
+                    Set<BlockPos> vein = Helpers.veinPos(world, origin, player.isSneaking() ? 0 : 256);
                     for (BlockPos coord : vein) {
                         if (coord.equals(origin)) {
                             continue;

@@ -18,6 +18,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

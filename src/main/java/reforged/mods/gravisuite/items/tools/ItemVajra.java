@@ -20,11 +20,12 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.BlockPos;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ItemVajra extends ItemToolElectric {
 
@@ -131,7 +132,8 @@ public class ItemVajra extends ItemToolElectric {
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral) {
                 BlockPos origin = new BlockPos(x, y, z);
-                for (BlockPos coord : Helpers.veinPos(world, origin, 128)) {
+                Set<BlockPos> vein = Helpers.veinPos(world, origin, player.isSneaking() ? 0 : 128);
+                for (BlockPos coord : vein) {
                     if (coord.equals(origin)) {
                         continue;
                     }
