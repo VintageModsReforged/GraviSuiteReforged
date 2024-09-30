@@ -1,78 +1,39 @@
-package reforged.mods.gravisuite.utils;
+package reforged.mods.gravisuite.utils.pos;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.AbstractIterator;
 import net.jcip.annotations.Immutable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 
 @Immutable
-public class BlockPos implements Comparable<BlockPos> {
-
-    /**
-     * X coordinate
-     */
-    private final int x;
-    /**
-     * Y coordinate
-     */
-    private final int y;
-    /**
-     * Z coordinate
-     */
-    private final int z;
+public class BlockPos extends Vec3i {
 
     public BlockPos(int x, int y, int z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        super(x, y, z);
     }
 
-    public BlockPos(BlockPos source) {
+    public BlockPos(double x, double y, double z) {
+        super(x, y, z);
+    }
+
+    public BlockPos(Vec3i source) {
         this(source.getX(), source.getY(), source.getZ());
     }
 
-    /**
-     * Gets the X coordinate.
-     */
-    public int getX() {
-        return this.x;
-    }
-
-    /**
-     * Gets the Y coordinate.
-     */
-    public int getY() {
-        return this.y;
-    }
-
-    /**
-     * Gets the Z coordinate.
-     */
-    public int getZ() {
-        return this.z;
+    public BlockPos add(double x, double y, double z) {
+        return x == 0.0D && y == 0.0D && z == 0.0D ? this : new BlockPos((double) this.getX() + x, (double) this.getY() + y, (double) this.getZ() + z);
     }
 
     public BlockPos add(int x, int y, int z) {
         return x == 0 && y == 0 && z == 0 ? this : new BlockPos(this.getX() + x, this.getY() + y, this.getZ() + z);
     }
 
+    public BlockPos add(Vec3i vec) {
+        return this.add(vec.getX(), vec.getY(), vec.getZ());
+    }
+
     public BlockPos toImmutable() {
         return this;
-    }
-
-    @Override
-    public int compareTo(@NotNull BlockPos anotherPos) {
-        if (this.getY() == anotherPos.getY()) {
-            return this.getZ() == anotherPos.getZ() ? this.getX() - anotherPos.getX() : this.getZ() - anotherPos.getZ();
-        } else {
-            return this.getY() - anotherPos.getY();
-        }
-    }
-
-    public String toString() {
-        return Objects.toStringHelper(this).add("x", this.getX()).add("y", this.getY()).add("z", this.getZ()).toString();
     }
 
     public static Iterable<MutableBlockPos> getAllInBoxMutable(BlockPos from, BlockPos to) {
@@ -121,6 +82,10 @@ public class BlockPos implements Comparable<BlockPos> {
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+
+        public BlockPos add(double x, double y, double z) {
+            return super.add(x, y, z).toImmutable();
         }
 
         public BlockPos add(int x, int y, int z) {
