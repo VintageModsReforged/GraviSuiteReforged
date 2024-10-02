@@ -10,6 +10,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
+import reforged.mods.gravisuite.events.BlockEvents;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
@@ -53,6 +55,7 @@ public class GraviSuite {
     public void preInit(FMLPreInitializationEvent e) {
         proxy.preInit(e);
         GraviSuiteData.init();
+        MinecraftForge.EVENT_BUS.register(new BlockEvents());
     }
 
     @Mod.Init

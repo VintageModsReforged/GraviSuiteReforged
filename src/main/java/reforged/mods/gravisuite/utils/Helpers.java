@@ -28,6 +28,34 @@ import java.util.Set;
 
 public class Helpers {
 
+    public static boolean instanceOf(Object obj, String clazz) {
+        if (obj == null)
+            return false;
+        try {
+            Class<?> c = Class.forName(clazz);
+            if (c.isInstance(obj))
+                return true;
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
+    public static boolean isAir(World world, BlockPos pos) {
+        return world.isAirBlock(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public static int getBlockMetadata(World world, BlockPos pos) {
+        return world.getBlockMetadata(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public static Block getBlock(World world, BlockPos pos) {
+        return getBlock(world, pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public static Block getBlock(World world, int x, int y, int z) {
+        return Block.blocksList[world.getBlockId(x, y, z)];
+    }
+
     public static boolean areStacksEqual(ItemStack aStack, ItemStack bStack) {
         return aStack != null && bStack != null &&
                 aStack.itemID == bStack.itemID &&
