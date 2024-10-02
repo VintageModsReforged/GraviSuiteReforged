@@ -33,13 +33,13 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
-        if (Loader.isModLoaded("TreeCapitator")) {
-            NBTTagCompound capitatorModConfig = new NBTTagCompound();
-            capitatorModConfig.setString("modID", Refs.id);
-            capitatorModConfig.setString("axeIDList", GraviSuiteData.advanced_chainsaw.itemID + "; " + GraviSuiteData.vajra.itemID);
-            FMLInterModComms.sendMessage("TreeCapitator", "ThirdPartyModConfig", capitatorModConfig);
-            GraviSuite.logger.info("TreeCapitator Compat Loaded!");
-        }
+//        if (Loader.isModLoaded("TreeCapitator")) {
+//            NBTTagCompound capitatorModConfig = new NBTTagCompound();
+//            capitatorModConfig.setString("modID", Refs.id);
+//            capitatorModConfig.setString("axeIDList", GraviSuiteData.advanced_chainsaw.itemID + "; " + GraviSuiteData.vajra.itemID);
+//            FMLInterModComms.sendMessage("TreeCapitator", "ThirdPartyModConfig", capitatorModConfig);
+//            GraviSuite.logger.info("TreeCapitator Compat Loaded!");
+//        }
     }
 
     public void postInit(FMLPostInitializationEvent e) {
