@@ -1,5 +1,6 @@
 package reforged.mods.gravisuite.items.tools;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
@@ -25,15 +26,14 @@ import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import org.jetbrains.annotations.Nullable;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
 
@@ -41,6 +41,8 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
     public Set<Block> mineableBlocks = new HashSet<Block>();
     public static boolean wasEquipped = false;
     public static AudioSource audioSource;
+
+    public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
 
     public ItemAdvancedChainsaw() {
         super(GraviSuiteMainConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumToolMaterial.EMERALD);
@@ -56,11 +58,19 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
         super.addInformation(stack, player, tooltip, par4);
-        boolean isShearsOn = readToolMode(stack);
-        String mode = isShearsOn ? Refs.status_on : Refs.status_off;
-        tooltip.add(Refs.tool_mode_shear_gold + " " + mode);
+        boolean isShearsOn = readToolMode(stack, NBT_SHEARS);
+        boolean isCapitatorOn = readToolMode(stack, NBT_TCAPITATOR);
+        String modeShear = Helpers.getStatusMessage(isShearsOn);
+        String modeCapitator = Helpers.getStatusMessage(isCapitatorOn);
+        tooltip.add(Refs.tool_mode_shear_gold + " " + modeShear);
+        if (GraviSuiteMainConfig.CHAINSAW_TREE_CAPITATOR) {
+            tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
+        }
         if (Helpers.isShiftKeyDown()) {
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", "Right Click", Refs.SHEAR_MODE + ".stat"));
+            if (GraviSuiteMainConfig.CHAINSAW_TREE_CAPITATOR) {
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, "Right Click", Refs.CAPITATOR_MODE + ".stat"));
+            }
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -83,50 +93,90 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, int x, int y, int z, EntityPlayer player) {
+    public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         if (IC2.platform.isRendering()) {
-            return false;
-        }
-        if (!readToolMode(itemstack)) {
             return false;
         }
         World world = player.worldObj;
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
-        if ((block instanceof IShearable)) {
+        if (block instanceof IShearable && readToolMode(stack, NBT_SHEARS)) {
             IShearable target = (IShearable) block;
-            if ((target.isShearable(itemstack, player.worldObj, x, y, z))
-                    && (ElectricItem.use(itemstack, this.energyPerOperation, player))) {
-                ArrayList<ItemStack> drops = target.onSheared(itemstack, player.worldObj, x, y, z,
-                        EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemstack));
-                for (ItemStack stack : drops) {
+            if ((target.isShearable(stack, player.worldObj, x, y, z))
+                    && (ElectricItem.use(stack, this.energyPerOperation, player))) {
+                ArrayList<ItemStack> drops = target.onSheared(stack, player.worldObj, x, y, z,
+                        EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
+                for (ItemStack drop : drops) {
                     float f = 0.7F;
                     double d = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
                     double d1 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
                     double d2 = itemRand.nextFloat() * f + (1.0F - f) * 0.5D;
-                    EntityItem entityitem = new EntityItem(player.worldObj, x + d, y + d1, z + d2, stack);
+                    EntityItem entityitem = new EntityItem(player.worldObj, x + d, y + d1, z + d2, drop);
                     entityitem.delayBeforeCanPickup = 10;
                     player.worldObj.spawnEntityInWorld(entityitem);
                 }
                 player.addStat(net.minecraft.stats.StatList.mineBlockStatArray[world.getBlockId(x, y, z)], 1);
             }
         }
+        if (GraviSuiteMainConfig.CHAINSAW_TREE_CAPITATOR && readToolMode(stack, NBT_TCAPITATOR)) {
+            ItemStack blockStack = new ItemStack(block, 1, 32767);
+            boolean isLog = false;
+            List<ItemStack> logs = Helpers.getStackFromOre("log");
+            logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
+            for (ItemStack check : logs) {
+                if (Helpers.areStacksEqual(check, blockStack)) {
+                    isLog = true;
+                    break;
+                }
+            }
+
+            if (isLog) {
+                BlockPos origin = new BlockPos(x, y, z);
+                LinkedList<BlockPos> connectedLogs = scanForTree(world, origin, player.isSneaking() ? 0 : 256);
+                for (BlockPos coord : connectedLogs) {
+                    if (coord.equals(origin)) {
+                        continue;
+                    }
+                    if (!ElectricItem.canUse(stack, this.energyPerOperation)) {
+                        break;
+                    }
+                    if (ElectricItem.canUse(stack, this.energyPerOperation)) {
+                        if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
+                            ElectricItem.use(stack, this.energyPerOperation, player);
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
-                if (!readToolMode(itemStack)) {
-                    saveToolMode(itemStack, true);
-                    IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + Refs.status_on);
+                boolean shears = false;
+                if (!readToolMode(stack, NBT_SHEARS)) {
+                    saveToolMode(stack, NBT_SHEARS, true);
+                    shears = true;
                 } else {
-                    saveToolMode(itemStack, false);
-                    IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + Refs.status_off);
+                    saveToolMode(stack, NBT_SHEARS, false);
+                }
+                IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + Helpers.getStatusMessage(shears));
+            }
+            if (GraviSuiteMainConfig.CHAINSAW_TREE_CAPITATOR) {
+                if (IC2.keyboard.isSneakKeyDown(player)) {
+                    boolean capitator = false;
+                    if (!readToolMode(stack, NBT_TCAPITATOR)) {
+                        saveToolMode(stack, NBT_TCAPITATOR, true);
+                        capitator = true;
+                    } else {
+                        saveToolMode(stack, NBT_TCAPITATOR, false);
+                    }
+                    IC2.platform.messagePlayer(player, Refs.tool_mode_capitator + " " + Helpers.getStatusMessage(capitator));
                 }
             }
         }
-        return itemStack;
+        return stack;
     }
 
     @Override
@@ -184,16 +234,16 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
         if (IC2.platform.isSimulating()) {
             Entity entity = event.target;
             EntityPlayer player = event.entityPlayer;
-            ItemStack itemstack = player.inventory.getStackInSlot(player.inventory.currentItem);
-            if ((itemstack != null) && (itemstack.getItem() == this) && ((entity instanceof IShearable))
-                    && (readToolMode(itemstack))
-                    && (ElectricItem.use(itemstack, this.energyPerOperation, player))) {
+            ItemStack stack = player.inventory.getStackInSlot(player.inventory.currentItem);
+            if ((stack != null) && (stack.getItem() == this) && ((entity instanceof IShearable))
+                    && (readToolMode(stack, NBT_SHEARS))
+                    && (ElectricItem.use(stack, this.energyPerOperation, player))) {
                 IShearable target = (IShearable) entity;
-                if (target.isShearable(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
-                    ArrayList<ItemStack> drops = target.onSheared(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ,
-                            EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemstack));
-                    for (ItemStack stack : drops) {
-                        EntityItem ent = entity.entityDropItem(stack, 1.0F);
+                if (target.isShearable(stack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
+                    ArrayList<ItemStack> drops = target.onSheared(stack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ,
+                            EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack));
+                    for (ItemStack drop : drops) {
+                        EntityItem ent = entity.entityDropItem(drop, 1.0F);
                         ent.motionY += itemRand.nextFloat() * 0.05F;
                         ent.motionX += (itemRand.nextFloat() - itemRand.nextFloat()) * 0.1F;
                         ent.motionZ += (itemRand.nextFloat() - itemRand.nextFloat()) * 0.1F;
@@ -213,14 +263,14 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
         return true;
     }
 
-    public static boolean readToolMode(ItemStack stack) {
+    public static boolean readToolMode(ItemStack stack, String mode) {
         NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return tag.getBoolean("shears");
+        return tag.getBoolean(mode);
     }
 
-    public static void saveToolMode(ItemStack stack, boolean value) {
+    public static void saveToolMode(ItemStack stack, String mode, boolean value) {
         NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        tag.setBoolean("shears", value);
+        tag.setBoolean(mode, value);
     }
 
     public void init() {
@@ -237,5 +287,93 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
         this.mineableBlocks.add(Block.melon);
         this.mineableBlocks.add(Block.cactus);
         this.mineableBlocks.add(Block.snow);
+    }
+
+    private interface BlockAction {
+        boolean onBlock(BlockPos pos, Block block, boolean isRightBlock);
+    }
+
+    public LinkedList<BlockPos> scanForTree(final World world, final BlockPos startPos, int limit) {
+        Block block = Block.blocksList[world.getBlockId(startPos.getX(), startPos.getY(), startPos.getZ())];
+        ItemStack blockStack = new ItemStack(block, 1, 32767);
+        boolean isLog = false;
+        List<ItemStack> logs = Helpers.getStackFromOre("log");
+        logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
+        for (ItemStack check : logs) {
+            if (Helpers.areStacksEqual(check, blockStack)) {
+                isLog = true;
+                break;
+            }
+        }
+        if (!isLog) {
+            return new LinkedList<BlockPos>();
+        }
+        final boolean[] leavesFound = new boolean[1];
+        LinkedList<BlockPos> result = recursiveSearch(world, startPos, new BlockAction() {
+            @Override
+            public boolean onBlock(BlockPos pos, Block block, boolean isRightBlock) {
+                int metadata = Helpers.getBlockMetadata(world, pos) | 8;
+                boolean isLeave = metadata >= 8 && metadata <= 11;
+                if (block.isLeaves(world, startPos.getX(), startPos.getY(), startPos.getZ()) && isLeave || getBOPStatus(world, pos)) leavesFound[0] = true;
+                return true;
+            }
+        }, limit);
+        return leavesFound[0] ? result : new LinkedList<BlockPos>();
+    }
+
+    // TODO: might need some adjustments
+    private boolean getBOPStatus(World world, BlockPos pos) {
+        int meta = Helpers.getBlockMetadata(world, pos) | 8;
+        Block block = Helpers.getBlock(world, pos);
+        if (Loader.isModLoaded("BiomesOPlenty")) {
+            if (Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPPetals") ||
+                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPLeaves") ||
+                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPColorizedLeaves") ||
+                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPAppleLeaves")) {
+                return meta >= 8 && meta <= 15;
+            }
+        }
+        return false;
+    }
+
+    // Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.
+    private static LinkedList<BlockPos> recursiveSearch(final World world, final BlockPos start, @Nullable final BlockAction action, int limit) {
+        Block wantedBlock = Helpers.getBlock(world, start);
+        boolean abort = false;
+        final LinkedList<BlockPos> result = new LinkedList<BlockPos>();
+        final Set<BlockPos> visited = new HashSet<BlockPos>();
+        final LinkedList<BlockPos> queue = new LinkedList<BlockPos>();
+        queue.push(start);
+
+        while (!queue.isEmpty()) {
+            final BlockPos center = queue.pop();
+            final int x0 = center.getX();
+            final int y0 = center.getY();
+            final int z0 = center.getZ();
+            for (int z = z0 - 1; z <= z0 + 1 && !abort; ++z) {
+                for (int y = y0 - 1; y <= y0 + 1 && !abort; ++y) {
+                    for (int x = x0 - 1; x <= x0 + 1 && !abort; ++x) {
+                        final BlockPos pos = new BlockPos(x, y, z);
+                        Block checkBlock = Helpers.getBlock(world, pos);
+                        if ((Helpers.isAir(world, pos) || !visited.add(pos))) {
+                            continue;
+                        }
+                        final boolean isRightBlock = checkBlock.blockID == wantedBlock.blockID;
+                        if (isRightBlock) {
+                            result.add(pos);
+                            if (queue.size() > limit) {
+                                abort = true;
+                                break;
+                            }
+                            queue.push(pos);
+                        }
+                        if (action != null) {
+                            abort = !action.onBlock(pos, checkBlock, isRightBlock);
+                        }
+                    }
+                }
+            }
+        }
+        return !abort ? result : new LinkedList<BlockPos>();
     }
 }

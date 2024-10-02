@@ -34,7 +34,7 @@ public class GraviSuite {
     public static GraviSuiteKeyboard KEYBOARD;
 
     public static final CreativeTabs TAB = new CreativeTabs(Refs.ID) {{
-            LanguageRegistry.instance().addStringLocalization("itemGroup." +Refs.ID, Refs.NAME);
+            LanguageRegistry.instance().addStringLocalization("itemGroup." + Refs.ID, Refs.NAME);
     }
         @Override
         public Item getTabIconItem() {

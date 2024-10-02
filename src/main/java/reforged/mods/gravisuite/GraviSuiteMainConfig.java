@@ -52,6 +52,7 @@ public class GraviSuiteMainConfig {
     public static boolean ENABLE_EXCAVATORS = true;
     public static boolean ENABLE_HUD = true;
     public static boolean USE_FIXED_VALUES = true;
+    public static boolean CHAINSAW_TREE_CAPITATOR = false;
     public static int HUD_POSITION = 1;
 
     public static int HUD_POS_ENERGY_X = 3;
@@ -69,6 +70,7 @@ public class GraviSuiteMainConfig {
 
         MAGNET_RANGE = getInt(Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
         MAGNET_MAX_CAPACITY = getInt(Refs.GENERAL, "magnet_max_capacity", 1, Integer.MAX_VALUE, MAGNET_MAX_CAPACITY, "Magnet Attraction Capacity.");
+        CHAINSAW_TREE_CAPITATOR = getBoolean(Refs.GENERAL, "chainsaw_tree_capitator", CHAINSAW_TREE_CAPITATOR, "Enable TreeCapitator Mode for Advanced Chainsaw.");
 
         HUD_POSITION = getInt(Refs.HUD, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
         ENABLE_HUD = getBoolean(Refs.HUD, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
