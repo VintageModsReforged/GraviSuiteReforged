@@ -6,8 +6,8 @@ public class Refs {
 
     public static final String ID = "gravisuite";
     public static final String NAME = "GraviSuite - Addon";
-    public static final String VERSION = "1.4.7-2.2.2q";
-    public static final String MC_VERSION = "1.4.7";
+    public static final String VERSION = "1.4.7-2.2.2r";
+    public static final String MC_VERSION = "[1.4.7]";
     public static final String DEPS = "required-after:IC2;after:RedPowerBase;after:AppliedEnergistics;after:GregTech_Addon";
 
     public static final String COMMON_PROXY = "reforged.mods.gravisuite.proxy.CommonProxy";
