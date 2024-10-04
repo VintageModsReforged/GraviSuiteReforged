@@ -143,15 +143,15 @@ public class Helpers {
         return block == null ? null : block.collisionRayTrace(world, x, y, x, var5, var7);
     }
 
-    public static void dropAsEntity(World var0, int var1, int var2, int var3, ItemStack var4) {
-        if (var4 != null) {
-            double var5 = 0.7;
-            double var7 = (double)var0.rand.nextFloat() * var5 + (1.0 - var5) * 0.5;
-            double var9 = (double)var0.rand.nextFloat() * var5 + (1.0 - var5) * 0.5;
-            double var11 = (double)var0.rand.nextFloat() * var5 + (1.0 - var5) * 0.5;
-            EntityItem var13 = new EntityItem(var0, (double)var1 + var7, (double)var2 + var9, (double)var3 + var11, var4.copy());
-            var13.delayBeforeCanPickup = 10;
-            var0.spawnEntityInWorld(var13);
+    public static void dropAsEntity(World world, int x, int y, int z, ItemStack stack) {
+        if (stack != null) {
+            double offset = 0.7;
+            double xPos = (double)world.rand.nextFloat() * offset + (1.0 - offset) * 0.5;
+            double yPos = (double)world.rand.nextFloat() * offset + (1.0 - offset) * 0.5;
+            double zPos = (double)world.rand.nextFloat() * offset + (1.0 - offset) * 0.5;
+            EntityItem drop = new EntityItem(world, (double)x + xPos, (double)y + yPos, (double)z + zPos, stack.copy());
+            drop.delayBeforeCanPickup = 10;
+            world.spawnEntityInWorld(drop);
         }
     }
 
