@@ -40,7 +40,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 2, 20000, 10000000);
+        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 3, 20000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPPED = 0.2F;

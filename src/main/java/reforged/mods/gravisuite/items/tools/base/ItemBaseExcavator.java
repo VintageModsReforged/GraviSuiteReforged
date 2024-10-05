@@ -2,6 +2,7 @@ package reforged.mods.gravisuite.items.tools.base;
 
 import ic2.core.IC2;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
@@ -13,14 +14,26 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.GraviSuiteData;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.pos.BlockPos;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 public class ItemBaseExcavator extends ItemBaseTool {
+
+    public static Set<Material> MATERIALS = new HashSet<Material>();
+
+    static {
+        MATERIALS.add(Material.grass);
+        MATERIALS.add(Material.sand);
+        MATERIALS.add(Material.snow);
+        MATERIALS.add(Material.craftedSnow);
+        MATERIALS.add(Material.ground);
+    }
 
     public ItemBaseExcavator(int id, EnumToolMaterial enumToolMaterial, int meta, String name) {
         super(id, name + "_excavator", enumToolMaterial, meta);
@@ -31,20 +44,10 @@ public class ItemBaseExcavator extends ItemBaseTool {
 
     @Override
     public float getStrVsBlock(ItemStack stack, Block block) {
-        return this.toolMaterial.getEfficiencyOnProperMaterial();
-    }
-
-    @Override
-    public boolean canHarvestBlock(Block block) {
-        EnumToolMaterial mat = this.toolMaterial;
-        if (mat.equals(EnumToolMaterial.WOOD)) {
-            return shovelWood.canHarvestBlock(block);
-        } else if (mat.equals(EnumToolMaterial.STONE)) {
-            return shovelStone.canHarvestBlock(block);
-        } else if (mat.equals(EnumToolMaterial.IRON) || mat.equals(GraviSuiteData.GEMS_MATERIAL)) {
-            return shovelSteel.canHarvestBlock(block);
+        if (MATERIALS.contains(block.blockMaterial)) {
+            return this.toolMaterial.getEfficiencyOnProperMaterial();
         } else {
-            return shovelDiamond.canHarvestBlock(block);
+            return 0.2f;
         }
     }
 
@@ -57,8 +60,6 @@ public class ItemBaseExcavator extends ItemBaseTool {
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = block.getBlockHardness(world, x, y, z);
             if (refStrength != 0.0D) {
-                int adjBlockId;
-                float strength;
                 MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, true, 4.5D);
                 if (mop == null) { // cancel 3x3 when rayTrace fails
                     return false;
@@ -78,19 +79,15 @@ public class ItemBaseExcavator extends ItemBaseTool {
                         xRange = 0;
                         break;
                 }
-
-                for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
-                    for (int yPos = y - yRange; yPos <= y + yRange; yPos++) {
-                        for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
-                            adjBlockId = world.getBlockId(xPos, yPos, zPos);
-                            Block adjBlock = Block.blocksList[adjBlockId];
-                            if (adjBlockId != 0) {
-                                strength = adjBlock.getBlockHardness(world, xPos, yPos, zPos);
-                                if (strength > 0f && strength / refStrength <= 10f) {
-                                    if ((ForgeHooks.isToolEffective(stack, adjBlock, world.getBlockMetadata(xPos, yPos, zPos)) || canHarvestBlock(adjBlock)) && harvestBlock(world, xPos, yPos, zPos, player)) {
-                                        mined++;
-                                    }
-                                }
+                BlockPos origin = new BlockPos(x, y, z);
+                for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
+                    Block adjBlock = Helpers.getBlock(world, pos);
+                    int metadata = Helpers.getBlockMetadata(world, pos);
+                    if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
+                        float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
+                        if (strength > 0f && strength / refStrength <= 10f) {
+                            if (ForgeHooks.isToolEffective(stack, adjBlock, metadata) && harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
+                                mined++;
                             }
                         }
                     }

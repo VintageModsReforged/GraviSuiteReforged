@@ -19,7 +19,7 @@ public class ItemLappack {
     public static class ItemUltimateLappack extends ItemBaseEnergyPack {
 
         public ItemUltimateLappack() {
-            super(GraviSuiteMainConfig.ULTIMATE_LAPPACK_ID, 1, "ultimate_lappack", 2, 20000, 10000000);
+            super(GraviSuiteMainConfig.ULTIMATE_LAPPACK_ID, 1, "ultimate_lappack", 3, 20000, 10000000);
         }
 
         @Override
