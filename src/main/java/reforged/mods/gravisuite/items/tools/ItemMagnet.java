@@ -98,6 +98,13 @@ public class ItemMagnet extends ItemToolElectric {
             }
             if (!tag.getBoolean(NBT_ACTIVE))
                 return;
+            if (world.getTotalWorldTime() % 20 == 0) {
+                if (ElectricItem.manager.canUse(stack, ENERGY_COST)) {
+                    ElectricItem.manager.use(stack, ENERGY_COST, player);
+                } else {
+                    tag.setBoolean(NBT_ACTIVE, false);
+                }
+            }
             if (world.getTotalWorldTime() % 2 != 0)
                 return;
             if (world.getChunkProvider().chunkExists(player.chunkCoordX, player.chunkCoordZ)) {
@@ -111,13 +118,7 @@ public class ItemMagnet extends ItemToolElectric {
                     return;
                 for (Entity item : items) {
                     if (item != null && !player.isSneaking()) {
-                        if (ElectricItem.manager.canUse(stack, ENERGY_COST)) {
-                            if (this.onCollideWithPlayer(player, item)) {
-                                ElectricItem.manager.use(stack, ENERGY_COST, player);
-                            }
-                        } else {
-                            tag.setBoolean(NBT_ACTIVE, false);
-                        }
+                        this.onCollideWithPlayer(player, item);
                     }
                 }
             }
