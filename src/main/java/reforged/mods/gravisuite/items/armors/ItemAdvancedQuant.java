@@ -35,7 +35,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 2, 20000, 10000000);
+        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 3, 20000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPEED = 0.11F;
