@@ -8,6 +8,7 @@ import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -122,7 +123,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                 List<ItemStack> logs = Helpers.getStackFromOre("log");
                 logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
                 for (ItemStack check : logs) {
-                    if (Helpers.areStacksEqual(check, blockStack)) {
+                    if (Helpers.areStacksEqual(check, blockStack) || isLog(block)) {
                         isLog = true;
                         break;
                     }
@@ -287,18 +288,48 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         this.mineableBlocks.add(Block.snow);
     }
 
+    public boolean isLog(Block block) {
+        return block instanceof BlockLog ||
+                Helpers.instanceOf(block, "binnie.extratrees.block.BlockETLog") ||
+                Helpers.instanceOf(block, "forestry.arboriculture.gadgets.BlockLog") ||
+                Helpers.instanceOf(block, "thaumcraft.common.world.BlockMagicalLog")
+                ;
+    }
+
+    public boolean isLeaves(World world, BlockPos pos) {
+        Block block = Helpers.getBlock(world, pos);
+        return getBOPStatus(world, pos) ||
+                Helpers.instanceOf(block, "forestry.arboriculture.gadgets.BlockLeaves") || // raw check
+                Helpers.instanceOf(block, "thaumcraft.common.world.BlockMagicalLeaves") // // raw check
+                ;
+    }
+
+    private boolean getBOPStatus(World world, BlockPos pos) {
+        int meta = Helpers.getBlockMetadata(world, pos) | 8;
+        Block block = Helpers.getBlock(world, pos);
+        if (Loader.isModLoaded("BiomesOPlenty")) {
+            if (Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPPetals") ||
+                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPLeaves") ||
+                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPColorizedLeaves") ||
+                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPAppleLeaves")) {
+                return meta >= 8 && meta <= 15;
+            }
+        }
+        return false;
+    }
+
     private interface BlockAction {
         boolean onBlock(BlockPos pos, Block block, boolean isRightBlock);
     }
 
     public LinkedList<BlockPos> scanForTree(final World world, final BlockPos startPos, int limit) {
-        Block block = Block.blocksList[world.getBlockId(startPos.getX(), startPos.getY(), startPos.getZ())];
+        Block block = Helpers.getBlock(world, startPos);
         ItemStack blockStack = new ItemStack(block, 1, 32767);
         boolean isLog = false;
         List<ItemStack> logs = Helpers.getStackFromOre("log");
         logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
         for (ItemStack check : logs) {
-            if (Helpers.areStacksEqual(check, blockStack)) {
+            if (Helpers.areStacksEqual(check, blockStack) || isLog(block)) {
                 isLog = true;
                 break;
             }
@@ -317,20 +348,6 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             }
         }, limit);
         return leavesFound[0] ? result : new LinkedList<BlockPos>();
-    }
-
-    private boolean getBOPStatus(World world, BlockPos pos) {
-        int meta = Helpers.getBlockMetadata(world, pos) | 8;
-        Block block = Helpers.getBlock(world, pos);
-        if (Loader.isModLoaded("BiomesOPlenty")) {
-            if (Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPPetals") ||
-                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPLeaves") ||
-                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPColorizedLeaves") ||
-                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPAppleLeaves")) {
-                return meta >= 8 && meta <= 15;
-            }
-        }
-        return false;
     }
 
     // Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.
