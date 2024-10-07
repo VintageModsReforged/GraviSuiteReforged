@@ -6,7 +6,7 @@ public class Refs {
 
     public static final String id = "gravisuite";
     public static final String name = "GraviSuite - Addon";
-    public static final String version = "1.5.2-2.2.2s";
+    public static final String version = "1.5.2-2.2.2t";
     public static final String mc = "[1.5.2]";
     public static final String deps = "required-after:IC2;after:GregTech_Addon;after:TreeCapitator";
 
