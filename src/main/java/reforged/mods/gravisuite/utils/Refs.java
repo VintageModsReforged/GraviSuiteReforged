@@ -20,7 +20,7 @@ public class Refs {
     public static final String NETWORK_COMMON = "reforged.mods.gravisuite.network.NetworkHandler";
 
     public static final int COMPONENTS_ICON_ID = 0, ARMOR_PACK_ID = 16, TOOLS_ID = 32, GRAVITOOL_ID = 48, HAMMERS_ID = 64, EXCAVATOR_ID = 80;
-    public static final String IDS = "ids", GENERAL = "general", COMPAT = "compat", HUD = "hud";
+    public static final String IDS = "ids", GENERAL = "general", COMPAT = "compat", HUD = "hud", TREE_CAPITATOR = "tree_capitator";
 
     public static final String SNEAK_KEY = StatCollector.translateToLocal("key.sneak");
 

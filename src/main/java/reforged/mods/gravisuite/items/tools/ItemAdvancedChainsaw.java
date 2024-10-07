@@ -9,6 +9,7 @@ import ic2.core.audio.PositionSpec;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -123,7 +124,7 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
             List<ItemStack> logs = Helpers.getStackFromOre("log");
             logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
             for (ItemStack check : logs) {
-                if (Helpers.areStacksEqual(check, blockStack)) {
+                if (Helpers.areStacksEqual(check, blockStack) || isLog(block)) {
                     isLog = true;
                     break;
                 }
@@ -289,36 +290,25 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
         this.mineableBlocks.add(Block.snow);
     }
 
-    private interface BlockAction {
-        boolean onBlock(BlockPos pos, Block block, boolean isRightBlock);
+    public boolean isLog(Block block) {
+        String[] logs = GraviSuiteMainConfig.LOGS;
+        boolean configLogs = false;
+        for (String log : logs) {
+            if (Helpers.instanceOf(block, log)) configLogs = true;
+            break;
+        }
+        return block instanceof BlockLog || configLogs;
     }
 
-    public LinkedList<BlockPos> scanForTree(final World world, final BlockPos startPos, int limit) {
-        Block block = Block.blocksList[world.getBlockId(startPos.getX(), startPos.getY(), startPos.getZ())];
-        ItemStack blockStack = new ItemStack(block, 1, 32767);
-        boolean isLog = false;
-        List<ItemStack> logs = Helpers.getStackFromOre("log");
-        logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
-        for (ItemStack check : logs) {
-            if (Helpers.areStacksEqual(check, blockStack)) {
-                isLog = true;
-                break;
-            }
+    public boolean isLeaves(World world, BlockPos pos) {
+        Block block = Helpers.getBlock(world, pos);
+        String[] leaves = GraviSuiteMainConfig.LEAVES;
+        boolean configLeaves = false;
+        for (String leave : leaves) {
+            if (Helpers.instanceOf(block, leave)) configLeaves = true;
+            break;
         }
-        if (!isLog) {
-            return new LinkedList<BlockPos>();
-        }
-        final boolean[] leavesFound = new boolean[1];
-        LinkedList<BlockPos> result = recursiveSearch(world, startPos, new BlockAction() {
-            @Override
-            public boolean onBlock(BlockPos pos, Block block, boolean isRightBlock) {
-                int metadata = Helpers.getBlockMetadata(world, pos) | 8;
-                boolean isLeave = metadata >= 8 && metadata <= 11;
-                if (block.isLeaves(world, startPos.getX(), startPos.getY(), startPos.getZ()) && isLeave || getBOPStatus(world, pos)) leavesFound[0] = true;
-                return true;
-            }
-        }, limit);
-        return leavesFound[0] ? result : new LinkedList<BlockPos>();
+        return getBOPStatus(world, pos) || configLeaves;
     }
 
     // TODO: might need some adjustments
@@ -334,6 +324,38 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
             }
         }
         return false;
+    }
+
+    private interface BlockAction {
+        boolean onBlock(BlockPos pos, Block block, boolean isRightBlock);
+    }
+
+    public LinkedList<BlockPos> scanForTree(final World world, final BlockPos startPos, int limit) {
+        Block block = Helpers.getBlock(world, startPos);
+        ItemStack blockStack = new ItemStack(block, 1, 32767);
+        boolean isLog = false;
+        List<ItemStack> logs = Helpers.getStackFromOre("log");
+        logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
+        for (ItemStack check : logs) {
+            if (Helpers.areStacksEqual(check, blockStack) || isLog(block)) {
+                isLog = true;
+                break;
+            }
+        }
+        if (!isLog) {
+            return new LinkedList<BlockPos>();
+        }
+        final boolean[] leavesFound = new boolean[1];
+        LinkedList<BlockPos> result = recursiveSearch(world, startPos, new BlockAction() {
+            @Override
+            public boolean onBlock(BlockPos pos, Block block, boolean isRightBlock) {
+                int metadata = Helpers.getBlockMetadata(world, pos) | 8;
+                boolean isLeave = metadata >= 8 && metadata <= 11;
+                if (block.isLeaves(world, pos.getX(), pos.getY(), pos.getZ()) && isLeave || isLeaves(world, pos)) leavesFound[0] = true;
+                return true;
+            }
+        }, limit);
+        return leavesFound[0] ? result : new LinkedList<BlockPos>();
     }
 
     // Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.

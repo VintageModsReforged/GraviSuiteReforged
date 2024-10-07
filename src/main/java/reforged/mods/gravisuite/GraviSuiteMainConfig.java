@@ -6,6 +6,7 @@ import net.minecraftforge.common.Property;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class GraviSuiteMainConfig {
 
@@ -44,6 +45,9 @@ public class GraviSuiteMainConfig {
     public static int BRONZE_EXCAVATOR_ID = 30253;
 
     public static String LANGUAGES;
+    public static String[] LOGS;
+    public static String[] LEAVES;
+
     public static int MAGNET_RANGE = 8;
     public static int MAGNET_MAX_CAPACITY = 200;
     public static double DURABILITY_FACTOR = 1.0;
@@ -53,6 +57,8 @@ public class GraviSuiteMainConfig {
     public static boolean ENABLE_HUD = true;
     public static boolean USE_FIXED_VALUES = true;
     public static boolean CHAINSAW_TREE_CAPITATOR = false;
+    public static boolean INSPECT_MODE = false;
+
     public static int HUD_POSITION = 1;
 
     public static int HUD_POS_ENERGY_X = 3;
@@ -70,7 +76,6 @@ public class GraviSuiteMainConfig {
 
         MAGNET_RANGE = getInt(Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
         MAGNET_MAX_CAPACITY = getInt(Refs.GENERAL, "magnet_max_capacity", 1, Integer.MAX_VALUE, MAGNET_MAX_CAPACITY, "Magnet Attraction Capacity.");
-        CHAINSAW_TREE_CAPITATOR = getBoolean(Refs.GENERAL, "chainsaw_tree_capitator", CHAINSAW_TREE_CAPITATOR, "Enable TreeCapitator Mode for Advanced Chainsaw.");
 
         HUD_POSITION = getInt(Refs.HUD, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
         ENABLE_HUD = getBoolean(Refs.HUD, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
@@ -89,7 +94,12 @@ public class GraviSuiteMainConfig {
         ENABLE_HAMMERS = getBoolean(Refs.GENERAL, "enable_hammers", ENABLE_HAMMERS, "Enable Hammers.");
         ENABLE_EXCAVATORS = getBoolean(Refs.GENERAL, "enable_excavators", ENABLE_EXCAVATORS, "Enable Excavators.");
         LOG_WRENCH = getBoolean(Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
+        INSPECT_MODE = getBoolean(Refs.GENERAL, "enable_inspect_mode", INSPECT_MODE, "Enable inspect mode. Helps identify block name, class and metadata.");
         LANGUAGES = getString(Refs.GENERAL, "localization_list", "en_US,ru_RU", "Supported localizations. Place your <name>.lang file in gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
+
+        CHAINSAW_TREE_CAPITATOR = getBoolean(Refs.TREE_CAPITATOR, "chainsaw_tree_capitator", CHAINSAW_TREE_CAPITATOR, "Enable TreeCapitator Mode for Advanced Chainsaw.");
+        LOGS = getString(Refs.TREE_CAPITATOR, "logs", new String[]{"thaumcraft.common.world.BlockMagicalLog"}, "Support for custom logs block that aren't instances of `BlockLog`. Enable inspect_mode and right click with a stick to get more info in the log.");
+        LEAVES = getString(Refs.TREE_CAPITATOR, "leaves", new String[]{}, "Support for custom leaves block. This shouldn't be here, but just in case, for blocks that have their `isLeaves=false` for some reasons, but still are leaves... Enable inspect_mode and right click with a stick to get more info in the log.");
 
         COMPONENT_ID = getId(Refs.IDS, "component_id", COMPONENT_ID, "component");
 
@@ -120,14 +130,21 @@ public class GraviSuiteMainConfig {
         }
     }
 
-    public static String getString(String cat, String tag, String defaultValue, String comment) {
+    private static String getString(String cat, String tag, String defaultValue, String comment) {
         comment = comment.replace("{t}", tag) + "\n";
         Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
         prop.comment = comment + "Default: " + defaultValue;
         return prop.value;
     }
 
-    public static int getId(String cat, String tag, int defaultValue, String comment) {
+    private static String[] getString(String cat, String tag, String[] defaultValue, String comment) {
+        comment = comment.replace("{t}", tag) + "\n";
+        Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
+        prop.comment = comment + "Default: " + Arrays.toString(defaultValue);
+        return prop.valueList;
+    }
+
+    private static int getId(String cat, String tag, int defaultValue, String comment) {
         comment = comment.replace("{t}", tag) + "\n";
         Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
         prop.comment = comment + "Default: " + defaultValue;

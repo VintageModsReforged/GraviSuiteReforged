@@ -8,12 +8,17 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
+import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.logging.Logger;
@@ -47,6 +52,7 @@ public class GraviSuite {
 
     public GraviSuite() {
         LOGGER.setParent(FMLLog.getLogger());
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Mod.PreInit
@@ -63,5 +69,19 @@ public class GraviSuite {
     @Mod.PostInit
     public void postInit(FMLPostInitializationEvent e) {
         PROXY.postInit(e);
+    }
+
+    @ForgeSubscribe
+    public void onRightClick(PlayerInteractEvent e) {
+        if (GraviSuiteMainConfig.INSPECT_MODE && e.entityPlayer.getHeldItem() != null) {
+            if (e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && e.entityPlayer.getHeldItem().getItem() == Item.stick) {
+                Block block = Helpers.getBlock(e.entity.worldObj, e.x, e.y, e.z);
+                int metadata = e.entityPlayer.worldObj.getBlockMetadata(e.x, e.y, e.z);
+                if (block != null) {
+                    LOGGER.info("Block: " + block.translateBlockName() + " | Class Name: " + block.getClass().getName());
+                    LOGGER.info("Block Metadata: " + metadata);
+                }
+            }
+        }
     }
 }
