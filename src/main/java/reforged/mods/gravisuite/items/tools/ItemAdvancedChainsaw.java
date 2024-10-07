@@ -289,19 +289,24 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     }
 
     public boolean isLog(Block block) {
-        return block instanceof BlockLog ||
-                Helpers.instanceOf(block, "binnie.extratrees.block.BlockETLog") ||
-                Helpers.instanceOf(block, "forestry.arboriculture.gadgets.BlockLog") ||
-                Helpers.instanceOf(block, "thaumcraft.common.world.BlockMagicalLog")
-                ;
+        String[] logs = GraviSuiteConfig.logs;
+        boolean configLogs = false;
+        for (String log : logs) {
+            if (Helpers.instanceOf(block, log)) configLogs = true;
+            break;
+        }
+        return block instanceof BlockLog || configLogs;
     }
 
     public boolean isLeaves(World world, BlockPos pos) {
         Block block = Helpers.getBlock(world, pos);
-        return getBOPStatus(world, pos) ||
-                Helpers.instanceOf(block, "forestry.arboriculture.gadgets.BlockLeaves") || // raw check
-                Helpers.instanceOf(block, "thaumcraft.common.world.BlockMagicalLeaves") // // raw check
-                ;
+        String[] leaves = GraviSuiteConfig.leaves;
+        boolean configLeaves = false;
+        for (String leave : leaves) {
+            if (Helpers.instanceOf(block, leave)) configLeaves = true;
+            break;
+        }
+        return getBOPStatus(world, pos) || configLeaves;
     }
 
     private boolean getBOPStatus(World world, BlockPos pos) {
@@ -343,7 +348,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             public boolean onBlock(BlockPos pos, Block block, boolean isRightBlock) {
                 int metadata = Helpers.getBlockMetadata(world, pos) | 8;
                 boolean isLeave = metadata >= 8 && metadata <= 11;
-                if (block.isLeaves(world, startPos.getX(), startPos.getY(), startPos.getZ()) && isLeave || getBOPStatus(world, pos)) leavesFound[0] = true;
+                if (block.isLeaves(world, pos.getX(), pos.getY(), pos.getZ()) && isLeave || isLeaves(world, pos)) leavesFound[0] = true;
                 return true;
             }
         }, limit);

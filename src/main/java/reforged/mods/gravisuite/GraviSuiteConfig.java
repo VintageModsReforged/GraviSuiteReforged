@@ -7,20 +7,28 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Arrays;
 
 public class GraviSuiteConfig {
 
     public static File info;
+
     public static Configuration id_config;
     public static Configuration main_config;
     public static String additional_languages;
     public static String default_language;
+    public static String[] logs;
+    public static String[] leaves;
+
     public static int magnet_range = 8;
     public static int magnet_max_capacity = 200;
+
     public static boolean log_wrench = false;
     public static boolean enable_hud = true;
     public static boolean use_fixed_values = true;
     public static boolean chainsaw_tree_capitator = false;
+    public static boolean inspect_mode = false;
+
     public static int hud_position = 1;
 
     public static int hud_pos_energy_x = 3;
@@ -84,12 +92,16 @@ public class GraviSuiteConfig {
         hud_pos_gravi_x = getInt(Refs.hud, "hud_pos_gravi_x", 0, Integer.MAX_VALUE, hud_pos_gravi_x, "X Pos for Gravitational Chestplate status info.");
         hud_pos_gravi_y = getInt(Refs.hud, "hud_pos_gravi_y", 0, Integer.MAX_VALUE, hud_pos_gravi_y, "Y Pos for Gravitational Chestplate status info.");
 
-        chainsaw_tree_capitator = getBoolean(Refs.general, "chainsaw_tree_capitator", chainsaw_tree_capitator, "Enable TreeCapitator Mode for Advanced Chainsaw");
         log_wrench = getBoolean(Refs.general, "enable_wrench_logging", log_wrench, "Should GraviTool Wrench be logged? [Debug purposes only!]");
+        inspect_mode = getBoolean(Refs.general, "enable_inspect_mode", inspect_mode, "Enable inspect mode. Helps identify block name, class and metadata.");
         default_language = getString(Refs.general, "default_language", "en_US,ru_RU", "Default Language. DO NOT CHANGE THIS! Use additional_languages field instead!");
         additional_languages = getString(Refs.general, "additional_languages", "", "Additional supported localizations. Place your <name>.lang file in config/gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
         magnet_range = getInt(Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
         magnet_max_capacity = getInt(Refs.general, "magnet_max_capacity", 1, Integer.MAX_VALUE, magnet_max_capacity, "Magnet Attraction Capacity.");
+
+        chainsaw_tree_capitator = getBoolean(Refs.tree_capitator, "chainsaw_tree_capitator", chainsaw_tree_capitator, "Enable TreeCapitator Mode for Advanced Chainsaw");
+        logs = getString(Refs.tree_capitator, "logs", new String[]{"thaumcraft.common.world.BlockMagicalLog"}, "Support for custom logs block that aren't instances of `BlockLog`. Enable inspect_mode and right click with a stick to get more info in the log.");
+        leaves = getString(Refs.tree_capitator, "leaves", new String[]{}, "Support for custom leaves block. This shouldn't be here, but just in case, for blocks that have their `isLeaves=false` for some reasons, but still are leaves... Enable inspect_mode and right click with a stick to get more info in the log.");
 
         if (main_config.hasChanged()) main_config.save();
 
@@ -115,14 +127,21 @@ public class GraviSuiteConfig {
         return value;
     }
 
-    public static String getString(String cat, String tag, String defaultValue, String comment) {
+    private static String getString(String cat, String tag, String defaultValue, String comment) {
         comment = comment.replace("{t}", tag) + "\n";
         Property prop = main_config.get(cat, tag, defaultValue);
         prop.comment = comment + "Default: " + defaultValue;
         return prop.getString();
     }
 
-    public static int getId(String tag, int defaultValue, String comment) {
+    private static String[] getString(String cat, String tag, String[] defaultValue, String comment) {
+        comment = comment.replace("{t}", tag) + "\n";
+        Property prop = main_config.get(cat, tag, defaultValue);
+        prop.comment = comment + "Default: " + Arrays.toString(defaultValue);
+        return prop.getStringList();
+    }
+
+    private static int getId(String tag, int defaultValue, String comment) {
         comment = comment.replace("{t}", tag) + "\n";
         Property prop = id_config.get(Refs.IDs, tag, defaultValue);
         prop.comment = comment + "Default: " + defaultValue;

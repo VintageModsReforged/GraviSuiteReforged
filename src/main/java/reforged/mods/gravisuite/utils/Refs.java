@@ -20,7 +20,7 @@ public class Refs {
     public static final String networkClient = "reforged.mods.gravisuite.network.NetworkHandlerClient";
     public static final String networkCommon = "reforged.mods.gravisuite.network.NetworkHandler";
 
-    public static final String IDs = "ids", general = "general", hud = "hud";
+    public static final String IDs = "ids", general = "general", hud = "hud", tree_capitator = "tree_capitator";
 
     public static final String SNEAK_KEY = StatCollector.translateToLocal("key.sneak");
 
