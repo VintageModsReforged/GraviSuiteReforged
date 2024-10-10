@@ -1,5 +1,6 @@
 package reforged.mods.gravisuite.items.tools;
 
+import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,14 +33,13 @@ import thermalexpansion.api.core.IDismantleable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemGraviTool extends ItemBaseElectricItem {
+public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
 
     public int ENERGY_PER_USE = 50;
     public boolean LOW_ENERGY = false;
 
     public String CHANGE_SOUND = "toolchange.ogg";
     public String TOOL_WRENCH = "Tools/wrench.ogg";
-    public String TOOL_TREETAP = "Tools/Treetap.ogg";
 
     public ItemGraviTool() {
         super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", 2, 10000, 100000, EnumToolMaterial.IRON);
@@ -84,6 +84,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         ToolMode mode = readToolMode(stack);
+        Block block = Helpers.getBlock(world, x, y, z);
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
@@ -103,6 +104,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         ToolMode mode = readToolMode(stack);
+        Block block = Helpers.getBlock(world, x, y, z);
         boolean actionDone = false;
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
@@ -296,6 +298,25 @@ public class ItemGraviTool extends ItemBaseElectricItem {
             IC2.platform.messagePlayer(player, Refs.status_low);
         }
         return IC2.platform.isSimulating();
+    }
+
+    /**
+     *
+     * {@link IToolWrench}
+     *
+     * */
+
+    @Override
+    public boolean canWrench(EntityPlayer player, int x, int y, int z) {
+        ItemStack stack = player.getHeldItem();
+        ToolMode mode = readToolMode(stack);
+        return mode == ToolMode.WRENCH;
+    }
+
+    @Override
+    public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
+        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
+        ElectricItem.use(player.getHeldItem(), this.ENERGY_PER_USE, player);
     }
 
     public enum ToolMode {

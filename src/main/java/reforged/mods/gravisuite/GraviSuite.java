@@ -73,13 +73,20 @@ public class GraviSuite {
 
     @ForgeSubscribe
     public void onRightClick(PlayerInteractEvent e) {
-        if (GraviSuiteMainConfig.INSPECT_MODE && e.entityPlayer.getHeldItem() != null) {
-            if (e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && e.entityPlayer.getHeldItem().getItem() == Item.stick) {
+        if (e.entityPlayer.getHeldItem() != null) {
+            if (e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
                 Block block = Helpers.getBlock(e.entity.worldObj, e.x, e.y, e.z);
-                int metadata = e.entityPlayer.worldObj.getBlockMetadata(e.x, e.y, e.z);
-                if (block != null) {
-                    LOGGER.info("Block: " + block.translateBlockName() + " | Class Name: " + block.getClass().getName());
-                    LOGGER.info("Block Metadata: " + metadata);
+                if (e.entityPlayer.getHeldItem().getItem() == Item.stick && GraviSuiteMainConfig.INSPECT_MODE) {
+                    int metadata = e.entityPlayer.worldObj.getBlockMetadata(e.x, e.y, e.z);
+                    if (block != null) {
+                        LOGGER.info("Block: " + block.translateBlockName() + " | Class Name: " + block.getClass().getName());
+                        LOGGER.info("Block Metadata: " + metadata);
+                    }
+                }
+                if (e.entityPlayer.getHeldItem().getItem() == GraviSuiteData.GRAVI_TOOL) {
+                    if (Helpers.instanceOf(block, "appeng.common.AppEngMultiBlock")) { // cancel any interaction with AE block
+                        e.setCanceled(true);
+                    }
                 }
             }
         }
