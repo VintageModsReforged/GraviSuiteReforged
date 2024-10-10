@@ -27,6 +27,7 @@ import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.utils.BlockHelper;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import thermalexpansion.api.core.IDismantleable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,8 +76,7 @@ public class ItemGraviTool extends ItemBaseElectricItem {
                 saveToolMode(stack, nextMode);
                 IC2.platform.messagePlayer(player, Refs.tool_mode + " " + nextMode.name);
             }
-            if (IC2.platform.isRendering())
-                IC2.audioManager.playOnce(player, PositionSpec.Hand, CHANGE_SOUND, false, IC2.audioManager.defaultVolume);
+            IC2.audioManager.playOnce(player, PositionSpec.Hand, CHANGE_SOUND, false, IC2.audioManager.defaultVolume);
         }
         return stack;
     }
@@ -103,26 +103,22 @@ public class ItemGraviTool extends ItemBaseElectricItem {
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         ToolMode mode = readToolMode(stack);
+        boolean actionDone = false;
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
             } else {
                 if (mode == ToolMode.WRENCH) {
-                    boolean wrench = onWrenchUse(stack, player, world, x, y, z, side);
-                    if (wrench) {
-                        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, true, IC2.audioManager.defaultVolume);
-                    }
-                    return wrench;
+                    actionDone = onWrenchUse(stack, player, world, x, y, z, side);
                 } else if (mode == ToolMode.SCREWDRIVER) {
-                    boolean screwdriver = onScrewdriverUse(stack, player, world, x, y, z);
-                    if (screwdriver) {
-                        IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, true, IC2.audioManager.defaultVolume);
-                    }
-                    return screwdriver;
+                    actionDone = onScrewdriverUse(stack, player, world, x, y, z);
                 }
             }
         }
-        return false;
+        if (IC2.platform.isSimulating() && actionDone) {
+            IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
+        }
+        return actionDone;
     }
 
     public boolean onWrenchUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side) {
@@ -195,6 +191,16 @@ public class ItemGraviTool extends ItemBaseElectricItem {
                             world.setBlock(x, y, z, 0);
                             ElectricItem.use(stack, 10000, player);
                         }
+                        return true;
+                    }
+                }
+            }
+            if (Loader.isModLoaded("ThermalExpansion")) {
+                if (block instanceof IDismantleable) {
+                    IDismantleable dismantleable = (IDismantleable) block;
+                    if (dismantleable.canDismantle(player, world, x, y, z)) {
+                        dismantleable.dismantleBlock(player, world, x, y, z, false);
+                        ElectricItem.use(stack, ENERGY_PER_USE, player);
                         return true;
                     }
                 }
