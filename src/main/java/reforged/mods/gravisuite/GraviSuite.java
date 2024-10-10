@@ -11,15 +11,18 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import reforged.mods.gravisuite.items.tools.ItemGraviTool;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import thermalexpansion.api.core.IDismantleable;
 
 import java.util.logging.Logger;
 
@@ -73,18 +76,23 @@ public class GraviSuite {
 
     @ForgeSubscribe
     public void onRightClick(PlayerInteractEvent e) {
-        if (e.entityPlayer.getHeldItem() != null) {
+        ItemStack heldStack = e.entityPlayer.getHeldItem();
+        if (heldStack != null) {
             if (e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
                 Block block = Helpers.getBlock(e.entity.worldObj, e.x, e.y, e.z);
-                if (e.entityPlayer.getHeldItem().getItem() == Item.stick && GraviSuiteMainConfig.INSPECT_MODE) {
+
+                if (heldStack.getItem() == Item.stick && GraviSuiteMainConfig.INSPECT_MODE) {
                     int metadata = e.entityPlayer.worldObj.getBlockMetadata(e.x, e.y, e.z);
                     if (block != null) {
                         LOGGER.info("Block: " + block.translateBlockName() + " | Class Name: " + block.getClass().getName());
                         LOGGER.info("Block Metadata: " + metadata);
                     }
                 }
-                if (e.entityPlayer.getHeldItem().getItem() == GraviSuiteData.GRAVI_TOOL) {
-                    if (Helpers.instanceOf(block, "appeng.common.AppEngMultiBlock")) { // cancel any interaction with AE block
+                if (heldStack.getItem() == GraviSuiteData.GRAVI_TOOL) {
+                    if (block instanceof IDismantleable && ItemGraviTool.readToolMode(heldStack) != ItemGraviTool.ToolMode.WRENCH) {
+                        e.setCanceled(true); // cancel interaction with ThermalExpansion when not in WRENCH mode
+                    }
+                    if (Helpers.instanceOf(block, "appeng.common.AppEngMultiBlock") && ItemGraviTool.readToolMode(heldStack) != ItemGraviTool.ToolMode.SCREWDRIVER) { // cancel any interaction with AE block when is not in SCREWDRIVER mode
                         e.setCanceled(true);
                     }
                 }
