@@ -77,20 +77,29 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
         }
     }
 
-    public boolean canHarvestBlock(Block block, ItemStack stack) {
-        return ((Item.axeDiamond.canHarvestBlock(block))
-                || (Item.axeDiamond.getStrVsBlock(stack, block) > 1.0F)
-                || (Item.swordDiamond.canHarvestBlock(block))
-                || (Item.swordDiamond.getStrVsBlock(stack, block) > 1.0F)) || (this.mineableBlocks.contains(block));
+    @Override
+    public boolean canHarvestBlock(Block block) {
+        ItemStack stack = new ItemStack(this);
+        return (Item.axeDiamond.canHarvestBlock(block) || Item.axeDiamond.getStrVsBlock(stack, block) > 1F) ||
+                (Item.swordDiamond.canHarvestBlock(block) || Item.swordDiamond.getStrVsBlock(stack, block) > 1F) || this.mineableBlocks.contains(block);
     }
 
     @Override
     public float getStrVsBlock(ItemStack stack, Block block, int meta) {
-        if (!ElectricItem.canUse(stack, this.energyPerOperation))
+        if (!ElectricItem.canUse(stack, this.energyPerOperation)) {
             return 0.5F;
-        if (canHarvestBlock(block, stack))
-            return this.efficiencyOnProperMaterial;
-        return 1.0F;
+        } else {
+            if (canHarvestBlock(block)) {
+                return this.efficiencyOnProperMaterial;
+            } else {
+                return 0.5F;
+            }
+        }
+    }
+
+    @Override
+    public float getStrVsBlock(ItemStack stack, Block block) {
+       return getStrVsBlock(stack, block, 0);
     }
 
     @Override
@@ -141,7 +150,7 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
                         break;
                     }
                     if (ElectricItem.canUse(stack, this.energyPerOperation)) {
-                        if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
+                        if (canHarvestBlock(block) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
                             ElectricItem.use(stack, this.energyPerOperation, player);
                         }
                     }
@@ -181,28 +190,35 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, int block, int xPos, int yPos, int zPos, EntityLiving entity) {
-        if (Block.blocksList[block].getBlockHardness(par2World, xPos, yPos, zPos) != 0.0D) {
-            if (entity != null) {
-                ElectricItem.use(par1ItemStack, this.energyPerOperation, null);
+    public boolean onBlockDestroyed(ItemStack stack, World world, int block, int xPos, int yPos, int zPos, EntityLiving entity) {
+        if (Block.blocksList[block].getBlockHardness(world, xPos, yPos, zPos) != 0.0D) {
+            if (entity instanceof EntityPlayer) {
+                ElectricItem.use(stack, this.energyPerOperation, (EntityPlayer) entity);
             } else {
-                ElectricItem.discharge(par1ItemStack, this.energyPerOperation, this.TIER, true, false);
+                ElectricItem.discharge(stack, this.energyPerOperation, this.TIER, true, false);
             }
         }
         return true;
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLiving entity, EntityLiving attacker) {
-        if (ElectricItem.use(stack, this.energyPerOperation, null)) {
-            entity.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 13);
+    public boolean hitEntity(ItemStack itemstack, EntityLiving entity, EntityLiving attacker) {
+        if (ElectricItem.use(itemstack, this.energyPerOperation * 2, (EntityPlayer) attacker)) {
+            entity.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 10);
         } else {
             entity.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 1);
         }
-        if (attacker != null && entity instanceof EntityCreeper && entity.getHealth() <= 0.0F) {
-            IC2.achievements.issueAchievement((EntityPlayer)attacker, "killCreeperChainsaw");
+
+        if (entity instanceof EntityCreeper && entity.getHealth() <= 0) {
+            IC2.achievements.issueAchievement((EntityPlayer) attacker, "killCreeperChainsaw");
         }
+
         return false;
+    }
+
+    @Override
+    public int getItemEnchantability() {
+        return 45;
     }
 
     @Override
