@@ -26,6 +26,7 @@ import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -51,13 +52,14 @@ public class ItemMagnet extends ItemBaseElectricItem {
     @SideOnly(Side.CLIENT)
     @Override
     @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean debugMode) {
         super.addInformation(stack, player, tooltip, debugMode);
-        if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
-        } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        addKeyTooltips(tooltip, new IToolTipProvider() {
+            @Override
+            public void addTooltip() {
+                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
+            }
+        });
     }
 
     @Override

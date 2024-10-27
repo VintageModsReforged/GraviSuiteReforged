@@ -29,6 +29,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import org.jetbrains.annotations.Nullable;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
@@ -46,9 +47,9 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
     public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
 
     public ItemAdvancedChainsaw() {
-        super(GraviSuiteMainConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumToolMaterial.EMERALD);
-        this.efficiencyOnProperMaterial = 35.0F;
-        MinecraftForge.setToolClass(this, "axe", 4);
+        super(GraviSuiteMainConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumToolMaterial.IRON);
+        this.efficiencyOnProperMaterial = 24.0F;
+        MinecraftForge.setToolClass(this, "axe", 2);
         MinecraftForge.EVENT_BUS.register(this);
         this.setIconIndex(Refs.TOOLS_ID + 1);
         init();
@@ -57,7 +58,7 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
     @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean par4) {
         super.addInformation(stack, player, tooltip, par4);
         boolean isShearsOn = readToolMode(stack, NBT_SHEARS);
         boolean isCapitatorOn = readToolMode(stack, NBT_TCAPITATOR);
@@ -67,14 +68,15 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
         if (GraviSuiteMainConfig.CHAINSAW_TREE_CAPITATOR) {
             tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
         }
-        if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", "Right Click", Refs.SHEAR_MODE + ".stat"));
-            if (GraviSuiteMainConfig.CHAINSAW_TREE_CAPITATOR) {
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, "Right Click", Refs.CAPITATOR_MODE + ".stat"));
+        addKeyTooltips(tooltip, new IToolTipProvider() {
+            @Override
+            public void addTooltip() {
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", Refs.USE_KEY, Refs.SHEAR_MODE + ".stat"));
+                if (GraviSuiteMainConfig.CHAINSAW_TREE_CAPITATOR) {
+                    tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, Refs.USE_KEY, Refs.CAPITATOR_MODE + ".stat"));
+                }
             }
-        } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        });
     }
 
     @Override

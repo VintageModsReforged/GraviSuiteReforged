@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
@@ -57,19 +58,20 @@ public class ItemVajra extends ItemBaseElectricItem {
     @SideOnly(Side.CLIENT)
     @Override
     @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean par4) {
         super.addInformation(stack, player, tooltip, par4);
         VajraMode mode = readToolMode(stack);
         VajraProps props = readToolProps(stack);
         tooltip.add(Refs.tool_mining_mode_gold + " " + mode.name);
         tooltip.add(Refs.eff_tool_mode_gold + " " + props.name);
-        if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MINING_MODE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", "Right Click", Refs.EFF_MODE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
-        } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        addKeyTooltips(tooltip, new IToolTipProvider() {
+            @Override
+            public void addTooltip() {
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", Refs.USE_KEY, Refs.MINING_MODE + ".stat"));
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", Refs.USE_KEY, Refs.EFF_MODE + ".stat"));
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, Refs.USE_KEY, Refs.ENCH_MODE + ".stat"));
+            }
+        });
     }
 
     @Override

@@ -21,6 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.audio.IAudioProvider;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
@@ -46,7 +47,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         this.BOOST_SPPED = 0.2F;
         this.BOOST_MULTIPLIER = 3;
         MinecraftForge.EVENT_BUS.register(this);
-        this.TOGGLE_TIMER = 5;
+        TOGGLE_TIMER = 5;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
 
     @SuppressWarnings({"unchecked"})
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean par4) {
         super.addInformation(stack, player, tooltip, par4);
         boolean isGraviEngineOn = readFlyStatus(stack);
         boolean isLevitationOn = readWorkMode(stack);
@@ -65,13 +66,14 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         String levitationStatus = isLevitationOn ? Refs.status_on : Refs.status_off;
         tooltip.add(Refs.gravitation_engine + " " + gravitationEngine);
         tooltip.add(Refs.gravitation_levitation + " " + levitationStatus);
-        if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.LEVITATION + ".stat"));
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
-        } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        addKeyTooltips(tooltip, new IToolTipProvider() {
+            @Override
+            public void addTooltip() {
+                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.LEVITATION + ".stat"));
+                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
+            }
+        });
     }
 
     @Override

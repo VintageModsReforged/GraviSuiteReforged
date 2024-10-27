@@ -10,6 +10,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteData;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.armors.IHasOverlay;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
@@ -41,6 +42,14 @@ public class ItemBaseEnergyPack extends ItemArmor implements IElectricItem, IHas
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
         super.addInformation(stack, player, tooltip, debugMode);
         tooltip.add(TextFormatter.AQUA.literal(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier()));
+    }
+
+    public void addKeyTooltips(List tooltip, IToolTipProvider provider) {
+        if (Helpers.isShiftKeyDown()) {
+            provider.addTooltip();
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+        }
     }
 
     @Override

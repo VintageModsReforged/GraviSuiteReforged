@@ -10,7 +10,9 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Refs;
 import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
@@ -43,6 +45,14 @@ public class ItemBaseElectricItem extends ItemBaseTool implements IElectricItem 
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
         super.addInformation(stack, player, tooltip, debugMode);
         tooltip.add(TextFormatter.AQUA.literal(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier()));
+    }
+
+    public void addKeyTooltips(List tooltip, IToolTipProvider provider) {
+        if (Helpers.isShiftKeyDown()) {
+            provider.addTooltip();
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+        }
     }
 
     @SideOnly(Side.CLIENT)

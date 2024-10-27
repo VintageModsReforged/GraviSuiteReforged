@@ -15,6 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.audio.IAudioProvider;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
@@ -39,7 +40,7 @@ public class ItemBaseJetpack extends ItemBaseEnergyPack implements IAudioProvide
     @SuppressWarnings({"unchecked"})
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean par4) {
         super.addInformation(stack, player, tooltip, par4);
         boolean isHoverMode = readWorkMode(stack);
         boolean isEngineOn = readFlyStatus(stack);
@@ -49,13 +50,14 @@ public class ItemBaseJetpack extends ItemBaseEnergyPack implements IAudioProvide
 
         tooltip.add(Refs.jetpack_engine_gold + " " + jetpackStatus);
         tooltip.add(Refs.jetpack_hover_gold + " " + hoverStatus);
-        if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.JETPACK_HOVER + ".stat"));
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
-        } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        addKeyTooltips(tooltip, new IToolTipProvider() {
+            @Override
+            public void addTooltip() {
+                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.JETPACK_HOVER + ".stat"));
+                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
+            }
+        });
     }
 
     @Override

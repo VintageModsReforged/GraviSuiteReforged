@@ -19,6 +19,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
@@ -45,18 +46,19 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
     @SuppressWarnings("unchecked")
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List toolTips, boolean flag) {
+    public void addInformation(ItemStack stack, EntityPlayer player, final List toolTips, boolean flag) {
         super.addInformation(stack, player, toolTips, flag);
         DrillMode mode = readToolMode(stack);
         DrillProps props = readToolProps(stack);
         toolTips.add(Refs.tool_mining_mode_gold + " " + mode.NAME);
         toolTips.add(Refs.eff_tool_mode_gold + " " + props.NAME);
-        if (Helpers.isShiftKeyDown()) {
-            toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MINING_MODE + ".stat"));
-            toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", "Right Click", Refs.EFF_MODE + ".stat"));
-        } else {
-            toolTips.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        addKeyTooltips(toolTips, new IToolTipProvider() {
+            @Override
+            public void addTooltip() {
+                toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", Refs.USE_KEY, Refs.MINING_MODE + ".stat"));
+                toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", Refs.USE_KEY, Refs.EFF_MODE + ".stat"));
+            }
+        });
     }
 
     @Override
@@ -138,8 +140,6 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
                         }
                     }
                 }
-            } else {
-                ElectricItem.use(stack, props.ENERGY_COST, player);
             }
         }
         return false;
@@ -149,16 +149,18 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
-        DrillMode mode = readToolMode(stack);
         DrillProps props = readToolProps(stack);
-        if (blockId != 0) {
+        // will recharge only in NORMAL mode
+        if (blockId == 0) {
             return false;
         }
-        if (!ElectricItem.canUse(stack, props.ENERGY_COST)) {
-            return false;
-        }
-        if (mode == DrillMode.NORMAL) {
-            ElectricItem.use(stack, props.ENERGY_COST, null);
+        if (Block.blocksList[blockId].getBlockHardness(world, x, y, z) != 0) {
+            if (entity instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) entity;
+                ElectricItem.use(stack, props.ENERGY_COST, player);
+            } else {
+                ElectricItem.discharge(stack, props.ENERGY_COST, this.TIER, true, false);
+            }
         }
         return true;
     }

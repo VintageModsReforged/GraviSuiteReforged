@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.utils.BlockHelper;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -49,22 +50,23 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     @SideOnly(Side.CLIENT)
     @Override
     @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
-        super.addInformation(stack, player, tooltip, par4);
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean debugMode) {
+        super.addInformation(stack, player, tooltip, debugMode);
         ToolMode mode = readToolMode(stack);
         tooltip.add(Refs.tool_mode_gold + " " + mode.name);
-        if (par4) {
+        if (debugMode) {
             tooltip.add("Texture Index: " + mode.index);
         }
-        if (Helpers.isShiftKeyDown()) {
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MODE + ".stat"));
-        } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        addKeyTooltips(tooltip, new IToolTipProvider() {
+            @Override
+            public void addTooltip() {
+                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", Refs.USE_KEY, Refs.MODE + ".stat"));
+            }
+        });
     }
 
     @Override
-    public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6) {
+    public boolean shouldPassSneakingClickToBlock(World par2World, int x, int y, int z) {
         return true;
     }
 
