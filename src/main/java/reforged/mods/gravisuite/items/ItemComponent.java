@@ -12,7 +12,15 @@ import java.util.List;
 
 public class ItemComponent extends Item {
 
-    public String[] names = new String[] { "superconductor_cover", "superconductor", "cooling_core", "gravi_engine", "magnetron", "vajra_core", "engine_booster" };
+    public String[] names = new String[] {
+            "superconductor_cover",
+            "superconductor",
+            "cooling_core",
+            "gravi_engine",
+            "magnetron",
+            "vajra_core",
+            "engine_booster"
+    };
 
     public ItemComponent() {
         super(GraviSuiteMainConfig.COMPONENT_ID);

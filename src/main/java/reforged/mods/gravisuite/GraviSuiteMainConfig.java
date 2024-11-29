@@ -44,7 +44,7 @@ public class GraviSuiteMainConfig {
     public static int GREEN_SAPPHIRE_EXCAVATOR_ID = 30252;
     public static int BRONZE_EXCAVATOR_ID = 30253;
 
-    public static String LANGUAGES;
+    public static String[] LANGUAGES;
     public static String[] LOGS;
     public static String[] LEAVES;
 
@@ -95,7 +95,7 @@ public class GraviSuiteMainConfig {
         ENABLE_EXCAVATORS = getBoolean(Refs.GENERAL, "enable_excavators", ENABLE_EXCAVATORS, "Enable Excavators.");
         LOG_WRENCH = getBoolean(Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         INSPECT_MODE = getBoolean(Refs.GENERAL, "enable_inspect_mode", INSPECT_MODE, "Enable inspect mode. Helps identify block name, class and metadata.");
-        LANGUAGES = getString(Refs.GENERAL, "localization_list", "en_US,ru_RU", "Supported localizations. Place your <name>.lang file in gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
+        LANGUAGES = getString(Refs.GENERAL, "localizations", new String[] { "en_US", "ru_RU" }, "Supported localizations. Place your <name>.lang file in config/gravisuite/lang folder or inside mods/gravisuite/lang inside modJar");
 
         CHAINSAW_TREE_CAPITATOR = getBoolean(Refs.TREE_CAPITATOR, "chainsaw_tree_capitator", CHAINSAW_TREE_CAPITATOR, "Enable TreeCapitator Mode for Advanced Chainsaw.");
         LOGS = getString(Refs.TREE_CAPITATOR, "logs", new String[]{"thaumcraft.common.world.BlockMagicalLog"}, "Support for custom logs block that aren't instances of `BlockLog`. Enable inspect_mode and right click with a stick to get more info in the log.");
@@ -128,13 +128,6 @@ public class GraviSuiteMainConfig {
         if (MAIN_CONFIG != null) {
             MAIN_CONFIG.save();
         }
-    }
-
-    private static String getString(String cat, String tag, String defaultValue, String comment) {
-        comment = comment.replace("{t}", tag) + "\n";
-        Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
-        prop.comment = comment + "Default: " + defaultValue;
-        return prop.value;
     }
 
     private static String[] getString(String cat, String tag, String[] defaultValue, String comment) {

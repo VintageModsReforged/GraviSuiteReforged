@@ -1,6 +1,9 @@
 package reforged.mods.gravisuite.items.tools.base;
 
 import ic2.core.IC2;
+import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.ToolHelper;
+import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -15,9 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -60,7 +61,7 @@ public class ItemBaseExcavator extends ItemBaseTool {
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = block.getBlockHardness(world, x, y, z);
             if (refStrength != 0.0D) {
-                MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, true, 4.5D);
+                MovingObjectPosition mop = BlockHelper.raytraceFromEntity(world, player, true, 4.5D);
                 if (mop == null) { // cancel 3x3 when rayTrace fails
                     return false;
                 }
@@ -81,12 +82,12 @@ public class ItemBaseExcavator extends ItemBaseTool {
                 }
                 BlockPos origin = new BlockPos(x, y, z);
                 for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
-                    Block adjBlock = Helpers.getBlock(world, pos);
-                    int metadata = Helpers.getBlockMetadata(world, pos);
+                    Block adjBlock = BlockHelper.getBlock(world, pos);
+                    int metadata = BlockHelper.getBlockMetadata(world, pos);
                     if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
                         float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
                         if (strength > 0f && strength / refStrength <= 10f) {
-                            if (ForgeHooks.isToolEffective(stack, adjBlock, metadata) && harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
+                            if (ForgeHooks.isToolEffective(stack, adjBlock, metadata) && ToolHelper.harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
                                 mined++;
                             }
                         }

@@ -1,6 +1,8 @@
 package reforged.mods.gravisuite.items.tools.base;
 
 import ic2.core.IC2;
+import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.ToolHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -70,7 +72,7 @@ public class ItemBaseHammer extends ItemBaseTool {
             if (refStrength != 0.0D) {
                 int adjBlockId;
                 float strength;
-                MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, true, 4.5D);
+                MovingObjectPosition mop = BlockHelper.raytraceFromEntity(world, player, true, 4.5D);
                 if (mop == null) { // cancel 3x3 when rayTrace fails
                     return false;
                 }
@@ -98,7 +100,7 @@ public class ItemBaseHammer extends ItemBaseTool {
                             if (adjBlockId != 0) {
                                 strength = adjBlock.getBlockHardness(world, xPos, yPos, zPos);
                                 if (strength > 0f && strength / refStrength <= 10f) {
-                                    if ((ForgeHooks.isToolEffective(stack, adjBlock, world.getBlockMetadata(xPos, yPos, zPos)) || canHarvestBlock(adjBlock)) && harvestBlock(world, xPos, yPos, zPos, player)) {
+                                    if ((ForgeHooks.isToolEffective(stack, adjBlock, world.getBlockMetadata(xPos, yPos, zPos)) || canHarvestBlock(adjBlock)) && ToolHelper.harvestBlock(world, xPos, yPos, zPos, player)) {
                                         mined++;
                                     }
                                 }

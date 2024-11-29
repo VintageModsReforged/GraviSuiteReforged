@@ -3,6 +3,7 @@ package reforged.mods.gravisuite.items.armors.base;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.IElectricItem;
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -14,7 +15,6 @@ import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.armors.IHasOverlay;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
 
@@ -40,8 +40,7 @@ public class ItemBaseEnergyPack extends ItemArmor implements IElectricItem, IHas
     @Override
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debugMode) {
-        super.addInformation(stack, player, tooltip, debugMode);
-        tooltip.add(TextFormatter.AQUA.literal(Helpers.getCharge(stack) + "/" + this.getMaxCharge() + " EU @ Tier " + this.getTier()));
+        tooltip.add(FormattedTranslator.AQUA.format("message.info.energy", Helpers.getCharge(stack), this.getMaxCharge(), FormattedTranslator.WHITE.format("message.info.energy.tier", FormattedTranslator.YELLOW.literal(this.getTier() + ""))));
     }
 
     public void addKeyTooltips(List tooltip, IToolTipProvider provider) {

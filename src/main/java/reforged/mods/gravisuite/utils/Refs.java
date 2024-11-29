@@ -1,5 +1,6 @@
 package reforged.mods.gravisuite.utils;
 
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.StatCollector;
 
@@ -7,9 +8,9 @@ public class Refs {
 
     public static final String ID = "gravisuite";
     public static final String NAME = "GraviSuite - Addon";
-    public static final String VERSION = "1.4.7-2.2.2t";
+    public static final String VERSION = "1.4.7-2.2.2u";
     public static final String MC_VERSION = "[1.4.7]";
-    public static final String DEPS = "required-after:IC2;after:RedPowerBase;after:AppliedEnergistics;after:GregTech_Addon";
+    public static final String DEPS = "required-after:VintageCore;required-after:IC2;after:RedPowerBase;after:AppliedEnergistics;after:GregTech_Addon";
 
     public static final String COMMON_PROXY = "reforged.mods.gravisuite.proxy.CommonProxy";
     public static final String CLIENT_PROXY = "reforged.mods.gravisuite.proxy.ClientProxy";
@@ -72,42 +73,42 @@ public class Refs {
 
     // Formatted Messages // \247
 
-    public static final String energy_level = TextFormatter.WHITE.format(ENERGY_LEVEL);
-    public static final String energy_level_gold = TextFormatter.GOLD.format(ENERGY_LEVEL);
-    public static final String jetpack_engine = TextFormatter.YELLOW.format(JETPACK_ENGINE);
-    public static final String jetpack_engine_gold = TextFormatter.GOLD.format(JETPACK_ENGINE);
-    public static final String jetpack_hover = TextFormatter.YELLOW.format(JETPACK_HOVER);
-    public static final String jetpack_hover_gold = TextFormatter.GOLD.format(JETPACK_HOVER);
-    public static final String status_on = TextFormatter.GREEN.format(STATUS_ON);
-    public static final String status_off = TextFormatter.RED.format(STATUS_OFF);
-    public static final String status_low = TextFormatter.RED.format(STATUS_LOW_ENERGY);
-    public static final String status_shutdown = TextFormatter.RED.format(STATUS_SHUTDOWN);
-    public static final String gravitation_engine = TextFormatter.AQUA.format(GRAVITATION_ENGINE);
-    public static final String gravitation_levitation = TextFormatter.AQUA.format(LEVITATION);
-    public static final String eff_tool_mode = TextFormatter.YELLOW.format(EFF_MODE);
-    public static final String eff_tool_mode_gold = TextFormatter.GOLD.format(EFF_MODE);
-    public static final String eff_tool_mode_normal = TextFormatter.LIGHT_PURPLE.format(EFF_MODE_NORMAL);
-    public static final String eff_tool_mode_low = TextFormatter.GREEN.format(EFF_MODE_LOW_POWER);
-    public static final String eff_tool_mode_fine = TextFormatter.AQUA.format(EFF_MODE_FINE);
-    public static final String tool_mode_magnet = TextFormatter.YELLOW.format(MAGNET_MODE);
-    public static final String tool_mode_magnet_gold = TextFormatter.GOLD.format(MAGNET_MODE);
-    public static final String tool_mode_shear = TextFormatter.YELLOW.format(SHEAR_MODE);
-    public static final String tool_mode_capitator = TextFormatter.YELLOW.format(CAPITATOR_MODE);
-    public static final String tool_mode_shear_gold = TextFormatter.GOLD.format(SHEAR_MODE);
-    public static final String tool_mode_capitator_gold = TextFormatter.GOLD.format(CAPITATOR_MODE);
-    public static final String tool_mining_mode = TextFormatter.YELLOW.format(MINING_MODE);
-    public static final String tool_mining_mode_gold = TextFormatter.GOLD.format(MINING_MODE);
-    public static final String tool_mode = TextFormatter.YELLOW.format(MODE);
-    public static final String tool_mode_gold = TextFormatter.GOLD.format(MODE);
-    public static final String ench_mode_yellow = TextFormatter.YELLOW.format(ENCH_MODE);
-    public static final String tool_mode_normal = TextFormatter.GREEN.format(MODE_NORMAL);
-    public static final String tool_mode_big_holes = TextFormatter.LIGHT_PURPLE.format(MODE_BIG_HOLES);
-    public static final String tool_mode_vein = TextFormatter.AQUA.format(MODE_VEIN);
-    public static final String tool_mode_vein_extended = TextFormatter.LIGHT_PURPLE.format(MODE_VEIN_EXTENDED);
-    public static final String tool_mode_silk = TextFormatter.GREEN.format(MODE_SILK);
-    public static final String tool_mode_fortune = TextFormatter.AQUA.format(MODE_FORTUNE);
-    public static final String tool_mode_hoe = TextFormatter.GREEN.format(TOOL_MODE_HOE);
-    public static final String tool_mode_treetap = TextFormatter.GOLD.format(TOOL_MODE_TREETAP);
-    public static final String tool_mode_wrench = TextFormatter.AQUA.format(TOOL_MODE_WRENCH);
-    public static final String tool_mode_screwdriver = TextFormatter.LIGHT_PURPLE.format(TOOL_MODE_SCREWDRIVER);
+    public static final String energy_level = FormattedTranslator.WHITE.format(ENERGY_LEVEL);
+    public static final String energy_level_gold = FormattedTranslator.GOLD.format(ENERGY_LEVEL);
+    public static final String jetpack_engine = FormattedTranslator.YELLOW.format(JETPACK_ENGINE);
+    public static final String jetpack_engine_gold = FormattedTranslator.GOLD.format(JETPACK_ENGINE);
+    public static final String jetpack_hover = FormattedTranslator.YELLOW.format(JETPACK_HOVER);
+    public static final String jetpack_hover_gold = FormattedTranslator.GOLD.format(JETPACK_HOVER);
+    public static final String status_on = FormattedTranslator.GREEN.format(STATUS_ON);
+    public static final String status_off = FormattedTranslator.RED.format(STATUS_OFF);
+    public static final String status_low = FormattedTranslator.RED.format(STATUS_LOW_ENERGY);
+    public static final String status_shutdown = FormattedTranslator.RED.format(STATUS_SHUTDOWN);
+    public static final String gravitation_engine = FormattedTranslator.AQUA.format(GRAVITATION_ENGINE);
+    public static final String gravitation_levitation = FormattedTranslator.AQUA.format(LEVITATION);
+    public static final String eff_tool_mode = FormattedTranslator.YELLOW.format(EFF_MODE);
+    public static final String eff_tool_mode_gold = FormattedTranslator.GOLD.format(EFF_MODE);
+    public static final String eff_tool_mode_normal = FormattedTranslator.LIGHT_PURPLE.format(EFF_MODE_NORMAL);
+    public static final String eff_tool_mode_low = FormattedTranslator.GREEN.format(EFF_MODE_LOW_POWER);
+    public static final String eff_tool_mode_fine = FormattedTranslator.AQUA.format(EFF_MODE_FINE);
+    public static final String tool_mode_magnet = FormattedTranslator.YELLOW.format(MAGNET_MODE);
+    public static final String tool_mode_magnet_gold = FormattedTranslator.GOLD.format(MAGNET_MODE);
+    public static final String tool_mode_shear = FormattedTranslator.YELLOW.format(SHEAR_MODE);
+    public static final String tool_mode_capitator = FormattedTranslator.YELLOW.format(CAPITATOR_MODE);
+    public static final String tool_mode_shear_gold = FormattedTranslator.GOLD.format(SHEAR_MODE);
+    public static final String tool_mode_capitator_gold = FormattedTranslator.GOLD.format(CAPITATOR_MODE);
+    public static final String tool_mining_mode = FormattedTranslator.YELLOW.format(MINING_MODE);
+    public static final String tool_mining_mode_gold = FormattedTranslator.GOLD.format(MINING_MODE);
+    public static final String tool_mode = FormattedTranslator.YELLOW.format(MODE);
+    public static final String tool_mode_gold = FormattedTranslator.GOLD.format(MODE);
+    public static final String ench_mode_yellow = FormattedTranslator.YELLOW.format(ENCH_MODE);
+    public static final String tool_mode_normal = FormattedTranslator.GREEN.format(MODE_NORMAL);
+    public static final String tool_mode_big_holes = FormattedTranslator.LIGHT_PURPLE.format(MODE_BIG_HOLES);
+    public static final String tool_mode_vein = FormattedTranslator.AQUA.format(MODE_VEIN);
+    public static final String tool_mode_vein_extended = FormattedTranslator.LIGHT_PURPLE.format(MODE_VEIN_EXTENDED);
+    public static final String tool_mode_silk = FormattedTranslator.GREEN.format(MODE_SILK);
+    public static final String tool_mode_fortune = FormattedTranslator.AQUA.format(MODE_FORTUNE);
+    public static final String tool_mode_hoe = FormattedTranslator.GREEN.format(TOOL_MODE_HOE);
+    public static final String tool_mode_treetap = FormattedTranslator.GOLD.format(TOOL_MODE_TREETAP);
+    public static final String tool_mode_wrench = FormattedTranslator.AQUA.format(TOOL_MODE_WRENCH);
+    public static final String tool_mode_screwdriver = FormattedTranslator.LIGHT_PURPLE.format(TOOL_MODE_SCREWDRIVER);
 }

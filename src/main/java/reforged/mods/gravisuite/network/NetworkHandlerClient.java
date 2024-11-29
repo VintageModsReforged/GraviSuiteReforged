@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import reforged.mods.gravisuite.events.client.ClientArmorHandler;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.ByteArrayOutputStream;
@@ -18,15 +17,7 @@ public class NetworkHandlerClient extends NetworkHandler {
 
     @Override
     public void onPacketData(INetworkManager iNetworkManager, Packet250CustomPayload packet, Player iPlayer) {
-        if (packet.data.length != 0) {
-            switch (packet.data[0]) {
-                case 1:
-                default:
-                    break;
-                case 2:
-                    ClientArmorHandler.firstLoad = true;
-            }
-        }
+
     }
 
     @Override

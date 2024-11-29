@@ -5,6 +5,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
+import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.ToolHelper;
+import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -23,7 +26,6 @@ import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.HashSet;
 import java.util.List;
@@ -97,7 +99,7 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
             World world = player.worldObj;
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
-            MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, false, 4.5D);
+            MovingObjectPosition mop = BlockHelper.raytraceFromEntity(world, player, false, 4.5D);
             int block = world.getBlockId(x, y, z);
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
@@ -132,7 +134,7 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
                             float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
                             if (strength > 0f && strength / refStrength <= 8f) {
                                 if (ElectricItem.canUse(stack, props.ENERGY_COST)) {
-                                    if (canHarvestBlock(adjBlock) && harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
+                                    if (canHarvestBlock(adjBlock) && ToolHelper.harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
                                         ElectricItem.use(stack, props.ENERGY_COST, player);
                                     }
                                 }

@@ -4,19 +4,19 @@ import cpw.mods.fml.common.TickType;
 import ic2.api.IElectricItem;
 import ic2.core.IC2;
 import ic2.core.util.StackUtil;
+import mods.vintage.core.platform.events.tick.TickEvents;
+import mods.vintage.core.platform.lang.FormattedTranslator;
+import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.events.tick.TickEvents;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.LangHelper;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.EnumSet;
 
@@ -30,6 +30,10 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
     int yPosEnergy = offset, yPosEnergyJoint = offset, yPosJetpack = offset, yPosHover = offset, yPosGravi = offset, yPosLevitation = offset;
 
     public static Minecraft mc = Minecraft.getMinecraft();
+
+    public OverlayHandler() {
+        super(Refs.ID);
+    }
 
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... objects) {
@@ -57,7 +61,7 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
                 }
 
                 // ENERGY STATUS
-                String energyToDisplay = Refs.energy_level_gold + " " + getEnergyTextColor(charge) + TextFormatter.WHITE.literal("%");
+                String energyToDisplay = Refs.energy_level_gold + " " + getEnergyTextColor(charge) + FormattedTranslator.WHITE.literal("%");
 
                 // HOVER MODE STATUS
 
@@ -142,10 +146,10 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
                 if (armor.getItem() instanceof ItemBaseJetpack) {
                     int xPos = scaledRes.getScaledWidth() / 2;
                     int yPos = scaledRes.getScaledHeight() - 85;
-                    String quick_change = LangHelper.format(Refs.quick_charge);
+                    String quick_change = Translator.format(Refs.quick_charge);
                     int width = mc.fontRenderer.getStringWidth(quick_change);
                     if (tag.getBoolean(ItemBaseJetpack.NBT_ACTIVE) && IC2.keyboard.isAltKeyDown(player)) {
-                        mc.ingameGUI.drawString(mc.fontRenderer, TextFormatter.GREEN.format(Refs.quick_charge), xPos - width / 2, yPos, 0);
+                        mc.ingameGUI.drawString(mc.fontRenderer, FormattedTranslator.GREEN.literal(quick_change), xPos - width / 2, yPos, 0);
                     }
                 }
             }
@@ -172,21 +176,21 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
     }
 
     public static String getEnergyTextColor(int energyLevel) {
-        TextFormatter colorCode = TextFormatter.WHITE; // white
+        FormattedTranslator colorCode = FormattedTranslator.WHITE; // white
         if (energyLevel >= 90) {
-            colorCode = TextFormatter.GREEN; // green
+            colorCode = FormattedTranslator.GREEN; // green
         }
         if ((energyLevel <= 90) && (energyLevel > 75)) {
-            colorCode = TextFormatter.YELLOW; // yellow
+            colorCode = FormattedTranslator.YELLOW; // yellow
         }
         if ((energyLevel <= 75) && (energyLevel > 50)) {
-            colorCode = TextFormatter.GOLD; // gold
+            colorCode = FormattedTranslator.GOLD; // gold
         }
         if ((energyLevel <= 50) && (energyLevel > 35)) {
-            colorCode = TextFormatter.RED; // red
+            colorCode = FormattedTranslator.RED; // red
         }
         if (energyLevel <= 35) {
-            colorCode = TextFormatter.DARK_RED; // dark_red
+            colorCode = FormattedTranslator.DARK_RED; // dark_red
         }
         return colorCode.literal(String.valueOf(energyLevel));
     }

@@ -13,6 +13,7 @@ import ic2.core.audio.PositionSpec;
 import ic2.core.block.machine.tileentity.TileEntityTerra;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
+import mods.vintage.core.helpers.BlockHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +27,6 @@ import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.utils.BlockHelper;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import thermalexpansion.api.core.IDismantleable;
@@ -86,7 +86,6 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         ToolMode mode = readToolMode(stack);
-        Block block = Helpers.getBlock(world, x, y, z);
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
@@ -106,7 +105,6 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         ToolMode mode = readToolMode(stack);
-        Block block = Helpers.getBlock(world, x, y, z);
         boolean actionDone = false;
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
@@ -251,7 +249,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
                         LOW_ENERGY = true;
                         return false;
                     }
-                    MovingObjectPosition stack5 = Helpers.retraceBlock(world, player, x, y, z);
+                    MovingObjectPosition stack5 = BlockHelper.retraceBlock(world, player, x, y, z);
                     if (stack5 == null) {
                         return false;
                     }

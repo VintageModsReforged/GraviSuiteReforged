@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.GraviSuiteRecipes;
 import reforged.mods.gravisuite.events.server.ServerArmorHandler;
-import reforged.mods.gravisuite.utils.LangHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,6 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         registerTickHandlers(ServerArmorHandler.THIS);
         GraviSuiteMainConfig.initMainConfig();
-        LangHelper.init();
     }
 
     public void init(FMLInitializationEvent e) {}

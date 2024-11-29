@@ -1,10 +1,10 @@
 package reforged.mods.gravisuite.keyboard;
 
+import mods.vintage.core.helpers.KeyHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
 public class GraviSuiteKeyboardClient extends GraviSuiteKeyboard {
@@ -15,9 +15,8 @@ public class GraviSuiteKeyboardClient extends GraviSuiteKeyboard {
     private int lastKeyState = 0;
 
     public GraviSuiteKeyboardClient() {
-        // Register Keybinds using 1.7.10 method
-        Minecraft.getMinecraft().gameSettings.keyBindings = Helpers.add(Minecraft.getMinecraft().gameSettings.keyBindings, engine_toggle);
-        Minecraft.getMinecraft().gameSettings.keyBindings = Helpers.add(Minecraft.getMinecraft().gameSettings.keyBindings, magnet_toggle);
+        KeyHelper.registerKeybindings(engine_toggle);
+        KeyHelper.registerKeybindings(magnet_toggle);
     }
 
     @Override

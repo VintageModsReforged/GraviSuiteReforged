@@ -8,10 +8,15 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.Utils;
+import mods.vintage.core.platform.lang.ILangProvider;
+import mods.vintage.core.platform.lang.LangManager;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -20,17 +25,18 @@ import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
-import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import thermalexpansion.api.core.IDismantleable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Mod(modid = Refs.ID, name = Refs.NAME, dependencies = Refs.DEPS, version = Refs.VERSION, acceptedMinecraftVersions = Refs.MC_VERSION)
 @NetworkMod(clientSideRequired = true,
         clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.ID }, packetHandler = NetworkHandlerClient.class),
         serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.ID }, packetHandler = NetworkHandler.class))
-public class GraviSuite {
+public class GraviSuite implements ILangProvider {
 
     @SidedProxy(clientSide = Refs.CLIENT_PROXY, serverSide = Refs.COMMON_PROXY)
     public static CommonProxy PROXY;
@@ -62,6 +68,7 @@ public class GraviSuite {
     public void preInit(FMLPreInitializationEvent e) {
         PROXY.preInit(e);
         GraviSuiteData.init();
+        LangManager.THIS.registerLangProvider(this);
     }
 
     @Mod.Init
@@ -79,7 +86,7 @@ public class GraviSuite {
         ItemStack heldStack = e.entityPlayer.getHeldItem();
         if (heldStack != null) {
             if (e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
-                Block block = Helpers.getBlock(e.entity.worldObj, e.x, e.y, e.z);
+                Block block = BlockHelper.getBlock(e.entity.worldObj, e.x, e.y, e.z);
 
                 if (heldStack.getItem() == Item.stick && GraviSuiteMainConfig.INSPECT_MODE) {
                     int metadata = e.entityPlayer.worldObj.getBlockMetadata(e.x, e.y, e.z);
@@ -92,11 +99,26 @@ public class GraviSuite {
                     if (block instanceof IDismantleable && ItemGraviTool.readToolMode(heldStack) != ItemGraviTool.ToolMode.WRENCH) {
                         e.setCanceled(true); // cancel interaction with ThermalExpansion when not in WRENCH mode
                     }
-                    if (Helpers.instanceOf(block, "appeng.common.AppEngMultiBlock") && ItemGraviTool.readToolMode(heldStack) != ItemGraviTool.ToolMode.SCREWDRIVER) { // cancel any interaction with AE block when is not in SCREWDRIVER mode
+                    if (Utils.instanceOf(block, "appeng.common.AppEngMultiBlock") && ItemGraviTool.readToolMode(heldStack) != ItemGraviTool.ToolMode.SCREWDRIVER) { // cancel any interaction with AE block when is not in SCREWDRIVER mode
                         e.setCanceled(true);
                     }
                 }
             }
         }
+    }
+
+    @ForgeSubscribe
+    public void onBlockHighlight(DrawBlockHighlightEvent e) {
+
+    }
+
+    @Override
+    public String getModid() {
+        return Refs.ID;
+    }
+
+    @Override
+    public List<String> getLocalizationList() {
+        return Arrays.asList(GraviSuiteMainConfig.LANGUAGES);
     }
 }

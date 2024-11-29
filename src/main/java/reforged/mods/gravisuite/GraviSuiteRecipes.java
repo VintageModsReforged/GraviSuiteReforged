@@ -4,11 +4,11 @@ import cpw.mods.fml.common.Loader;
 import ic2.api.Ic2Recipes;
 import ic2.api.Items;
 import ic2.core.util.StackUtil;
+import mods.vintage.core.helpers.RecipeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import reforged.mods.gravisuite.utils.Helpers;
 
 public class GraviSuiteRecipes {
 
@@ -58,7 +58,7 @@ public class GraviSuiteRecipes {
                 'D', Items.getItem("glassFiberCableItem"),
                 'F', Items.getItem("advancedCircuit"));
 
-        Helpers.removeRecipeByOutput(Items.getItem("quantumBodyarmor"));
+        RecipeHelper.removeRecipeByOutput(Items.getItem("quantumBodyarmor"));
         Ic2Recipes.addCraftingRecipe(Items.getItem("quantumBodyarmor"),
                 "ANA", "ILI", "IAI",
                 'A', Items.getItem("advancedAlloy"),
