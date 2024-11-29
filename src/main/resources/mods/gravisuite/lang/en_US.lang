@@ -98,5 +98,6 @@ message.info.filter.set=Set the filter
 message.vein.active=Active Vein Miner
 message.info.filter=Void Filter: %s
 message.info.quick_change=[!] Quick Mode Change [!]
-
-
+## USE TOGETHER: AQUA.format("message.info.energy", WHITE.format("message.info.energy.tier", tier))
+message.info.energy=%s/%s EU %s
+message.info.energy.tier=(Tier: %s)

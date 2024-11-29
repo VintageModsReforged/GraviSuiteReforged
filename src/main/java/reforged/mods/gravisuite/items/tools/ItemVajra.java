@@ -4,6 +4,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.StackHelper;
+import mods.vintage.core.helpers.ToolHelper;
+import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -21,7 +25,6 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -126,7 +129,7 @@ public class ItemVajra extends ItemToolElectric {
             }
             ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
             boolean isOre = false;
-            for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
+            for (ItemStack oreStack : StackHelper.getStackFromOre("ore")) {
                 if (oreStack.isItemEqual(blockStack)) {
                     isOre = true;
                     break;
@@ -135,7 +138,7 @@ public class ItemVajra extends ItemToolElectric {
             boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
             if (veinGeneral) {
                 BlockPos origin = new BlockPos(x, y, z);
-                Set<BlockPos> vein = Helpers.veinPos(world, origin, player.isSneaking() ? 0 : 128);
+                Set<BlockPos> vein = BlockHelper.veinPos(world, origin, player.isSneaking() ? 0 : 128);
                 for (BlockPos coord : vein) {
                     if (coord.equals(origin)) {
                         continue;
@@ -144,7 +147,7 @@ public class ItemVajra extends ItemToolElectric {
                         break;
                     }
                     if (canOperate(stack)) {
-                        if (canHarvestBlock(block) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
+                        if (canHarvestBlock(block) && ToolHelper.harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
                             ElectricItem.manager.use(stack, props.energyCost, player);
                         }
                     }

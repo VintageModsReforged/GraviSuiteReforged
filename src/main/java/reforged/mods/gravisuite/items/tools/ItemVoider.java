@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
@@ -17,7 +18,6 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class ItemVoider extends ItemToolElectric {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
         if (filterStack != null) {
-            tooltip.add(TextFormatter.GOLD.format("message.info.filter", filterStack.getDisplayName()));
+            tooltip.add(FormattedTranslator.GOLD.format("message.info.filter", filterStack.getDisplayName()));
         }
     }
 

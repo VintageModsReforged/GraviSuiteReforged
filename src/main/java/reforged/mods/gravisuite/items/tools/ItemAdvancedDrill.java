@@ -4,6 +4,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.StackHelper;
+import mods.vintage.core.helpers.ToolHelper;
+import mods.vintage.core.helpers.pos.BlockPos;
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
@@ -22,8 +27,6 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.TextFormatter;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.*;
 
@@ -100,7 +103,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             World world = player.worldObj;
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
-            MovingObjectPosition mop = Helpers.raytraceFromEntity(world, player, false, 4.5D);
+            MovingObjectPosition mop = BlockHelper.raytraceFromEntity(world, player, false, 4.5D);
             int block = world.getBlockId(x, y, z);
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
@@ -135,7 +138,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                             float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
                             if (strength > 0f && strength / refStrength <= 8f) {
                                 if (canOperate(stack)) {
-                                    if (canHarvestBlock(adjBlock, stack) && harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
+                                    if (canHarvestBlock(adjBlock, stack) && ToolHelper.harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
                                         ElectricItem.manager.use(stack, props.energy_cost, player);
                                     }
                                 }
@@ -298,8 +301,8 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         @Override
         @SideOnly(Side.CLIENT)
         public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
-            tooltip.add(TextFormatter.AQUA.format(Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier));
-            tooltip.add(TextFormatter.GOLD.format(Refs.vein_miner));
+            super.addInformation(stack, player, tooltip, flag);
+            tooltip.add(FormattedTranslator.GOLD.format(Refs.vein_miner));
             if (Helpers.isShiftKeyDown()) {
                 tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
             } else {
@@ -356,7 +359,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                 }
                 ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
                 boolean isOre = false;
-                for (ItemStack oreStack : Helpers.getStackFromOre("ore")) {
+                for (ItemStack oreStack : StackHelper.getStackFromOre("ore")) {
                     if (oreStack.isItemEqual(blockStack)) {
                         isOre = true;
                         break;
@@ -366,7 +369,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                     return false;
                 if (isOre && !player.capabilities.isCreativeMode) {
                     BlockPos origin = new BlockPos(x, y, z);
-                    for (BlockPos coord : Helpers.veinPos(world, origin, 128)) {
+                    for (BlockPos coord : BlockHelper.veinPos(world, origin, 128)) {
                         if (coord.equals(origin)) {
                             continue;
                         }
@@ -374,7 +377,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                             break;
                         }
                         if (ElectricItem.manager.canUse(stack, this.energy_per_use)) {
-                            if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
+                            if (canHarvestBlock(block, stack) && ToolHelper.harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
                                 ElectricItem.manager.use(stack, this.energy_per_use, player);
                             }
                         }

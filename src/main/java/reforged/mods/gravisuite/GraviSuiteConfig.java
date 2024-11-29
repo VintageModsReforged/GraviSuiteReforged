@@ -15,8 +15,7 @@ public class GraviSuiteConfig {
 
     public static Configuration id_config;
     public static Configuration main_config;
-    public static String additional_languages;
-    public static String default_language;
+    public static String[] langs;
     public static String[] logs;
     public static String[] leaves;
 
@@ -94,8 +93,7 @@ public class GraviSuiteConfig {
 
         log_wrench = getBoolean(Refs.general, "enable_wrench_logging", log_wrench, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         inspect_mode = getBoolean(Refs.general, "enable_inspect_mode", inspect_mode, "Enable inspect mode. Helps identify block name, class and metadata.");
-        default_language = getString(Refs.general, "default_language", "en_US,ru_RU", "Default Language. DO NOT CHANGE THIS! Use additional_languages field instead!");
-        additional_languages = getString(Refs.general, "additional_languages", "", "Additional supported localizations. Place your <name>.lang file in config/gravisuite/lang folder and list <name> here. Format: no spaces, comma separated. Ex: <name>,<name>");
+        langs = getString(Refs.general, "localizations", new String[] { "en_US", "ru_RU" }, "Supported localizations. Place your <name>.lang file in config/gravisuite/lang folder or inside mods/gravisuite/lang inside modJar");
         magnet_range = getInt(Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
         magnet_max_capacity = getInt(Refs.general, "magnet_max_capacity", 1, Integer.MAX_VALUE, magnet_max_capacity, "Magnet Attraction Capacity.");
 

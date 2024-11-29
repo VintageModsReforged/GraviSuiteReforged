@@ -92,3 +92,6 @@ message.info.filter.set=чтобы установить фильтр
 message.vein.active=Активный режим добычи рудной жилы
 message.info.filter=Уничтожать предмет: %s
 message.info.quick_change=[!] Быстрое переключение режимов [!]
+## USE TOGETHER: AQUA.format("message.info.energy", WHITE.format("message.info.energy.tier", tier))
+message.info.energy=%s/%s EU %s
+message.info.energy.tier=(Т: %s)

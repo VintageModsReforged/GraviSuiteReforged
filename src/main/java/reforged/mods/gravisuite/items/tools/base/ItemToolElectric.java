@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -16,7 +17,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +57,7 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
-        tooltip.add(TextFormatter.AQUA.literal(Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier));
+        tooltip.add(FormattedTranslator.AQUA.format("message.info.energy", Helpers.getCharge(stack), this.getMaxCharge(stack), FormattedTranslator.WHITE.format("message.info.energy.tier", FormattedTranslator.YELLOW.literal(this.tier + ""))));
     }
 
     @Override

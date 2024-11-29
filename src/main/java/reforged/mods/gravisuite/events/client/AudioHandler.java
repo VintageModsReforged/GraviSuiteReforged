@@ -2,11 +2,12 @@ package reforged.mods.gravisuite.events.client;
 
 import cpw.mods.fml.common.TickType;
 import ic2.core.audio.AudioSource;
+import mods.vintage.core.platform.events.tick.TickEvents;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.audio.IAudioProvider;
-import reforged.mods.gravisuite.events.tick.TickEvents;
+import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.EnumSet;
 
@@ -16,6 +17,10 @@ public class AudioHandler extends TickEvents.PlayerTickEvent {
 
     boolean USED;
     AudioSource AUDIO_SOURCE;
+
+    public AudioHandler() {
+        super(Refs.id);
+    }
 
     @Override
     public void tickStart(EnumSet<TickType> enumSet, Object... objects) {

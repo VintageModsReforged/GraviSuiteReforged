@@ -2,6 +2,7 @@ package reforged.mods.gravisuite;
 
 import ic2.api.item.Items;
 import ic2.api.recipe.Recipes;
+import mods.vintage.core.helpers.RecipeHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -54,7 +55,7 @@ public class GraviSuiteRecipes {
                 'D', Items.getItem("glassFiberCableItem"),
                 'F', Items.getItem("advancedCircuit"));
 
-        Helpers.removeRecipeByOutput(Items.getItem("quantumBodyarmor"));
+        RecipeHelper.removeRecipeByOutput(Items.getItem("quantumBodyarmor"));
         Recipes.advRecipes.addRecipe(Items.getItem("quantumBodyarmor"),
                 "ANA", "ILI", "IAI",
                 'A', Items.getItem("advancedAlloy"),

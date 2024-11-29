@@ -7,6 +7,11 @@ import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
+import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.StackHelper;
+import mods.vintage.core.helpers.ToolHelper;
+import mods.vintage.core.helpers.Utils;
+import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.enchantment.Enchantment;
@@ -31,7 +36,6 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.pos.BlockPos;
 
 import java.util.*;
 
@@ -120,10 +124,10 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             if (GraviSuiteConfig.chainsaw_tree_capitator && readToolMode(stack, NBT_TCAPITATOR)) {
                 ItemStack blockStack = new ItemStack(block, 1, 32767);
                 boolean isLog = false;
-                List<ItemStack> logs = Helpers.getStackFromOre("log");
-                logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
+                List<ItemStack> logs = StackHelper.getStackFromOre("log");
+                logs.addAll(StackHelper.getStackFromOre("wood")); // just in case some mod uses old oredict name
                 for (ItemStack check : logs) {
-                    if (Helpers.areStacksEqual(check, blockStack) || isLog(block)) {
+                    if (StackHelper.areStacksEqual(check, blockStack) || isLog(block)) {
                         isLog = true;
                         break;
                     }
@@ -140,7 +144,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                             break;
                         }
                         if (canOperate(stack)) {
-                            if (canHarvestBlock(block, stack) && harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
+                            if (canHarvestBlock(block, stack) && ToolHelper.harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
                                 ElectricItem.manager.use(stack, this.energyPerOperation, player);
                             }
                         }
@@ -292,31 +296,31 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         String[] logs = GraviSuiteConfig.logs;
         boolean configLogs = false;
         for (String log : logs) {
-            if (Helpers.instanceOf(block, log)) configLogs = true;
+            if (Utils.instanceOf(block, log)) configLogs = true;
             break;
         }
         return block instanceof BlockLog || configLogs;
     }
 
     public boolean isLeaves(World world, BlockPos pos) {
-        Block block = Helpers.getBlock(world, pos);
+        Block block = BlockHelper.getBlock(world, pos);
         String[] leaves = GraviSuiteConfig.leaves;
         boolean configLeaves = false;
         for (String leave : leaves) {
-            if (Helpers.instanceOf(block, leave)) configLeaves = true;
+            if (Utils.instanceOf(block, leave)) configLeaves = true;
             break;
         }
         return getBOPStatus(world, pos) || configLeaves;
     }
 
     private boolean getBOPStatus(World world, BlockPos pos) {
-        int meta = Helpers.getBlockMetadata(world, pos) | 8;
-        Block block = Helpers.getBlock(world, pos);
+        int meta = BlockHelper.getBlockMetadata(world, pos) | 8;
+        Block block = BlockHelper.getBlock(world, pos);
         if (Loader.isModLoaded("BiomesOPlenty")) {
-            if (Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPPetals") ||
-                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPLeaves") ||
-                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPColorizedLeaves") ||
-                    Helpers.instanceOf(block, "biomesoplenty.blocks.BlockBOPAppleLeaves")) {
+            if (Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPPetals") ||
+                    Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPLeaves") ||
+                    Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPColorizedLeaves") ||
+                    Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPAppleLeaves")) {
                 return meta >= 8 && meta <= 15;
             }
         }
@@ -328,13 +332,13 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     }
 
     public LinkedList<BlockPos> scanForTree(final World world, final BlockPos startPos, int limit) {
-        Block block = Helpers.getBlock(world, startPos);
+        Block block = BlockHelper.getBlock(world, startPos);
         ItemStack blockStack = new ItemStack(block, 1, 32767);
         boolean isLog = false;
-        List<ItemStack> logs = Helpers.getStackFromOre("log");
-        logs.addAll(Helpers.getStackFromOre("wood")); // just in case some mod uses old oredict name
+        List<ItemStack> logs = StackHelper.getStackFromOre("log");
+        logs.addAll(StackHelper.getStackFromOre("wood")); // just in case some mod uses old oredict name
         for (ItemStack check : logs) {
-            if (Helpers.areStacksEqual(check, blockStack) || isLog(block)) {
+            if (StackHelper.areStacksEqual(check, blockStack) || isLog(block)) {
                 isLog = true;
                 break;
             }
@@ -346,7 +350,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         LinkedList<BlockPos> result = recursiveSearch(world, startPos, new BlockAction() {
             @Override
             public boolean onBlock(BlockPos pos, Block block, boolean isRightBlock) {
-                int metadata = Helpers.getBlockMetadata(world, pos) | 8;
+                int metadata = BlockHelper.getBlockMetadata(world, pos) | 8;
                 boolean isLeave = metadata >= 8 && metadata <= 11;
                 if (block.isLeaves(world, pos.getX(), pos.getY(), pos.getZ()) && isLeave || isLeaves(world, pos)) leavesFound[0] = true;
                 return true;
@@ -357,7 +361,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
 
     // Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.
     private static LinkedList<BlockPos> recursiveSearch(final World world, final BlockPos start, @Nullable final BlockAction action, int limit) {
-        Block wantedBlock = Helpers.getBlock(world, start);
+        Block wantedBlock = BlockHelper.getBlock(world, start);
         boolean abort = false;
         final LinkedList<BlockPos> result = new LinkedList<BlockPos>();
         final Set<BlockPos> visited = new HashSet<BlockPos>();
@@ -373,8 +377,8 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                 for (int y = y0 - 1; y <= y0 + 1 && !abort; ++y) {
                     for (int x = x0 - 1; x <= x0 + 1 && !abort; ++x) {
                         final BlockPos pos = new BlockPos(x, y, z);
-                        Block checkBlock = Helpers.getBlock(world, pos);
-                        if ((Helpers.isAir(world, pos) || !visited.add(pos))) {
+                        Block checkBlock = BlockHelper.getBlock(world, pos);
+                        if ((BlockHelper.isAir(world, pos) || !visited.add(pos))) {
                             continue;
                         }
                         final boolean isRightBlock = checkBlock.blockID == wantedBlock.blockID;

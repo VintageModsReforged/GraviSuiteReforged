@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IMetalArmor;
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -16,7 +17,6 @@ import net.minecraftforge.common.IArmorTextureProvider;
 import net.minecraftforge.common.ISpecialArmor;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
-import reforged.mods.gravisuite.utils.TextFormatter;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
-        tooltip.add(TextFormatter.AQUA.format(Helpers.getCharge(stack) + "/" + this.getMaxCharge(stack) + " EU" + " @ Tier " + this.tier));
+        tooltip.add(FormattedTranslator.AQUA.format("message.info.energy", Helpers.getCharge(stack), this.getMaxCharge(stack), FormattedTranslator.WHITE.format("message.info.energy.tier", FormattedTranslator.YELLOW.literal(this.tier + ""))));
     }
 
     @Override
