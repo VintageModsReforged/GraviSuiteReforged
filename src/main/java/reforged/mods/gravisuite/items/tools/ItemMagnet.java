@@ -122,10 +122,22 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 List<Entity> items = selectEntitiesWithinAABB(world, aabb);
                 if (items.isEmpty())
                     return;
+                boolean playSound = false;
+                String soundFile = "";
+                Entity drop = null;
                 for (Entity item : items) {
                     if (item != null && !player.isSneaking()) {
-                        this.onCollideWithPlayer(player, item);
+                        if (this.onCollideWithPlayer(player, item)) {
+                            if (item instanceof EntityXPOrb) {
+                                soundFile = "random.orb";
+                            } else soundFile = "random.pop";
+                            playSound = true;
+                            drop = item;
+                        }
                     }
+                }
+                if (playSound && drop != null) {
+                    drop.playSound(soundFile, 0.2F, ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 }
             }
         }
@@ -174,7 +186,6 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 EntityXPOrb xpOrb = (EntityXPOrb) drop;
                 if (xpOrb.field_70532_c == 0 && player.xpCooldown == 0) {
                     player.xpCooldown = 2;
-                    xpOrb.playSound("random.pop", 0.02F, 1F);
                     player.onItemPickup(xpOrb, 1);
                     player.addExperience(xpOrb.getXpValue());
                     xpOrb.setDead();
@@ -212,7 +223,6 @@ public class ItemMagnet extends ItemBaseElectricItem {
                     }
 
                     GameRegistry.onPickupNotification(player, itemDrop);
-                    itemDrop.playSound("random.pop", 0.02F, 1F);
                     player.onItemPickup(itemDrop, stackSize);
                     if (stack.stackSize <= 0) {
                         itemDrop.setDead();

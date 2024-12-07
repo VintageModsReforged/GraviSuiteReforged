@@ -11,9 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuite;
@@ -57,37 +55,19 @@ public class ItemBaseExcavator extends ItemBaseTool {
         if (IC2.platform.isSimulating()) {
             int mined = 0;
             World world = player.worldObj;
-            Block block = Block.blocksList[world.getBlockId(x, y, z)];
+            Block block = BlockHelper.getBlock(world, x, y, z);
+            if (!canHarvestBlock(block))
+                return false;
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = block.getBlockHardness(world, x, y, z);
             if (refStrength != 0.0D) {
-                MovingObjectPosition mop = BlockHelper.raytraceFromEntity(world, player, true, 4.5D);
-                if (mop == null) { // cancel 3x3 when rayTrace fails
-                    return false;
-                }
-                int xRange = radius, yRange = radius, zRange = radius;
-                switch (mop.sideHit) {
-                    case 0:
-                    case 1:
-                        yRange = 0;
-                        break;
-                    case 2:
-                    case 3:
-                        zRange = 0;
-                        break;
-                    case 4:
-                    case 5:
-                        xRange = 0;
-                        break;
-                }
                 BlockPos origin = new BlockPos(x, y, z);
-                for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
+                for (BlockPos pos : ToolHelper.getAOE(player, origin, radius)) {
                     Block adjBlock = BlockHelper.getBlock(world, pos);
-                    int metadata = BlockHelper.getBlockMetadata(world, pos);
-                    if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
+                    if (!BlockHelper.isAir(world, pos)) {
                         float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
-                        if (strength > 0f && strength / refStrength <= 10f) {
-                            if (ForgeHooks.isToolEffective(stack, adjBlock, metadata) && ToolHelper.harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
+                        if (strength > 0f && strength / refStrength <= 8f) {
+                            if ((getStrVsBlock(stack, adjBlock, world.getBlockMetadata(pos.getX(), pos.getY(), pos.getZ())) > 0.0F && canHarvestBlock(adjBlock)) && ToolHelper.harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
                                 mined++;
                             }
                         }

@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
-import mods.vintage.core.helpers.BlockHelper;
 import mods.vintage.core.helpers.ToolHelper;
 import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
@@ -16,7 +15,6 @@ import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -99,7 +97,6 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
             World world = player.worldObj;
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
-            MovingObjectPosition mop = BlockHelper.raytraceFromEntity(world, player, false, 4.5D);
             int block = world.getBlockId(x, y, z);
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
@@ -108,27 +105,9 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
             if (!ElectricItem.canUse(stack, props.ENERGY_COST))
                 return false;
             if (mode == DrillMode.BIG_HOLES) {
-                if (mop == null) { // cancel 3x3 when rayTrace fails
-                    return false;
-                }
                 if (refStrength != 0.0D) {
-                    int xRange = radius, yRange = radius, zRange = radius;
-                    switch (mop.sideHit) {
-                        case 0:
-                        case 1:
-                            yRange = 0;
-                            break;
-                        case 2:
-                        case 3:
-                            zRange = 0;
-                            break;
-                        case 4:
-                        case 5:
-                            xRange = 0;
-                            break;
-                    }
                     BlockPos origin = new BlockPos(x, y, z);
-                    for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
+                    for (BlockPos pos : ToolHelper.getAOE(player, origin, radius)) {
                         Block adjBlock = Block.blocksList[world.getBlockId(pos.getX(), pos.getY(), pos.getZ())];
                         if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
                             float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());

@@ -1,12 +1,11 @@
 package reforged.mods.gravisuite;
 
 import cpw.mods.fml.relauncher.FMLInjectionData;
+import mods.vintage.core.helpers.ConfigHelper;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
-import java.util.Arrays;
 
 public class GraviSuiteMainConfig {
 
@@ -74,104 +73,59 @@ public class GraviSuiteMainConfig {
         MAIN_CONFIG = new Configuration(new File((File) FMLInjectionData.data()[6], "config/gravisuite_main.cfg"));
         MAIN_CONFIG.load();
 
-        MAGNET_RANGE = getInt(Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
-        MAGNET_MAX_CAPACITY = getInt(Refs.GENERAL, "magnet_max_capacity", 1, Integer.MAX_VALUE, MAGNET_MAX_CAPACITY, "Magnet Attraction Capacity.");
+        MAGNET_RANGE = ConfigHelper.getInt(MAIN_CONFIG, Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
+        MAGNET_MAX_CAPACITY = ConfigHelper.getInt(MAIN_CONFIG, Refs.GENERAL, "magnet_max_capacity", 1, Integer.MAX_VALUE, MAGNET_MAX_CAPACITY, "Magnet Attraction Capacity.");
 
-        HUD_POSITION = getInt(Refs.HUD, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
-        ENABLE_HUD = getBoolean(Refs.HUD, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
-        USE_FIXED_VALUES = getBoolean(Refs.HUD, "enable_hud_fixed", USE_FIXED_VALUES, "Should GraviSuite HUD use fixed values from `hud_position`?");
+        HUD_POSITION = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
+        ENABLE_HUD = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.HUD, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
+        USE_FIXED_VALUES = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.HUD, "enable_hud_fixed", USE_FIXED_VALUES, "Should GraviSuite HUD use fixed values from `hud_position`?");
 
-        HUD_POS_ENERGY_X = getInt(Refs.HUD, "hud_pos_energy_x", 0, Integer.MAX_VALUE, HUD_POS_ENERGY_X, "X Pos for energy status info.");
-        HUD_POS_ENERGY_Y = getInt(Refs.HUD, "hud_pos_energy_y", 0, Integer.MAX_VALUE, HUD_POS_ENERGY_Y, "Y Pos for energy status info.");
+        HUD_POS_ENERGY_X = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_pos_energy_x", 0, Integer.MAX_VALUE, HUD_POS_ENERGY_X, "X Pos for energy status info.");
+        HUD_POS_ENERGY_Y = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_pos_energy_y", 0, Integer.MAX_VALUE, HUD_POS_ENERGY_Y, "Y Pos for energy status info.");
 
-        HUD_POS_JETPACK_X = getInt(Refs.HUD, "hud_pos_jetpack_x", 0, Integer.MAX_VALUE, HUD_POS_JETPACK_X, "X Pos for jetpack status info.");
-        HUD_POS_JETPACK_Y = getInt(Refs.HUD, "hud_pos_jetpack_y", 0, Integer.MAX_VALUE, HUD_POS_JETPACK_Y, "Y Pos for jetpack status info.");
+        HUD_POS_JETPACK_X = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_pos_jetpack_x", 0, Integer.MAX_VALUE, HUD_POS_JETPACK_X, "X Pos for jetpack status info.");
+        HUD_POS_JETPACK_Y = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_pos_jetpack_y", 0, Integer.MAX_VALUE, HUD_POS_JETPACK_Y, "Y Pos for jetpack status info.");
 
-        HUD_POS_GRAVI_X = getInt(Refs.HUD, "hud_pos_gravi_x", 0, Integer.MAX_VALUE, HUD_POS_GRAVI_X, "X Pos for Gravitational Chestplate status info.");
-        HUD_POS_GRAVI_Y = getInt(Refs.HUD, "hud_pos_gravi_y", 0, Integer.MAX_VALUE, HUD_POS_GRAVI_Y, "Y Pos for Gravitational Chestplate status info.");
+        HUD_POS_GRAVI_X = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_pos_gravi_x", 0, Integer.MAX_VALUE, HUD_POS_GRAVI_X, "X Pos for Gravitational Chestplate status info.");
+        HUD_POS_GRAVI_Y = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_pos_gravi_y", 0, Integer.MAX_VALUE, HUD_POS_GRAVI_Y, "Y Pos for Gravitational Chestplate status info.");
 
-        DURABILITY_FACTOR = getDouble(Refs.GENERAL, "durability_factor", 0.1, 1.0, 1.0, "Durability factor for Hammers.");
-        ENABLE_HAMMERS = getBoolean(Refs.GENERAL, "enable_hammers", ENABLE_HAMMERS, "Enable Hammers.");
-        ENABLE_EXCAVATORS = getBoolean(Refs.GENERAL, "enable_excavators", ENABLE_EXCAVATORS, "Enable Excavators.");
-        LOG_WRENCH = getBoolean(Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
-        INSPECT_MODE = getBoolean(Refs.GENERAL, "enable_inspect_mode", INSPECT_MODE, "Enable inspect mode. Helps identify block name, class and metadata.");
-        LANGUAGES = getString(Refs.GENERAL, "localizations", new String[] { "en_US", "ru_RU" }, "Supported localizations. Place your <name>.lang file in config/gravisuite/lang folder or inside mods/gravisuite/lang inside modJar");
+        DURABILITY_FACTOR = ConfigHelper.getDouble(MAIN_CONFIG, Refs.GENERAL, "durability_factor", 0.1, 1.0, 1.0, "Durability factor for Hammers.");
+        ENABLE_HAMMERS = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "enable_hammers", ENABLE_HAMMERS, "Enable Hammers.");
+        ENABLE_EXCAVATORS = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "enable_excavators", ENABLE_EXCAVATORS, "Enable Excavators.");
+        LOG_WRENCH = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
+        INSPECT_MODE = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "enable_inspect_mode", INSPECT_MODE, "Enable inspect mode. Helps identify block name, class and metadata.");
+        LANGUAGES = ConfigHelper.getStrings(MAIN_CONFIG, Refs.GENERAL, "localizations", new String[] { "en_US", "ru_RU" }, "Supported localizations. Place your <name>.lang file in config/gravisuite/lang folder or inside mods/gravisuite/lang inside modJar");
 
-        CHAINSAW_TREE_CAPITATOR = getBoolean(Refs.TREE_CAPITATOR, "chainsaw_tree_capitator", CHAINSAW_TREE_CAPITATOR, "Enable TreeCapitator Mode for Advanced Chainsaw.");
-        LOGS = getString(Refs.TREE_CAPITATOR, "logs", new String[]{"thaumcraft.common.world.BlockMagicalLog"}, "Support for custom logs block that aren't instances of `BlockLog`. Enable inspect_mode and right click with a stick to get more info in the log.");
-        LEAVES = getString(Refs.TREE_CAPITATOR, "leaves", new String[]{}, "Support for custom leaves block. This shouldn't be here, but just in case, for blocks that have their `isLeaves=false` for some reasons, but still are leaves... Enable inspect_mode and right click with a stick to get more info in the log.");
+        CHAINSAW_TREE_CAPITATOR = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.TREE_CAPITATOR, "chainsaw_tree_capitator", CHAINSAW_TREE_CAPITATOR, "Enable TreeCapitator Mode for Advanced Chainsaw.");
+        LOGS = ConfigHelper.getStrings(MAIN_CONFIG, Refs.TREE_CAPITATOR, "logs", new String[]{"thaumcraft.common.world.BlockMagicalLog"}, "Support for custom logs block that aren't instances of `BlockLog`. Enable inspect_mode and right click with a stick to get more info in the log.");
+        LEAVES = ConfigHelper.getStrings(MAIN_CONFIG, Refs.TREE_CAPITATOR, "leaves", new String[]{}, "Support for custom leaves block. This shouldn't be here, but just in case, for blocks that have their `isLeaves=false` for some reasons, but still are leaves... Enable inspect_mode and right click with a stick to get more info in the log.");
 
-        COMPONENT_ID = getId(Refs.IDS, "component_id", COMPONENT_ID, "component");
+        COMPONENT_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "component_id", COMPONENT_ID);
 
-        ADVANCED_LAPPACK_ID = getId(Refs.IDS, "advanced_lappack", ADVANCED_LAPPACK_ID, "advanced_lappack_id");
-        ULTIMATE_LAPPACK_ID = getId(Refs.IDS, "utlimate_lappack", ULTIMATE_LAPPACK_ID, "utlimate_lappack_id");
-        ADVANCED_JETPACK_ID = getId(Refs.IDS, "advanced_jetpack_id", ADVANCED_JETPACK_ID, "advanced_jetpack_id");
-        ADVANCED_NANO_ID = getId(Refs.IDS, "advanced_nano_id", ADVANCED_NANO_ID, "advanced_nano_id");
-        ADVANCED_QUANT_ID = getId(Refs.IDS, "advanced_quant_id", ADVANCED_QUANT_ID, "advanced_quant_id");
+        ADVANCED_LAPPACK_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "advanced_lappack", ADVANCED_LAPPACK_ID);
+        ULTIMATE_LAPPACK_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "utlimate_lappack", ULTIMATE_LAPPACK_ID);
+        ADVANCED_JETPACK_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "advanced_jetpack_id", ADVANCED_JETPACK_ID);
+        ADVANCED_NANO_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "advanced_nano_id", ADVANCED_NANO_ID);
+        ADVANCED_QUANT_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "advanced_quant_id", ADVANCED_QUANT_ID);
 
-        ADVANCED_DRILL_ID = getId(Refs.IDS, "advanced_diamond_drill", ADVANCED_DRILL_ID, "advanced_diamond_drill_id");
-        ADVANCED_CHAINSAW_ID = getId(Refs.IDS, "advanced_chainsaw", ADVANCED_CHAINSAW_ID, "advanced_chainsaw_id");
-        GRAVI_TOOL_ID = getId(Refs.IDS, "gravitool_id", GRAVI_TOOL_ID, "gravitool_id");
-        VAJRA_ID = getId(Refs.IDS, "vajra", VAJRA_ID, "vajra_id");
-        MAGNET_ID = getId(Refs.IDS, "magnet", MAGNET_ID, "magnet_id");
+        ADVANCED_DRILL_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "advanced_diamond_drill", ADVANCED_DRILL_ID);
+        ADVANCED_CHAINSAW_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "advanced_chainsaw", ADVANCED_CHAINSAW_ID);
+        GRAVI_TOOL_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "gravitool_id", GRAVI_TOOL_ID);
+        VAJRA_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "vajra", VAJRA_ID);
+        MAGNET_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "magnet", MAGNET_ID);
 
-        WOOD_HAMMER_ID = getId(Refs.IDS, "wooden_hammer", WOOD_HAMMER_ID,"wooden_hammer_id");
-        STONE_HAMMER_ID = getId(Refs.IDS, "stone_hammer", STONE_HAMMER_ID,"stone_hammer_id");
-        IRON_HAMMER_ID = getId(Refs.IDS, "iron_hammer", IRON_HAMMER_ID,"iron_hammer_id");
-        DIAMOND_HAMMER_ID = getId(Refs.IDS, "diamond_hammer", DIAMOND_HAMMER_ID,"diamond_hammer_id");
-        BRONZE_HAMMER_ID = getId(Refs.IDS, "bronze_hammer_id", BRONZE_HAMMER_ID, "bronze_hammer_id");
-        QUARTZ_HAMMER_ID = getId(Refs.IDS, "quartz_hammer_id", QUARTZ_HAMMER_ID, "quartz_hammer_id");
-        RUBY_HAMMER_ID = getId(Refs.IDS, "ruby_hammer_id", RUBY_HAMMER_ID, "ruby_hammer_id");
-        SAPPHIRE_HAMMER_ID = getId(Refs.IDS, "sapphire_hammer_id", SAPPHIRE_HAMMER_ID, "sapphire_hammer_id");
-        GREEN_SAPPHIRE_HAMMER_ID = getId(Refs.IDS, "green_sapphire_hammer_id", GREEN_SAPPHIRE_HAMMER_ID, "green_sapphire_hammer_id");
+        WOOD_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "wooden_hammer", WOOD_HAMMER_ID);
+        STONE_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "stone_hammer", STONE_HAMMER_ID);
+        IRON_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "iron_hammer", IRON_HAMMER_ID);
+        DIAMOND_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "diamond_hammer", DIAMOND_HAMMER_ID);
+        BRONZE_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "bronze_hammer_id", BRONZE_HAMMER_ID);
+        QUARTZ_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "quartz_hammer_id", QUARTZ_HAMMER_ID);
+        RUBY_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "ruby_hammer_id", RUBY_HAMMER_ID);
+        SAPPHIRE_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "sapphire_hammer_id", SAPPHIRE_HAMMER_ID);
+        GREEN_SAPPHIRE_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "green_sapphire_hammer_id", GREEN_SAPPHIRE_HAMMER_ID);
 
         if (MAIN_CONFIG != null) {
             MAIN_CONFIG.save();
         }
-    }
-
-    private static String[] getString(String cat, String tag, String[] defaultValue, String comment) {
-        comment = comment.replace("{t}", tag) + "\n";
-        Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
-        prop.comment = comment + "Default: " + Arrays.toString(defaultValue);
-        return prop.valueList;
-    }
-
-    private static int getId(String cat, String tag, int defaultValue, String comment) {
-        comment = comment.replace("{t}", tag) + "\n";
-        Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
-        prop.comment = comment + "Default: " + defaultValue;
-        int value = prop.getInt(defaultValue);
-        prop.value = Integer.toString(value);
-        return value;
-    }
-
-    private static int getInt(String cat, String tag, int min, int max, int defaultValue, String comment) {
-        comment = comment.replace("{t}", tag) + "\n";
-        Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
-        prop.comment = comment + "Min: " + min + ", Max: " + max + ", Default: " + defaultValue;
-        int value = prop.getInt(defaultValue);
-        value = Math.max(value, min);
-        value = Math.min(value, max);
-        prop.value = Integer.toString(value);
-        return value;
-    }
-
-    private static double getDouble(String cat, String tag, double min, double max, double defaultValue, String comment) {
-        comment = comment.replace("{t}", tag) + "\n";
-        Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
-        prop.comment = comment + "Min: " + min + ", Max: " + max + ", Default: " + defaultValue;
-        double value = prop.getDouble(defaultValue);
-        value = Math.max(value, min);
-        value = Math.min(value, max);
-        prop.value = Double.toString(value);
-        return value;
-    }
-
-    private static boolean getBoolean(String cat, String tag, boolean defaultValue, String comment) {
-        comment = comment.replace("{t}", tag) + "\n";
-        Property prop = MAIN_CONFIG.get(cat, tag, defaultValue);
-        prop.comment = comment + "Default: " + defaultValue;
-        return prop.getBoolean(defaultValue);
     }
 }
