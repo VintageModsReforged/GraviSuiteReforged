@@ -52,7 +52,7 @@ dependencies {
 //	modImplementation files("libs/")
 //  coremodImplementation files("libs/")
 
-	modImplementation files("libs/VintageCore-1.5.2-1.0.3-dev.jar")
+	modImplementation files("libs/VintageCore-1.5.2-1.0.3.1-dev.jar")
 	modImplementation files("libs/industrialcraft-2_1.117.385-lf.jar")
 	modImplementation files("libs/gregtechmod311.jar")
 	modImplementation files("libs/buildcraft-A-3.7.2.jar")

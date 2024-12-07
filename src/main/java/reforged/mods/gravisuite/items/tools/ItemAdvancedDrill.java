@@ -21,7 +21,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
@@ -103,7 +102,6 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             World world = player.worldObj;
             DrillMode mode = readToolMode(stack);
             DrillProps props = readToolProps(stack);
-            MovingObjectPosition mop = BlockHelper.raytraceFromEntity(world, player, false, 4.5D);
             int block = world.getBlockId(x, y, z);
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
@@ -112,27 +110,9 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             if (!canOperate(stack))
                 return false;
             if (mode == DrillMode.BIG_HOLES) {
-                if (mop == null) { // cancel 3x3 when rayTrace fails
-                    return false;
-                }
                 if (refStrength != 0.0D) {
-                    int xRange = radius, yRange = radius, zRange = radius;
-                    switch (mop.sideHit) {
-                        case 0:
-                        case 1:
-                            yRange = 0;
-                            break;
-                        case 2:
-                        case 3:
-                            zRange = 0;
-                            break;
-                        case 4:
-                        case 5:
-                            xRange = 0;
-                            break;
-                    }
                     BlockPos origin = new BlockPos(x, y, z);
-                    for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(-xRange, -yRange, -zRange), origin.add(xRange, yRange, zRange))) {
+                    for (BlockPos pos : ToolHelper.getAOE(player, origin, radius)) {
                         Block adjBlock = Block.blocksList[world.getBlockId(pos.getX(), pos.getY(), pos.getZ())];
                         if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
                             float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());

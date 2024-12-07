@@ -32,7 +32,6 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ItemMagnet extends ItemToolElectric {
 
@@ -84,10 +83,10 @@ public class ItemMagnet extends ItemToolElectric {
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int hand, boolean update) {
-        EntityPlayer player = (EntityPlayer) entity;
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        byte ticker = tag.getByte(NBT_TICKER);
         if (IC2.platform.isSimulating()) {
+            EntityPlayer player = (EntityPlayer) entity;
+            NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+            byte ticker = tag.getByte(NBT_TICKER);
             if (ticker > 0) {
                 ticker--;
                 tag.setByte(NBT_TICKER, ticker);
@@ -116,10 +115,22 @@ public class ItemMagnet extends ItemToolElectric {
                 List<Entity> items = selectEntitiesWithinAABB(world, aabb);
                 if (items.isEmpty())
                     return;
+                boolean playSound = false;
+                String soundFile = "";
+                Entity drop = null;
                 for (Entity item : items) {
                     if (item != null && !player.isSneaking()) {
-                        this.onCollideWithPlayer(player, item);
+                        if (this.onCollideWithPlayer(player, item)) {
+                            if (item instanceof EntityXPOrb) {
+                                soundFile = "random.orb";
+                            } else soundFile = "random.pop";
+                            playSound = true;
+                            drop = item;
+                        }
                     }
+                }
+                if (playSound && drop != null) {
+                    drop.playSound(soundFile, 0.2F, ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 }
             }
         }
@@ -162,13 +173,11 @@ public class ItemMagnet extends ItemToolElectric {
 
     public boolean onCollideWithPlayer(EntityPlayer player, Entity drop) {
         World world = player.worldObj;
-        Random rand = new Random();
         if (!world.isRemote) {
             if (drop instanceof EntityXPOrb) {
                 EntityXPOrb xpOrb = (EntityXPOrb) drop;
                 if (xpOrb.field_70532_c == 0 && player.xpCooldown == 0) {
                     player.xpCooldown = 2;
-                    xpOrb.playSound("random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
                     player.onItemPickup(xpOrb, 1);
                     player.addExperience(xpOrb.getXpValue());
                     xpOrb.setDead();
@@ -180,33 +189,26 @@ public class ItemMagnet extends ItemToolElectric {
                 if (itemDrop.delayBeforeCanPickup > 0) {
                     return false;
                 }
-
                 EntityItemPickupEvent event = new EntityItemPickupEvent(player, itemDrop);
                 if (MinecraftForge.EVENT_BUS.post(event)) {
                     return false;
                 }
-
                 ItemStack stack = itemDrop.getEntityItem();
                 int i = stack.stackSize;
                 if (itemDrop.delayBeforeCanPickup <= 0 && (event.getResult() == Event.Result.ALLOW || i <= 0 || player.inventory.addItemStackToInventory(stack))) {
                     if (stack.itemID == Block.wood.blockID) {
                         player.triggerAchievement(AchievementList.mineWood);
                     }
-
                     if (stack.itemID == Item.leather.itemID) {
                         player.triggerAchievement(AchievementList.killCow);
                     }
-
                     if (stack.itemID == Item.diamond.itemID) {
                         player.triggerAchievement(AchievementList.diamonds);
                     }
-
                     if (stack.itemID == Item.blazeRod.itemID) {
                         player.triggerAchievement(AchievementList.blazeRod);
                     }
-
                     GameRegistry.onPickupNotification(player, itemDrop);
-                    drop.playSound("random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     player.onItemPickup(drop, i);
                     if (stack.stackSize <= 0) {
                         drop.setDead();
