@@ -7,8 +7,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import mods.vintage.core.platform.lang.ILangProvider;
 import mods.vintage.core.platform.lang.LangManager;
 import net.minecraft.block.Block;
@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import reforged.mods.gravisuite.compat.NEIHandler;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
@@ -42,10 +43,7 @@ public class GraviSuite implements ILangProvider {
     @SidedProxy(clientSide = Refs.networkClient, serverSide = Refs.networkCommon)
     public static NetworkHandler network;
 
-    public static final CreativeTabs graviTab = new CreativeTabs(Refs.id) {{
-            LanguageRegistry.instance().addStringLocalization("itemGroup." + Refs.id, Refs.name);
-        }
-
+    public static final CreativeTabs graviTab = new CreativeTabs(Refs.id) {
         @Override
         public Item getTabIconItem() {
             return GraviSuiteData.advanced_quant;
@@ -64,6 +62,7 @@ public class GraviSuite implements ILangProvider {
         proxy.preInit(e);
         GraviSuiteData.init();
         LangManager.THIS.registerLangProvider(this);
+        LangManager.THIS.loadCreativeTabName(Refs.id, FormattedTranslator.BLUE.literal(Refs.name));
     }
 
     @Mod.Init
@@ -74,6 +73,7 @@ public class GraviSuite implements ILangProvider {
     @Mod.PostInit
     public void postInit(FMLPostInitializationEvent e) {
         proxy.postInit(e);
+        NEIHandler.init();
     }
 
     @ForgeSubscribe
