@@ -9,12 +9,14 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
+import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.events.client.AudioHandler;
 import reforged.mods.gravisuite.events.client.ClientArmorHandler;
 import reforged.mods.gravisuite.events.client.KeyboardHandler;
@@ -86,6 +88,11 @@ public class ClientProxy extends CommonProxy {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isSneakKeyDown() {
+        return Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode);
     }
 
     @Override

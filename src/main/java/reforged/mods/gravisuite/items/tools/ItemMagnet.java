@@ -51,7 +51,7 @@ public class ItemMagnet extends ItemToolElectric {
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         super.addInformation(stack, player, tooltip, isDebugMode);
-        if (Helpers.isShiftKeyDown()) {
+        if (GraviSuite.proxy.isSneakKeyDown()) {
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));

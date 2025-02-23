@@ -3,11 +3,9 @@ package reforged.mods.gravisuite.utils;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import mods.vintage.core.platform.lang.FormattedTranslator;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
@@ -47,10 +45,6 @@ public class Helpers {
             stack.setTagCompound(tag);
         }
         return tag;
-    }
-
-    public static boolean isShiftKeyDown() {
-        return Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode);
     }
 
     public static String pressForInfo(String data) {

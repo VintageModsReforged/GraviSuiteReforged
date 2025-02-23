@@ -44,6 +44,10 @@ public class CommonProxy {
         return false;
     }
 
+    public boolean isSneakKeyDown() {
+        return false;
+    }
+
     public void registerTickHandlers(ITickHandler handler) {
         TickRegistry.registerTickHandler(handler, Side.SERVER);
     }

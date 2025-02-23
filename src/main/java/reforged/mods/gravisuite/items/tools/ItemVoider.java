@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -36,7 +37,7 @@ public class ItemVoider extends ItemToolElectric {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         NBTTagCompound filterStackTag = tag.getCompoundTag("FilterStack");
         ItemStack filterStack = ItemStack.loadItemStackFromNBT(filterStackTag);
-        if (Helpers.isShiftKeyDown()) {
+        if (GraviSuite.proxy.isSneakKeyDown()) {
             tooltip.add(Helpers.clickFor("Right Click", "message.info.filter.set"));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));

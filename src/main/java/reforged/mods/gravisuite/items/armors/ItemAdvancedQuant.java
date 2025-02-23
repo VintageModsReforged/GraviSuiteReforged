@@ -65,7 +65,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
         String levitationStatus = Helpers.getStatusMessage(isLevitationOn);
         tooltip.add(Refs.gravitation_engine + " " + gravitationEngine);
         tooltip.add(Refs.gravitation_levitation + " " + levitationStatus);
-        if (Helpers.isShiftKeyDown()) {
+        if (GraviSuite.proxy.isSneakKeyDown()) {
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.LEVITATION + ".stat"));
             tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));

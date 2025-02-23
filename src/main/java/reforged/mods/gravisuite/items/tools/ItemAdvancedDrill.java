@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -48,7 +49,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         DrillProps props = readToolProps(stack);
         tooltip.add(Refs.tool_mining_mode_gold + " " + mode.name);
         tooltip.add(Refs.eff_tool_mode_gold + " " + props.name);
-        if (Helpers.isShiftKeyDown()) {
+        if (GraviSuite.proxy.isSneakKeyDown()) {
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MINING_MODE + ".stat"));
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", "Right Click", Refs.EFF_MODE + ".stat"));
         } else {
@@ -283,7 +284,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
             this.addEnergyInfo(stack, tooltip);
             tooltip.add(FormattedTranslator.GOLD.format(Refs.vein_miner));
-            if (Helpers.isShiftKeyDown()) {
+            if (GraviSuite.proxy.isSneakKeyDown()) {
                 tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
             } else {
                 tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));

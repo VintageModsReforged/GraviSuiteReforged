@@ -27,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -80,7 +81,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
         super.addInformation(stack, player, tooltip, isDebugMode);
         ToolMode mode = readToolMode(stack);
         tooltip.add(Refs.tool_mode_gold + " " + mode.name);
-        if (Helpers.isShiftKeyDown()) {
+        if (GraviSuite.proxy.isSneakKeyDown()) {
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MODE + ".stat"));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));

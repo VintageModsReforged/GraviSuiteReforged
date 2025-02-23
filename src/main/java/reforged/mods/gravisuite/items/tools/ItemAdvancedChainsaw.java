@@ -30,6 +30,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import org.jetbrains.annotations.Nullable;
+import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
@@ -65,7 +66,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         if (GraviSuiteConfig.chainsaw_tree_capitator) {
             tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
         }
-        if (Helpers.isShiftKeyDown()) {
+        if (GraviSuite.proxy.isSneakKeyDown()) {
             tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", "Right Click", Refs.SHEAR_MODE + ".stat"));
             if (GraviSuiteConfig.chainsaw_tree_capitator) {
                 tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, "Right Click", Refs.CAPITATOR_MODE + ".stat"));
