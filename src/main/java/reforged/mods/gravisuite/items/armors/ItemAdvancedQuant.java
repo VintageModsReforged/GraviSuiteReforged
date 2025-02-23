@@ -38,7 +38,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
         super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", 3, 20000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
-        this.BOOST_SPEED = 0.11F;
+        this.BOOST_SPEED = 0.5F;
         this.BOOST_MULTIPLIER = 3;
         TOGGLE_TIMER = 5;
         MinecraftForge.EVENT_BUS.register(this);
@@ -152,7 +152,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
                 && (!player.isInWater())) {
             double currCharge = Helpers.getCharge(itemstack);
             if ((currCharge > USAGE_IN_AIR * BOOST_MULTIPLIER) || (player.capabilities.isCreativeMode)) {
-                player.moveFlying(0.0F, 0.4F, BOOST_SPEED);
+                player.moveFlying(0.0F, 0.4F, BOOST_SPEED + 0.1F);
 
                 if (!player.capabilities.isCreativeMode) {
                     ElectricItem.manager.discharge(itemstack, USAGE_IN_AIR * BOOST_MULTIPLIER, 3, true, false);

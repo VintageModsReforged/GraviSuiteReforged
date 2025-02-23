@@ -7,14 +7,20 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import reforged.mods.gravisuite.audio.IAudioTicker;
+import reforged.mods.gravisuite.audio.tickers.ArmorAudioTicker;
+import reforged.mods.gravisuite.audio.tickers.ChainsawAudioTicker;
 import reforged.mods.gravisuite.events.client.AudioHandler;
 import reforged.mods.gravisuite.events.client.ClientArmorHandler;
 import reforged.mods.gravisuite.events.client.KeyboardHandler;
@@ -23,7 +29,12 @@ import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.utils.Helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientProxy extends CommonProxy {
+
+    public static List<IAudioTicker> TICKERS = new ArrayList<IAudioTicker>();
 
     @Override
     public void preInit(FMLPreInitializationEvent e) {
@@ -53,6 +64,17 @@ public class ClientProxy extends CommonProxy {
     @ForgeSubscribe
     public void onWorldLoad(WorldEvent.Load event) {
         ClientArmorHandler.firstLoad = true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @ForgeSubscribe
+    public void onSpawn(EntityJoinWorldEvent e) {
+        Entity entity = e.entity;
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+            addAudioTicker(new ChainsawAudioTicker(player));
+            addAudioTicker(new ArmorAudioTicker(player));
+        }
     }
 
     @Override
@@ -86,5 +108,9 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerTickHandlers(ITickHandler handler) {
         TickRegistry.registerTickHandler(handler, Side.CLIENT);
+    }
+
+    public void addAudioTicker(IAudioTicker ticker) {
+        TICKERS.add(ticker);
     }
 }
