@@ -37,14 +37,14 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public int BOOST_MULTIPLIER;
     public int USAGE_IN_AIR;
     public int USAGE_ON_GROUND;
-    public float BOOST_SPPED;
+    public float BOOST_SPEED;
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
         super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 3, 20000, 10000000);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
-        this.BOOST_SPPED = 0.2F;
+        this.BOOST_SPEED = 0.5F;
         this.BOOST_MULTIPLIER = 3;
         MinecraftForge.EVENT_BUS.register(this);
         TOGGLE_TIMER = 5;
@@ -132,10 +132,10 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
             boostMode(player, itemStack);
             if ((currCharge > USAGE_IN_AIR * BOOST_MULTIPLIER) || (player.capabilities.isCreativeMode)) {
                 if (IC2.keyboard.isJumpKeyDown(player)) {
-                    player.motionY += BOOST_SPPED + 0.1F;
+                    player.motionY += BOOST_SPEED + 0.1F;
                 }
                 if (IC2.keyboard.isSneakKeyDown(player)) {
-                    player.motionY -= BOOST_SPPED + 0.1F;
+                    player.motionY -= BOOST_SPEED + 0.1F;
                 }
                 if (!player.capabilities.isCreativeMode) {
                     ElectricItem.discharge(itemStack, USAGE_IN_AIR * BOOST_MULTIPLIER, 3, true, false);
@@ -152,7 +152,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
                 && (!player.isInWater())) {
             double currCharge = Helpers.getCharge(itemstack);
             if ((currCharge > USAGE_IN_AIR * BOOST_MULTIPLIER) || (player.capabilities.isCreativeMode)) {
-                player.moveFlying(0.0F, 0.4F, BOOST_SPPED);
+                player.moveFlying(0.0F, 0.4F, BOOST_SPEED + 0.1F);
 
                 if (!player.capabilities.isCreativeMode) {
                     ElectricItem.discharge(itemstack, USAGE_IN_AIR * BOOST_MULTIPLIER, 3, true, false);

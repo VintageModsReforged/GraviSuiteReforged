@@ -7,19 +7,19 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import mods.vintage.core.helpers.BlockHelper;
 import mods.vintage.core.helpers.Utils;
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import mods.vintage.core.platform.lang.ILangProvider;
 import mods.vintage.core.platform.lang.LangManager;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import reforged.mods.gravisuite.compat.NEIHandler;
 import reforged.mods.gravisuite.items.tools.ItemGraviTool;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
@@ -47,9 +47,7 @@ public class GraviSuite implements ILangProvider {
     @SidedProxy(clientSide = Refs.KEYBOARD_CLIENT, serverSide = Refs.KEYBOARD_COMMON)
     public static GraviSuiteKeyboard KEYBOARD;
 
-    public static final CreativeTabs TAB = new CreativeTabs(Refs.ID) {{
-            LanguageRegistry.instance().addStringLocalization("itemGroup." + Refs.ID, Refs.NAME);
-    }
+    public static final CreativeTabs TAB = new CreativeTabs(Refs.ID) {
         @Override
         public Item getTabIconItem() {
             return GraviSuiteData.ADVANCED_QUANT;
@@ -69,6 +67,7 @@ public class GraviSuite implements ILangProvider {
         PROXY.preInit(e);
         GraviSuiteData.init();
         LangManager.THIS.registerLangProvider(this);
+        LangManager.THIS.loadCreativeTabName(Refs.ID, FormattedTranslator.BLUE.literal(Refs.NAME));
     }
 
     @Mod.Init
@@ -79,6 +78,7 @@ public class GraviSuite implements ILangProvider {
     @Mod.PostInit
     public void postInit(FMLPostInitializationEvent e) {
         PROXY.postInit(e);
+        NEIHandler.init();
     }
 
     @ForgeSubscribe
@@ -105,11 +105,6 @@ public class GraviSuite implements ILangProvider {
                 }
             }
         }
-    }
-
-    @ForgeSubscribe
-    public void onBlockHighlight(DrawBlockHighlightEvent e) {
-
     }
 
     @Override

@@ -4,8 +4,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
 import mods.vintage.core.helpers.BlockHelper;
@@ -13,7 +11,6 @@ import mods.vintage.core.helpers.StackHelper;
 import mods.vintage.core.helpers.ToolHelper;
 import mods.vintage.core.helpers.Utils;
 import mods.vintage.core.helpers.pos.BlockPos;
-import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.enchantment.Enchantment;
@@ -46,8 +43,6 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
 
     public int energyPerOperation = 100;
     public Set<Block> mineableBlocks = new HashSet<Block>();
-    public static boolean wasEquipped = false;
-    public static AudioSource audioSource;
 
     public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
 
@@ -228,31 +223,6 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
         return 45;
     }
 
-    @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean flag) {
-        boolean isEquipped = flag && entity instanceof EntityLiving;
-        if (IC2.platform.isRendering()) {
-            if (isEquipped && !wasEquipped) {
-                if (audioSource == null) {
-                    audioSource = IC2.audioManager.createSource(entity, PositionSpec.Hand, "Tools/Chainsaw/ChainsawIdle.ogg", true, false, IC2.audioManager.defaultVolume);
-                }
-                if (audioSource != null) {
-                    audioSource.play();
-                }
-            } else if (!isEquipped && audioSource != null) {
-                audioSource.stop();
-                audioSource.remove();
-                audioSource = null;
-                if (entity instanceof EntityLiving) {
-                    IC2.audioManager.playOnce(entity, PositionSpec.Hand, "Tools/Chainsaw/ChainsawStop.ogg", true, IC2.audioManager.defaultVolume);
-                }
-            } else if (audioSource != null) {
-                audioSource.updatePosition();
-            }
-            wasEquipped = isEquipped;
-        }
-    }
-
     @ForgeSubscribe
     public void onEntityInteract(EntityInteractEvent event) {
         if (IC2.platform.isSimulating()) {
@@ -275,16 +245,6 @@ public class ItemAdvancedChainsaw extends ItemBaseElectricItem {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player) {
-        if (audioSource != null) {
-            audioSource.stop();
-            audioSource.remove();
-            audioSource = null;
-        }
-        return true;
     }
 
     public static boolean readToolMode(ItemStack stack, String mode) {

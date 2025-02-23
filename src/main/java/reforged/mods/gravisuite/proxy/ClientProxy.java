@@ -67,6 +67,11 @@ public class ClientProxy extends CommonProxy {
         ClientArmorHandler.firstLoad = true;
     }
 
+    @ForgeSubscribe
+    public void onWorldUnload(WorldEvent.Unload event) {
+        AudioHandler.THIS.getPlayerTickers().clear();
+    }
+
     @Override
     public boolean isFlying(EntityPlayer player) {
         ItemStack armorStack = player.getCurrentArmor(2);

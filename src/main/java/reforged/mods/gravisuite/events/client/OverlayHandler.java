@@ -61,7 +61,7 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
                 }
 
                 // ENERGY STATUS
-                String energyToDisplay = Refs.energy_level_gold + " " + getEnergyTextColor(charge) + FormattedTranslator.WHITE.literal("%");
+                String energyToDisplay = Refs.energy_level + " " + getEnergyTextColor(charge) + FormattedTranslator.WHITE.literal("%");
 
                 // HOVER MODE STATUS
 
@@ -128,7 +128,7 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
                 }
 
                 if (GraviSuiteMainConfig.ENABLE_HUD) {
-                    if (charge > 0 && !(armor.getItem() instanceof ItemBaseJetpack) && !(armor.getItem() instanceof ItemAdvancedQuant)) {
+                    if (!(armor.getItem() instanceof ItemBaseJetpack) && !(armor.getItem() instanceof ItemAdvancedQuant)) {
                         mc.ingameGUI.drawString(mc.fontRenderer, energyToDisplay, xPosEnergy, yPosEnergy, 0);
                     }
                     if (armor.getItem() instanceof ItemBaseJetpack) {
