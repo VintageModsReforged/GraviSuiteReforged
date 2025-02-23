@@ -42,7 +42,7 @@ public class ItemVoider extends ItemToolElectric {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
         if (filterStack != null) {
-            tooltip.add(FormattedTranslator.GOLD.format("message.info.filter", filterStack.getDisplayName()));
+            tooltip.add(FormattedTranslator.GOLD.format("message.info.filter", FormattedTranslator.AQUA.literal(filterStack.getDisplayName())));
         }
     }
 

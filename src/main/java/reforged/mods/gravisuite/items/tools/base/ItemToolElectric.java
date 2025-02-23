@@ -53,10 +53,14 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
         Helpers.addChargeVariants(this, items);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
+        addEnergyInfo(stack, tooltip);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void addEnergyInfo(ItemStack stack, List tooltip) {
         tooltip.add(FormattedTranslator.AQUA.format("message.info.energy", Helpers.getCharge(stack), this.getMaxCharge(stack), FormattedTranslator.WHITE.format("message.info.energy.tier", FormattedTranslator.YELLOW.literal(this.tier + ""))));
     }
 

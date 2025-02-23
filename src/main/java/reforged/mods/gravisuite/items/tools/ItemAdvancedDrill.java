@@ -281,7 +281,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         @Override
         @SideOnly(Side.CLIENT)
         public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
-            super.addInformation(stack, player, tooltip, flag);
+            this.addEnergyInfo(stack, tooltip);
             tooltip.add(FormattedTranslator.GOLD.format(Refs.vein_miner));
             if (Helpers.isShiftKeyDown()) {
                 tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, "Right Click", Refs.ENCH_MODE + ".stat"));
