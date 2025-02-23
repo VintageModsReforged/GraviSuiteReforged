@@ -35,6 +35,7 @@ public class ChainsawAudioTicker implements IAudioTicker {
             if (heldStack == null || !(heldStack.getItem() instanceof ItemAdvancedChainsaw)) {
                 this.USED = 0;
                 if (this.AUDIO != null) {
+                    this.AUDIO.stop();
                     this.AUDIO.remove();
                     this.AUDIO = null;
                 }
