@@ -1,0 +1,9 @@
+[
+  {
+    "modid": "gravisuite",
+    "name": "GraviSuite - Addon",
+    "description": "Gravitation Suite give you ability to fly. This is addon for IndustrialCraft 2",
+    "version": "1.5.2-2.2.2.1",
+    "authors": ["SeNtiMeL", "CrossVas"]
+  }
+]
