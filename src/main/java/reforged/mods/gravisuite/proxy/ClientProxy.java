@@ -18,18 +18,26 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.input.Keyboard;
+import reforged.mods.gravisuite.events.client.AudioHandler;
+import reforged.mods.gravisuite.events.client.ClientArmorHandler;
+import reforged.mods.gravisuite.events.client.KeyboardHandler;
+import reforged.mods.gravisuite.events.client.OverlayHandler;
+import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
+import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
+import reforged.mods.gravisuite.utils.Helpers;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
-//        registerTickHandlers(OverlayHandler.THIS);
-//        registerTickHandlers(AudioHandler.THIS);
-//        registerTickHandlers(KeyboardHandler.THIS);
-//        registerTickHandlers(ClientArmorHandler.THIS);
+        registerTickHandlers(OverlayHandler.THIS);
+        registerTickHandlers(AudioHandler.THIS);
+        registerTickHandlers(KeyboardHandler.THIS);
+        registerTickHandlers(ClientArmorHandler.THIS);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -50,39 +58,39 @@ public class ClientProxy extends CommonProxy {
 
     @ForgeSubscribe
     public void onWorldLoad(WorldEvent.Load event) {
-//        ClientArmorHandler.firstLoad = true;
+        ClientArmorHandler.firstLoad = true;
     }
 
     @ForgeSubscribe
     public void onWorldUnload(WorldEvent.Unload event) {
-//        AudioHandler.THIS.getPlayerTickers().clear();
+        AudioHandler.THIS.getPlayerTickers().clear();
     }
 
     @Override
     public boolean isFlying(EntityPlayer player) {
-//        ItemStack armorStack = player.getCurrentArmor(2);
-//        if (armorStack != null) {
-//            NBTTagCompound tag = Helpers.getOrCreateTag(armorStack);
-//            int energyStorage = ElectricItem.manager.getCharge(armorStack);
-//            if (energyStorage > 0) {
-//                if (armorStack.getItem() instanceof ItemBaseJetpack) {
-//                    if (!tag.getBoolean(ItemBaseJetpack.NBT_ACTIVE)) {
-//                        return false;
-//                    }
-//                    if (!tag.getBoolean(ItemBaseJetpack.NBT_HOVER_ACTIVE)) {
-//                        if (IC2.keyboard.isJumpKeyDown(player)) {
-//                            return tag.getBoolean(ItemBaseJetpack.NBT_ACTIVE);
-//                        } else {
-//                            return IC2.keyboard.isAltKeyDown(player) && !player.onGround;
-//                        }
-//                    } else {
-//                        return !player.onGround && (!IC2.keyboard.isAltKeyDown(player) || IC2.keyboard.isJumpKeyDown(player));
-//                    }
-//                } else if (armorStack.getItem() instanceof ItemAdvancedQuant) {
-//                    return tag.getBoolean("isFlyActive");
-//                }
-//            }
-//        }
+        ItemStack armorStack = player.getCurrentArmor(2);
+        if (armorStack != null) {
+            NBTTagCompound tag = Helpers.getOrCreateTag(armorStack);
+            int energyStorage = ElectricItem.manager.getCharge(armorStack);
+            if (energyStorage > 0) {
+                if (armorStack.getItem() instanceof ItemBaseJetpack) {
+                    if (!tag.getBoolean(ItemBaseJetpack.NBT_ACTIVE)) {
+                        return false;
+                    }
+                    if (!tag.getBoolean(ItemBaseJetpack.NBT_HOVER_ACTIVE)) {
+                        if (IC2.keyboard.isJumpKeyDown(player)) {
+                            return tag.getBoolean(ItemBaseJetpack.NBT_ACTIVE);
+                        } else {
+                            return IC2.keyboard.isAltKeyDown(player) && !player.onGround;
+                        }
+                    } else {
+                        return !player.onGround && (!IC2.keyboard.isAltKeyDown(player) || IC2.keyboard.isJumpKeyDown(player));
+                    }
+                } else if (armorStack.getItem() instanceof ItemAdvancedQuant) {
+                    return tag.getBoolean("isFlyActive");
+                }
+            }
+        }
         return false;
     }
 
@@ -94,5 +102,14 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerTickHandlers(ITickHandler handler) {
         TickRegistry.registerTickHandler(handler, Side.CLIENT);
+    }
+
+    @Override
+    public void sendChatMessage(EntityPlayer player, String message, Object... args) {
+        if (args.length > 0) {
+            this.mc.ingameGUI.getChatGUI().addTranslatedMessage(message, args);
+        } else {
+            this.mc.ingameGUI.getChatGUI().printChatMessage(message);
+        }
     }
 }

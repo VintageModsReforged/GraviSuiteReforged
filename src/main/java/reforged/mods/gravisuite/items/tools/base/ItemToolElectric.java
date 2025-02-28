@@ -8,6 +8,7 @@ import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
@@ -65,12 +66,12 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int blockID, int x, int y, int z, EntityLiving user) {
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockID, int x, int y, int z, EntityLivingBase user) {
         return false;
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLiving attacker, EntityLiving target) {
+    public boolean hitEntity(ItemStack stack, EntityLivingBase attacker, EntityLivingBase target) {
         return false;
     }
 

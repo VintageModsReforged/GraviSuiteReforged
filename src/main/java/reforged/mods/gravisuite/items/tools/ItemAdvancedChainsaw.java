@@ -16,6 +16,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -163,7 +164,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                 } else {
                     saveToolMode(itemStack, NBT_SHEARS, false);
                 }
-                IC2.platform.messagePlayer(player, Refs.tool_mode_shear + " " + Helpers.getStatusMessage(shears));
+                GraviSuite.proxy.sendChatMessage(player, Refs.tool_mode_shear + " " + Helpers.getStatusMessage(shears));
             }
             if (GraviSuiteConfig.chainsaw_tree_capitator) {
                 if (IC2.keyboard.isSneakKeyDown(player)) {
@@ -174,7 +175,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                     } else {
                         saveToolMode(itemStack, NBT_TCAPITATOR, false);
                     }
-                    IC2.platform.messagePlayer(player, Refs.tool_mode_capitator + " " + Helpers.getStatusMessage(capitator));
+                    GraviSuite.proxy.sendChatMessage(player, Refs.tool_mode_capitator + " " + Helpers.getStatusMessage(capitator));
                 }
             }
         }
@@ -182,7 +183,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int xPos, int yPos, int zPos, EntityLiving entity) {
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int xPos, int yPos, int zPos, EntityLivingBase entity) {
         if (entity != null) {
             ElectricItem.manager.use(stack, this.energyPerOperation, entity);
         } else {
@@ -192,7 +193,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLiving entity, EntityLiving attacker) {
+    public boolean hitEntity(ItemStack stack, EntityLivingBase entity, EntityLivingBase attacker) {
         if (ElectricItem.manager.use(stack, this.energyPerOperation, attacker)) {
             entity.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 13);
         } else {

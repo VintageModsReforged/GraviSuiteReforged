@@ -7,7 +7,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatMessageComponent;
 import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.GraviSuiteRecipes;
+import reforged.mods.gravisuite.events.server.ServerArmorHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,14 +22,14 @@ public class CommonProxy {
     public static Map<EntityPlayer, Boolean> wasUndressed = new HashMap<EntityPlayer, Boolean>();
 
     public void preInit(FMLPreInitializationEvent e) {
-//        registerTickHandlers(ServerArmorHandler.THIS);
+        registerTickHandlers(ServerArmorHandler.THIS);
         GraviSuiteConfig.initConfig();
     }
 
     public void init(FMLInitializationEvent e) {}
 
     public void postInit(FMLPostInitializationEvent e) {
-//        GraviSuiteRecipes.initRecipes();
+        GraviSuiteRecipes.initRecipes();
     }
 
     public int addArmor(String armorName) { return 0; }
@@ -48,5 +52,18 @@ public class CommonProxy {
 
     public void registerTickHandlers(ITickHandler handler) {
         TickRegistry.registerTickHandler(handler, Side.SERVER);
+    }
+
+    public void sendChatMessage(EntityPlayer player, String message, Object... args) {
+        if (player instanceof EntityPlayerMP) {
+            EntityPlayerMP playerMP = (EntityPlayerMP) player;
+            ChatMessageComponent messageComponent;
+            if (args.length > 0) {
+                messageComponent = ChatMessageComponent.createFromTranslationWithSubstitutions(message, args);
+            } else {
+                messageComponent = ChatMessageComponent.createFromTranslationKey(message);
+            }
+            playerMP.sendChatToPlayer(messageComponent);
+        }
     }
 }

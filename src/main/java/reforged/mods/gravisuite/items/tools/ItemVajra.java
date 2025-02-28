@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
@@ -82,13 +83,13 @@ public class ItemVajra extends ItemToolElectric {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 VajraMode nextMode = readNextToolMode(stack);
                 saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + nextMode.name);
+                GraviSuite.proxy.sendChatMessage(player, Refs.tool_mining_mode + " " + nextMode.name);
 
             }
             if (IC2.keyboard.isAltKeyDown(player)) {
                 VajraProps nextProps = readNextToolProps(stack);
                 saveToolProps(stack, nextProps);
-                IC2.platform.messagePlayer(player, Refs.eff_tool_mode + " " + nextProps.name);
+                GraviSuite.proxy.sendChatMessage(player, Refs.eff_tool_mode + " " + nextProps.name);
                 this.efficiencyOnProperMaterial = nextProps.efficiency;
             }
 
@@ -97,10 +98,10 @@ public class ItemVajra extends ItemToolElectric {
                 NBTTagList enchTagList = stack.getEnchantmentTagList();
                 if (EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) == 0) {
                     enchMap.put(Enchantment.silkTouch.effectId, 1);
-                    IC2.platform.messagePlayer(player, Refs.ench_mode_yellow + " " + Refs.tool_mode_silk);
+                    GraviSuite.proxy.sendChatMessage(player, Refs.ench_mode_yellow + " " + Refs.tool_mode_silk);
                 } else {
                     enchMap.put(Enchantment.fortune.effectId, 3);
-                    IC2.platform.messagePlayer(player, Refs.ench_mode_yellow + " " + Refs.tool_mode_fortune);
+                    GraviSuite.proxy.sendChatMessage(player, Refs.ench_mode_yellow + " " + Refs.tool_mode_fortune);
                 }
                 if (enchTagList != null) {
                     for (int i = 0; i < enchTagList.tagCount(); i++) {
@@ -162,7 +163,7 @@ public class ItemVajra extends ItemToolElectric {
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLiving entityliving, EntityLiving attacker) {
+    public boolean hitEntity(ItemStack stack, EntityLivingBase entityliving, EntityLivingBase attacker) {
         VajraProps props = readToolProps(stack);
         if (ElectricItem.manager.use(stack, props.energyCost * 2, attacker)) {
             entityliving.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 25);
@@ -173,7 +174,7 @@ public class ItemVajra extends ItemToolElectric {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int blockID, int xPos, int yPos, int zPos, EntityLiving entity) {
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockID, int xPos, int yPos, int zPos, EntityLivingBase entity) {
         Block block = Block.blocksList[blockID];
         VajraProps props = readToolProps(stack);
         if (block.getBlockHardness(world, xPos, yPos, zPos) != 0.0D) {

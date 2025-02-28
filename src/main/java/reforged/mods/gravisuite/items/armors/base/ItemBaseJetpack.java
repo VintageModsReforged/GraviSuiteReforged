@@ -170,7 +170,7 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
             message = Refs.jetpack_hover + " " + Refs.status_on;
         }
         if (IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(player, message);
+            GraviSuite.proxy.sendChatMessage(player, message);
         }
     }
 
@@ -195,7 +195,7 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
             message = Refs.jetpack_engine + " " + Refs.status_on;
         }
         if (IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(player, message);
+            GraviSuite.proxy.sendChatMessage(player, message);
         }
     }
 

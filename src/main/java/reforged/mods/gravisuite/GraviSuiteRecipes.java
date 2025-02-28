@@ -152,7 +152,7 @@ public class GraviSuiteRecipes {
 
         Recipes.advRecipes.addRecipe(GraviSuiteData.engine_booster,
                 "ABA", "CDC", "BFB",
-                'A', Item.lightStoneDust,
+                'A', Item.glowstone,
                 'B', Items.getItem("advancedAlloy"),
                 'C', Items.getItem("advancedCircuit"),
                 'D', Items.getItem("overclockerUpgrade"),

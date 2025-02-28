@@ -78,7 +78,7 @@ public class ItemMagnet extends ItemToolElectric {
         } else {
             message = Refs.status_low;
         }
-        IC2.platform.messagePlayer(player, message);
+        GraviSuite.proxy.sendChatMessage(player, message);
     }
 
     @Override

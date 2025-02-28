@@ -14,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
@@ -135,7 +136,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLivingBase entity) {
         DrillMode mode = readToolMode(stack);
         DrillProps props = readToolProps(stack);
         if (blockId != 0) {
@@ -156,12 +157,12 @@ public class ItemAdvancedDrill extends ItemToolElectric {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 DrillMode nextMode = readNextToolMode(stack);
                 saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + nextMode.name);
+                GraviSuite.proxy.sendChatMessage(player, Refs.tool_mining_mode + " " + nextMode.name);
             }
             if (IC2.keyboard.isAltKeyDown(player)) {
                 DrillProps nextProps = readNextToolProps(stack);
                 saveToolProps(stack, nextProps);
-                IC2.platform.messagePlayer(player, Refs.eff_tool_mode + " " + nextProps.name);
+                GraviSuite.proxy.sendChatMessage(player, Refs.eff_tool_mode + " " + nextProps.name);
             }
         }
         return stack;
@@ -310,10 +311,10 @@ public class ItemAdvancedDrill extends ItemToolElectric {
                     NBTTagList enchTagList = stack.getEnchantmentTagList();
                     if (EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) == 0) {
                         enchMap.put(Enchantment.silkTouch.effectId, 1);
-                        IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_silk);
+                        GraviSuite.proxy.sendChatMessage(player, Refs.tool_mining_mode + " " + Refs.tool_mode_silk);
                     } else {
                         enchMap.put(Enchantment.fortune.effectId, 3);
-                        IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_fortune);
+                        GraviSuite.proxy.sendChatMessage(player, Refs.tool_mining_mode + " " + Refs.tool_mode_fortune);
                     }
                     if (enchTagList != null) {
                         for (int i = 0; i < enchTagList.tagCount(); i++) {

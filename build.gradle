@@ -40,15 +40,34 @@ repositories {
 	maven {
 		url("https://mvnrepository.com/artifact/it.unimi.dsi/fastutil")
 	}
+	maven {
+		url = "https://api.modrinth.com/maven"
+	}
 }
 
 dependencies {
+
+	implementation 'net.jcip:jcip-annotations:1.0'
+	implementation 'org.jetbrains:annotations-java5:24.0.0'
+
 	minecraft "com.mojang:minecraft:${minecraftVersion}"
 	forge "net.minecraftforge:forge:${forgeVersion}:universal" //no @zip classifier this time
 	mappings "net.minecraftforge:forge:${forgeVersion}:src@zip"
 
-	modImplementation files("libs/VintageCore - 1.6.4-dev.jar")
+	modImplementation files("libs/VintageCore-1.6.4-1.0.3.2-dev.jar")
 	modImplementation files("libs/ic2exp.jar")
+	modImplementation files("libs/gregtechmod408s.zip")
+
+	modImplementation files("libs/CodeChickenCore-1.6.4-0.9.0.9-universal.jar")
+	modImplementation files("libs/NotEnoughItems-1.6.4-1.6.1.9-universal.jar")
 
 	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDirs 'src/main/java'
+		}
+	}
 }

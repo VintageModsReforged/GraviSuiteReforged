@@ -119,7 +119,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
         double currCharge = Helpers.getCharge(itemStack);
         if (!player.capabilities.isCreativeMode) {
             if (currCharge < USAGE_IN_AIR) {
-                IC2.platform.messagePlayer(player, Refs.status_shutdown);
+                GraviSuite.proxy.sendChatMessage(player, Refs.status_shutdown);
                 switchFlyState(player, itemStack);
             } else if (!player.onGround) {
                 ElectricItem.manager.discharge(itemStack, USAGE_IN_AIR, 3, false, false);
@@ -141,7 +141,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
                     ElectricItem.manager.discharge(itemStack, USAGE_IN_AIR * BOOST_MULTIPLIER, 3, true, false);
                 }
             } else {
-                IC2.platform.messagePlayer(player, Refs.status_low);
+                GraviSuite.proxy.sendChatMessage(player, Refs.status_low);
 
             }
         }
@@ -182,7 +182,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
             message = Refs.gravitation_levitation + " " + Refs.status_on;
         }
         if (IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(player, message);
+            GraviSuite.proxy.sendChatMessage(player, message);
         }
     }
 
@@ -212,7 +212,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
             }
         }
         if (IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(player, message);
+            GraviSuite.proxy.sendChatMessage(player, message);
         }
     }
 

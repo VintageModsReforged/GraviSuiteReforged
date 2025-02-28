@@ -99,7 +99,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
             if (IC2.platform.isSimulating()) {
                 ToolMode nextMode = readNextToolMode(stack);
                 saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mode + " " + nextMode.name);
+                GraviSuite.proxy.sendChatMessage(player, Refs.tool_mode + " " + nextMode.name);
             }
             if (IC2.platform.isRendering())
                 IC2.audioManager.playOnce(player, PositionSpec.Hand, CHANGE_SOUND, false, 0.05F);
@@ -120,7 +120,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                     return Ic2Items.electricTreetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 }
             } else {
-                IC2.platform.messagePlayer(player, Refs.status_low);
+                GraviSuite.proxy.sendChatMessage(player, Refs.status_low);
             }
         }
 
@@ -214,7 +214,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
             if (Loader.isModLoaded("GregTech_Addon")) {
                 if (tile instanceof gregtechmod.api.metatileentity.BaseMetaTileEntity) {
                     gregtechmod.api.metatileentity.BaseMetaTileEntity baseTileEntity = (gregtechmod.api.metatileentity.BaseMetaTileEntity) tile;
-                    gregtechmod.api.metatileentity.MetaTileEntity metaTileEntity = baseTileEntity.getMetaTileEntity();
+                    gregtechmod.api.interfaces.IMetaTileEntity metaTileEntity = baseTileEntity.getMetaTileEntity();
                     if (metaTileEntity != null) {
                         side = gregtechmod.api.util.GT_Utility.determineWrenchingSide((byte) side, x, y, z);
                         if (baseTileEntity.isValidFacing((byte) side) && side != baseTileEntity.getFrontFacing()) {

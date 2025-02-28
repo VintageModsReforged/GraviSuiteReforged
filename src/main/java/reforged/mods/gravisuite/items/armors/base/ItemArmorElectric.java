@@ -8,19 +8,19 @@ import ic2.api.item.IMetalArmor;
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.common.IArmorTextureProvider;
 import net.minecraftforge.common.ISpecialArmor;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, IArmorTextureProvider, ISpecialArmor, IMetalArmor {
+public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, ISpecialArmor, IMetalArmor {
 
     public int tier, transfer, capacity;
     public int energy_per_damage, damage_priority;
@@ -61,8 +61,8 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
 
     @SideOnly(Side.CLIENT)
     @Override
-    public String getArmorTextureFile(ItemStack itemStack) {
-        return "/mods/gravisuite/textures/armors/" + this.name + ".png";
+    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
+        return "gravisuite:textures/armors/" + this.name + ".png";
     }
 
     @SuppressWarnings("unchecked")
@@ -73,7 +73,7 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     }
 
     @Override
-    public ArmorProperties getProperties(EntityLiving entityLiving, ItemStack armor, DamageSource damageSource, double damage, int slot) {
+    public ArmorProperties getProperties(EntityLivingBase entityLiving, ItemStack armor, DamageSource damageSource, double damage, int slot) {
         double absorption = this.base_absorption * this.damage_absorption;
         int damageLimit = (int) (this.energy_per_damage > 0 ? 25.0D * ElectricItem.manager.getCharge(armor) / this.energy_per_damage : 0.0D);
         return new ArmorProperties(this.damage_priority, absorption, damageLimit);
@@ -85,7 +85,7 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     }
 
     @Override
-    public void damageArmor(EntityLiving entity, ItemStack stack, DamageSource damageSource, int damage, int slot) {
+    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource damageSource, int damage, int slot) {
         ElectricItem.manager.discharge(stack, damage * this.energy_per_damage, this.tier, true, false);
     }
 
