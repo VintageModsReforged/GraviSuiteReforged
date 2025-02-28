@@ -19,21 +19,25 @@ public class AudioHandler extends TickEvents.PlayerTickEvent {
         super(Refs.id);
     }
 
+    public void initTickers(EntityPlayer player) {
+        String playerName = player.username;
+
+        if (!playerTickers.containsKey(playerName)) {
+            playerTickers.put(playerName, new ArrayList<IAudioTicker>());
+        }
+
+        List<IAudioTicker> tickers = playerTickers.get(playerName);
+
+        addTickerIfAbsent(tickers, new ChainsawAudioTicker(player));
+        addTickerIfAbsent(tickers, new ArmorAudioTicker(player));
+    }
+
     @Override
     public void tickStart(EnumSet<TickType> enumSet, Object... objects) {
         if (shouldTick(enumSet)) {
             EntityPlayer player = (EntityPlayer) objects[0];
             if (player != null) {
-                String playerName = player.username;
-
-                if (!playerTickers.containsKey(playerName)) {
-                    playerTickers.put(playerName, new ArrayList<IAudioTicker>());
-                }
-
-                List<IAudioTicker> tickers = playerTickers.get(playerName);
-
-                addTickerIfAbsent(tickers, new ChainsawAudioTicker(player));
-                addTickerIfAbsent(tickers, new ArmorAudioTicker(player));
+                initTickers(player);
             }
         }
     }
