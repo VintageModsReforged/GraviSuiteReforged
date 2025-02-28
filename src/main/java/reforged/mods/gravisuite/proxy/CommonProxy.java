@@ -8,8 +8,6 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.GraviSuiteRecipes;
-import reforged.mods.gravisuite.events.server.ServerArmorHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,14 +18,14 @@ public class CommonProxy {
     public static Map<EntityPlayer, Boolean> wasUndressed = new HashMap<EntityPlayer, Boolean>();
 
     public void preInit(FMLPreInitializationEvent e) {
-        registerTickHandlers(ServerArmorHandler.THIS);
+//        registerTickHandlers(ServerArmorHandler.THIS);
         GraviSuiteConfig.initConfig();
     }
 
     public void init(FMLInitializationEvent e) {}
 
     public void postInit(FMLPostInitializationEvent e) {
-        GraviSuiteRecipes.initRecipes();
+//        GraviSuiteRecipes.initRecipes();
     }
 
     public int addArmor(String armorName) { return 0; }

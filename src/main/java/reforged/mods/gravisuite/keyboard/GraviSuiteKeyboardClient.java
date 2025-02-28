@@ -1,16 +1,12 @@
 package reforged.mods.gravisuite.keyboard;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mods.vintage.core.helpers.KeyHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.Refs;
 
-@SideOnly(Side.CLIENT)
 public class GraviSuiteKeyboardClient extends GraviSuiteKeyboard {
 
     public static KeyBinding engine_toggle = new KeyBinding(Refs.KEY_TOGGLE_DESC, Keyboard.KEY_F);
@@ -27,7 +23,7 @@ public class GraviSuiteKeyboardClient extends GraviSuiteKeyboard {
     public void sendKeyUpdate() {
         int currentKeyState = (engine_toggle.pressed ? 1 : 0) << 0 | (magnet_toggle.pressed ? 1 : 0) << 1;
         if (currentKeyState != this.lastKeyState) {
-            GraviSuite.network.sendKeyStateUpdate(currentKeyState);
+            GraviSuite.NETWORK.sendKeyStateUpdate(currentKeyState);
             processKeyUpdate(Minecraft.getMinecraft().thePlayer, currentKeyState);
             this.lastKeyState = currentKeyState;
         }

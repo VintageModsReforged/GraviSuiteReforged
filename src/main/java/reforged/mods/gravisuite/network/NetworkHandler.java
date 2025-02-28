@@ -2,39 +2,14 @@ package reforged.mods.gravisuite.network;
 
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.events.server.ServerArmorHandler;
-
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 
 public class NetworkHandler implements IPacketHandler {
 
     @Override
-    public void onPacketData(INetworkManager iNetworkManager, Packet250CustomPayload packet, Player iPlayer) {
-        if (packet.data.length != 0) {
-            EntityPlayer player = (EntityPlayer) iPlayer;
-            ByteArrayInputStream buffer = new ByteArrayInputStream(packet.data, 1, packet.data.length - 1);
-            try {
-                DataInputStream stream;
-                int intData;
-                switch (packet.data[0]) {
-                    case 1:
-                        stream = new DataInputStream(buffer);
-                        intData = stream.readInt();
-                        GraviSuite.keyboard.processKeyUpdate(player, intData);
-                        break;
-                    case 2:
-                        ServerArmorHandler.firstLoad = true;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void onPacketData(INetworkManager iNetworkManager, Packet250CustomPayload packet250CustomPayload, Player player) {
+
     }
 
     public void sendKeyStateUpdate(int keyState) {}

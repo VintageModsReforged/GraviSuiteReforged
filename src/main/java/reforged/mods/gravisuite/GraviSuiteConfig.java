@@ -3,7 +3,6 @@ package reforged.mods.gravisuite;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import mods.vintage.core.helpers.ConfigHelper;
 import net.minecraftforge.common.Configuration;
-import reforged.mods.gravisuite.utils.Refs;
 
 import java.io.File;
 
