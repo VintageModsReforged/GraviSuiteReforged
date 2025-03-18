@@ -152,7 +152,7 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
             for (int i = 0; i < player.inventory.mainInventory.length; i++) {
                 ItemStack check = player.inventory.mainInventory[i];
                 if (check != null) {
-                    if(check.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch")) {
+                    if(check.getItemName().toLowerCase(Locale.ROOT).contains("torch") && !check.getItemName().toLowerCase(Locale.ROOT).contains("redstone")) {
                         Item item = check.getItem();
                         if (item instanceof net.minecraft.item.ItemBlock) {
                             int oldMeta = check.getItemDamage();
