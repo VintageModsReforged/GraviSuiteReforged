@@ -82,7 +82,7 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
             for (int i = 0; i < player.inventory.mainInventory.length; i++) {
                 ItemStack checkStack = player.inventory.mainInventory[i];
                 if (checkStack != null) {
-                    if (checkStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch") && !checkStack.getDisplayName().toLowerCase(Locale.ENGLISH).contains("redstone")) {
+                    if (checkStack.getItemName().toLowerCase(Locale.ENGLISH).contains("torch") && !checkStack.getItemName().toLowerCase(Locale.ENGLISH).contains("redstone")) {
                         torchStack = checkStack;
                         torchSlot = i;
                         break;
