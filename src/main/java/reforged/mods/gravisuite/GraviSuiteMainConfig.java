@@ -1,11 +1,8 @@
 package reforged.mods.gravisuite;
 
-import cpw.mods.fml.relauncher.FMLInjectionData;
 import mods.vintage.core.helpers.ConfigHelper;
 import net.minecraftforge.common.Configuration;
 import reforged.mods.gravisuite.utils.Refs;
-
-import java.io.File;
 
 public class GraviSuiteMainConfig {
 
@@ -70,7 +67,7 @@ public class GraviSuiteMainConfig {
     public static int HUD_POS_GRAVI_Y = 15;
 
     public static void initMainConfig() {
-        MAIN_CONFIG = new Configuration(new File((File) FMLInjectionData.data()[6], "config/gravisuite_main.cfg"));
+        MAIN_CONFIG = ConfigHelper.getConfigFor("gravisuite_main");
         MAIN_CONFIG.load();
 
         MAGNET_RANGE = ConfigHelper.getInt(MAIN_CONFIG, Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
@@ -94,7 +91,7 @@ public class GraviSuiteMainConfig {
         ENABLE_EXCAVATORS = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "enable_excavators", ENABLE_EXCAVATORS, "Enable Excavators.");
         LOG_WRENCH = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "enable_wrench_logging", LOG_WRENCH, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         INSPECT_MODE = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "enable_inspect_mode", INSPECT_MODE, "Enable inspect mode. Helps identify block name, class and metadata.");
-        LANGUAGES = ConfigHelper.getStrings(MAIN_CONFIG, Refs.GENERAL, "localizations", new String[] { "en_US", "ru_RU" }, "Supported localizations. Place your <name>.lang file in config/gravisuite/lang folder or inside mods/gravisuite/lang inside modJar");
+        LANGUAGES = ConfigHelper.getLocalizations(MAIN_CONFIG, new String[] { "en_US", "ru_RU" }, Refs.ID);
 
         CHAINSAW_TREE_CAPITATOR = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.TREE_CAPITATOR, "chainsaw_tree_capitator", CHAINSAW_TREE_CAPITATOR, "Enable TreeCapitator Mode for Advanced Chainsaw.");
         LOGS = ConfigHelper.getStrings(MAIN_CONFIG, Refs.TREE_CAPITATOR, "logs", new String[]{"thaumcraft.common.world.BlockMagicalLog"}, "Support for custom logs block that aren't instances of `BlockLog`. Enable inspect_mode and right click with a stick to get more info in the log.");
