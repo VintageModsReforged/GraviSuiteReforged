@@ -9,7 +9,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import mods.vintage.core.helpers.BlockHelper;
 import mods.vintage.core.platform.lang.FormattedTranslator;
-import mods.vintage.core.platform.lang.ILangProvider;
 import mods.vintage.core.platform.lang.LangManager;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -24,15 +23,13 @@ import reforged.mods.gravisuite.network.NetworkHandlerClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.Refs;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 @Mod(modid = Refs.id, name = Refs.name, useMetadata = true, dependencies = Refs.deps)
 @NetworkMod(clientSideRequired = true,
         clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.id }, packetHandler = NetworkHandlerClient.class),
         serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.id }, packetHandler = NetworkHandler.class))
-public class GraviSuite implements ILangProvider {
+public class GraviSuite {
 
     @SidedProxy(clientSide = Refs.client, serverSide = Refs.common)
     public static CommonProxy proxy;
@@ -61,7 +58,6 @@ public class GraviSuite implements ILangProvider {
     public void preInit(FMLPreInitializationEvent e) {
         proxy.preInit(e);
         GraviSuiteData.init();
-        LangManager.THIS.registerLangProvider(this);
         LangManager.THIS.loadCreativeTabName(Refs.id, FormattedTranslator.BLUE.literal(Refs.name));
     }
 
@@ -88,15 +84,5 @@ public class GraviSuite implements ILangProvider {
                 }
             }
         }
-    }
-
-    @Override
-    public String getModid() {
-        return Refs.id;
-    }
-
-    @Override
-    public List<String> getLocalizationList() {
-        return Arrays.asList(GraviSuiteConfig.langs);
     }
 }
