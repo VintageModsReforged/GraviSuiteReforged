@@ -1,11 +1,8 @@
 package reforged.mods.gravisuite;
 
-import cpw.mods.fml.relauncher.FMLInjectionData;
 import mods.vintage.core.helpers.ConfigHelper;
 import net.minecraftforge.common.Configuration;
 import reforged.mods.gravisuite.utils.Refs;
-
-import java.io.File;
 
 public class GraviSuiteConfig {
 
@@ -50,8 +47,7 @@ public class GraviSuiteConfig {
     public static int VOIDER_ID = 30237;
 
     public static void initConfig() {
-
-        id_config = new Configuration(new File((File) FMLInjectionData.data()[6], "config/gravisuite/ids.cfg"));
+        id_config = ConfigHelper.getConfigFor("gravisuite/ids");
         id_config.load();
 
         COMPONENT_ID = ConfigHelper.getId(id_config, Refs.IDs, "component_id", COMPONENT_ID);
@@ -72,7 +68,7 @@ public class GraviSuiteConfig {
 
         if (id_config.hasChanged()) id_config.save();
 
-        main_config = new Configuration(new File((File)FMLInjectionData.data()[6], "config/gravisuite/common.cfg"));
+        main_config = ConfigHelper.getConfigFor("gravisuite/common");
 
         enable_hud = ConfigHelper.getBoolean(main_config, Refs.hud, "enable_hud", enable_hud, "Should GraviSuite display the HUD with info about electric armor?");
         use_fixed_values = ConfigHelper.getBoolean(main_config, Refs.hud, "enable_hud_fixed", use_fixed_values, "Should GraviSuite HUD use fixed values from `hud_position`?");
@@ -89,7 +85,7 @@ public class GraviSuiteConfig {
 
         log_wrench = ConfigHelper.getBoolean(main_config, Refs.general, "enable_wrench_logging", log_wrench, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         inspect_mode = ConfigHelper.getBoolean(main_config, Refs.general, "enable_inspect_mode", inspect_mode, "Enable inspect mode. Helps identify block name, class and metadata.");
-        langs = ConfigHelper.getStrings(main_config, Refs.general, "localizations", new String[] { "en_US", "ru_RU" }, "Supported localizations. Place your <name>.lang file in config/gravisuite/lang folder or inside mods/gravisuite/lang inside modJar");
+        langs = ConfigHelper.getLocalizations(main_config, new String[] { "en_US", "ru_RU" }, Refs.id);
         magnet_range = ConfigHelper.getInt(main_config, Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
         magnet_max_capacity = ConfigHelper.getInt(main_config, Refs.general, "magnet_max_capacity", 1, Integer.MAX_VALUE, magnet_max_capacity, "Magnet Attraction Capacity.");
 
