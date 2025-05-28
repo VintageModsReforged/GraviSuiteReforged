@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RenderRelocatorBall extends Render {
+public class RelocatorBallRenderer extends Render {
 
     private static final String plazmaTextloc = "/mods/gravisuite/textures/models/plazma.png";
 
