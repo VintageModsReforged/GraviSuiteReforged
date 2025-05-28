@@ -31,6 +31,7 @@ item.gravitool.name=Грави-инструмент
 item.magnet.name=Магнит
 item.vajra.name=Ваджра
 item.voider.name=Уничтожитель
+item.relocator.name=Релокатор
 
 ####################
 # messages
@@ -88,6 +89,7 @@ message.info.press.to.enable1=Зажмите %1$s, чтобы включить %
 message.info.press.to.enable2=Зажмите %1$s и %2$s, чтобы включить %3$s
 message.info.click.block=%1$s по блоку, %2$s
 message.info.filter.set=чтобы установить фильтр
+message.info.relocator.default=Точка по умолчанию: %s
 
 message.vein.active=Активный режим добычи рудной жилы
 message.info.filter=Уничтожать предмет: %s
@@ -95,3 +97,16 @@ message.info.quick_change=[!] Быстрое переключение режим
 ## USE TOGETHER: AQUA.format("message.info.energy", WHITE.format("message.info.energy.tier", tier))
 message.info.energy=%s/%s EU %s
 message.info.energy.tier=(Т: %s)
+
+message.text.relocator.full=Не возможно добавить точку. Память заполнена.
+message.text.relocator.added=%s добавлена в память релокатора!
+message.text.relocator.default.set=Точка по умолчанию задана на %s!
+message.text.relocator.default.none=Не возможно задать точку по умолчанию. Точка не найдена.
+message.text.relocator.default.not_set=Точка по умоланию не задана
+message.text.relocator.add=Добавить новую точку
+message.tool.relocator.mode.personal=Личный
+message.tool.relocator.mode.translocator=Транслокатор
+message.tool.relocator.mode.translocator.disabled=Режим транслокатора отключен на сервере!
+message.tool.relocator.mode.portal=Портал
+message.tool.relocator.mode.portal.disabled=Режим портала отключен на сервере!
+message.tool.relocator.teleport.to=%s попытался телепортировать вас!

@@ -163,5 +163,11 @@ public class GraviSuiteRecipes {
                 'C', Items.getItem("advancedCircuit"),
                 'L', Items.getItem("lavaCell"),
                 'S', Items.getItem("odScanner"));
+
+        Recipes.advRecipes.addRecipe(new ItemStack(GraviSuiteData.relocator),
+                "CEC", "EPE", "CEC",
+                'C', GraviSuiteData.cooling_core,
+                'E', Item.enderPearl,
+                'P', Items.getItem("teleporter"));
     }
 }

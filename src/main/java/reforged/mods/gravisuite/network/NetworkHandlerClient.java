@@ -64,4 +64,23 @@ public class NetworkHandlerClient extends NetworkHandler {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void sendRelocatorPoints(String name, byte actionID) {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        DataOutputStream outputStream = new DataOutputStream(buffer);
+        try {
+            outputStream.writeByte(3);
+            outputStream.writeUTF(name);
+            outputStream.writeByte(actionID);
+            outputStream.close();
+            Packet250CustomPayload packet = new Packet250CustomPayload();
+            packet.channel = Refs.id;
+            packet.data = buffer.toByteArray();
+            packet.length = packet.data.length;
+            PacketDispatcher.sendPacketToServer(packet);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

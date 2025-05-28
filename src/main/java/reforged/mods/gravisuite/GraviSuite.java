@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import mods.vintage.core.helpers.BlockHelper;
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import mods.vintage.core.platform.lang.ILangProvider;
@@ -22,6 +23,7 @@ import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
+import reforged.mods.gravisuite.utils.GraviSuiteGuiHandler;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.Arrays;
@@ -43,6 +45,11 @@ public class GraviSuite implements ILangProvider {
     @SidedProxy(clientSide = Refs.networkClient, serverSide = Refs.networkCommon)
     public static NetworkHandler network;
 
+    @Mod.Instance(Refs.id)
+    public static GraviSuite instance;
+
+    public static int blockRelocatorPortalRenderID;
+
     public static final CreativeTabs graviTab = new CreativeTabs(Refs.id) {
         @Override
         public Item getTabIconItem() {
@@ -61,6 +68,7 @@ public class GraviSuite implements ILangProvider {
     public void preInit(FMLPreInitializationEvent e) {
         proxy.preInit(e);
         GraviSuiteData.init();
+        NetworkRegistry.instance().registerGuiHandler(this, new GraviSuiteGuiHandler());
         LangManager.THIS.registerLangProvider(this);
         LangManager.THIS.loadCreativeTabName(Refs.id, FormattedTranslator.BLUE.literal(Refs.name));
     }
