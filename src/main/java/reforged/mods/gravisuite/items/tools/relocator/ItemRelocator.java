@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -34,7 +35,7 @@ public class ItemRelocator extends ItemBaseElectricItem {
     final int ENERGY_SHOOT;
 
     public ItemRelocator() {
-        super(GraviSuiteMainConfig.RELOCATOR_ID, "relocator", 3, 50000, 10000000, EnumToolMaterial.STONE);
+        super(GraviSuiteMainConfig.RELOCATOR_ID, "relocator", EnergyValues.RELOCATOR.tier, EnergyValues.RELOCATOR.transfer, EnergyValues.RELOCATOR.maxCapacity, EnumToolMaterial.STONE);
         this.setIconIndex(36);
         this.ENERGY_STANDARD_TP = GraviSuiteMainConfig.ENERGY_STANDARD_TP;
         this.ENERGY_CROSS_TP = GraviSuiteMainConfig.ENERGY_CROSS_TP;

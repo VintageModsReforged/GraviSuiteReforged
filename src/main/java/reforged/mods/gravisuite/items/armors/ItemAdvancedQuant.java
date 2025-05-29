@@ -25,6 +25,7 @@ import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -41,7 +42,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", 3, 20000, 10000000);
+        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPEED = 0.5F;

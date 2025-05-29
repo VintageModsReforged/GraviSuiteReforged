@@ -17,6 +17,7 @@ import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.audio.IAudioProvider;
 import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -32,7 +33,7 @@ public class ItemBaseJetpack extends ItemBaseEnergyPack implements IAudioProvide
     public static final String NBT_TOGGLE_TIMER = "toggle_timer";
 
     public ItemBaseJetpack(int id, int meta, String name) {
-        super(id, meta, name, 2, 1000, 1000000);
+        super(id, meta, name, EnergyValues.ADV_JETPACK.tier, EnergyValues.ADV_JETPACK.transfer, EnergyValues.ADV_JETPACK.maxCapacity);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }

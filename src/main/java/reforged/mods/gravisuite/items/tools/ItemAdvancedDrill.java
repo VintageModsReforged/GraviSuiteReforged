@@ -22,6 +22,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -36,7 +37,7 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
     public Set<Material> mineableBlockMaterials = new HashSet<Material>();
 
     public ItemAdvancedDrill() {
-        super(GraviSuiteMainConfig.ADVANCED_DRILL_ID, "advanced_diamond_drill", 2, 500, 15000, EnumToolMaterial.EMERALD);
+        super(GraviSuiteMainConfig.ADVANCED_DRILL_ID, "advanced_diamond_drill", EnergyValues.DIAMOND_DRILL.tier, EnergyValues.DIAMOND_DRILL.transfer, EnergyValues.DIAMOND_DRILL.maxCapacity, EnumToolMaterial.EMERALD);
         this.setIconIndex(Refs.TOOLS_ID);
         MinecraftForge.setToolClass(this, "pickaxe", 4);
         MinecraftForge.setToolClass(this, "shovel", 4);

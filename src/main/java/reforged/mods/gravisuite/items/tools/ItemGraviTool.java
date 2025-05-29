@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import thermalexpansion.api.core.IDismantleable;
@@ -43,7 +44,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     public String TOOL_WRENCH = "Tools/wrench.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", 2, 10000, 100000, EnumToolMaterial.IRON);
+        super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", EnergyValues.GRAVITOOL.tier, EnergyValues.GRAVITOOL.transfer, EnergyValues.GRAVITOOL.maxCapacity, EnumToolMaterial.IRON);
         this.setIconIndex(Refs.GRAVITOOL_ID);
     }
 

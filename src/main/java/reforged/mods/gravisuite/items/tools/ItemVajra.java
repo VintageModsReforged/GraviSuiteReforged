@@ -27,6 +27,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.IToolTipProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -38,7 +39,7 @@ import java.util.Map;
 public class ItemVajra extends ItemBaseElectricItem {
 
     public ItemVajra() {
-        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", 2, 10000, 1000000, EnumToolMaterial.EMERALD);
+        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", EnergyValues.VAJRA.tier, EnergyValues.VAJRA.transfer, EnergyValues.VAJRA.maxCapacity, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 1.0F;
         this.setIconIndex(Refs.TOOLS_ID + 2);
         MinecraftForge.setToolClass(this, "pickaxe", 4);
@@ -281,9 +282,9 @@ public class ItemVajra extends ItemBaseElectricItem {
     }
 
     public enum VajraProps {
-        NORMAL(128.0F, 3200, Refs.eff_tool_mode_normal),
-        LOW_POWER(24.0F, 1600, Refs.eff_tool_mode_low),
-        FINE(10.0F, 800, Refs.eff_tool_mode_fine);
+        NORMAL(20000.0F, 3200, Refs.eff_tool_mode_normal),
+        LOW_POWER(1000.0F, 1600, Refs.eff_tool_mode_low),
+        FINE(100.0F, 800, Refs.eff_tool_mode_fine);
         public static final VajraProps[] VALUES = values();
         public final String name;
 
