@@ -252,6 +252,13 @@ public class GraviSuiteRecipes {
                 'C', GraviSuiteData.COOLING_CORE,
                 'E', Item.enderPearl,
                 'P', Items.getItem("teleporter"));
+
+        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.VOIDER),
+                "CLC", "LSL", "CLC",
+                'C', Items.getItem("advancedCircuit"),
+                'L', Items.getItem("lavaCell"),
+                'S', Items.getItem("odScanner"));
+
     }
 
     public static ItemStack count(Item item, int count) {

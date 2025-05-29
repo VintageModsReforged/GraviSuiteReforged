@@ -44,6 +44,7 @@ public class GraviSuiteMainConfig {
 
     public static int RELOCATOR_ID = 30254;
     public static int RELOCATOR_PORTAL_ID = 30255;
+    public static int VOIDER_ID = 30256;
 
     public static String[] LANGUAGES;
     public static String[] LOGS;
@@ -126,6 +127,7 @@ public class GraviSuiteMainConfig {
         GRAVI_TOOL_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "gravitool_id", GRAVI_TOOL_ID);
         VAJRA_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "vajra", VAJRA_ID);
         MAGNET_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "magnet", MAGNET_ID);
+        VOIDER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "voider_id", VOIDER_ID);
 
         RELOCATOR_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "relocator_id", RELOCATOR_ID);
         RELOCATOR_PORTAL_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "relocator_portal_id", RELOCATOR_PORTAL_ID);
