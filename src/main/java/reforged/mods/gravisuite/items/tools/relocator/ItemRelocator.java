@@ -6,10 +6,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import mods.vintage.core.helpers.pos.BlockPos;
-import mods.vintage.core.platform.lang.ChatFormatting;
 import mods.vintage.core.platform.lang.FormattedTranslator;
-import mods.vintage.core.platform.lang.components.ChatComponentText;
-import mods.vintage.core.platform.lang.components.ChatStyle;
+import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -24,13 +22,10 @@ import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ItemRelocator extends ItemToolElectric {
 
-    private static final EnumRarity[] CYCLING_RARITIES = EnumRarity.values();
     static int MAX_POINTS = 10;
 
     final int ENERGY_STANDARD_TP;
@@ -49,7 +44,7 @@ public class ItemRelocator extends ItemToolElectric {
     @Override
     @SideOnly(Side.CLIENT)
     public EnumRarity getRarity(ItemStack stack) {
-        EnumRarity[] CYCLING_RARITIES = new EnumRarity[] { EnumRarity.epic, EnumRarity.uncommon, EnumRarity.rare };
+        EnumRarity[] CYCLING_RARITIES = new EnumRarity[] { EnumRarity.epic, EnumRarity.rare };
         if (Minecraft.getMinecraft().theWorld == null) return EnumRarity.common; // fallback
 
         long time = Minecraft.getMinecraft().theWorld.getTotalWorldTime();
@@ -68,6 +63,26 @@ public class ItemRelocator extends ItemToolElectric {
             tooltip.add(FormattedTranslator.GOLD.format("message.info.relocator.default", FormattedTranslator.AQUA.literal(point.NAME)));
         } else {
             tooltip.add(FormattedTranslator.GOLD.format("message.info.relocator.default", FormattedTranslator.AQUA.literal(" - ")));
+        }
+        if (GraviSuite.proxy.isSneakKeyDown()) {
+            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MODE + ".stat"));
+            tooltip.add("");
+            String type = mode.name().toLowerCase(Locale.ROOT);
+            tooltip.add(FormattedTranslator.LIGHT_PURPLE.format("tooltip.relocator." + type + ".line1"));
+            tooltip.add(Helpers.pressXAndYForZ(Refs.to_custom_2, Refs.SNEAK_KEY, "Right Click", "tooltip.relocator." + type + ".line2"));
+            tooltip.add(Helpers.pressXForY(Refs.to_custom_1, "Right Click", "tooltip.relocator." + type + ".line3"));
+            if (mode == ToolMode.PERSONAL) {
+                String cost = Translator.format("tooltip.relocator.personal.line4",
+                        FormattedTranslator.AQUA.literal(this.ENERGY_STANDARD_TP + ""),
+                        FormattedTranslator.AQUA.literal(this.ENERGY_CROSS_TP + ""));
+                Collections.addAll(tooltip, cost.split("\n"));
+            } else {
+                int energy = mode == ToolMode.TRANSLOCATOR ? ENERGY_SHOOT : ENERGY_PORTAL;
+                tooltip.add(Translator.format("tooltip.relocator." + type + ".line4",
+                        FormattedTranslator.AQUA.literal(energy + "")));
+            }
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
     }
 

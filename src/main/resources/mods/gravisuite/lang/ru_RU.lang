@@ -83,6 +83,8 @@ message.gravitation.engine.stat=Гравитационный двигатель
 message.gravitation.levitation.stat=Режим левитации
 
 message.info.press=Зажмите %1$s для дополнительной информации
+message.info.press.to1.custom=Зажмите %1$s, чтобы %2$s
+message.info.press.to2.custom=Зажмите %1$s и %2$s, чтобы %3$s
 message.info.press.to1=Зажмите %1$s, чтобы сменить %2$s
 message.info.press.to2=Зажмите %1$s и %2$s, чтобы сменить %3$s
 message.info.press.to.enable1=Зажмите %1$s, чтобы включить %2$s
@@ -110,3 +112,18 @@ message.tool.relocator.mode.translocator.disabled=Режим транслока�
 message.tool.relocator.mode.portal=Портал
 message.tool.relocator.mode.portal.disabled=Режим портала отключен на сервере!
 message.tool.relocator.teleport.to=%s попытался телепортировать вас!
+
+tooltip.relocator.personal.line1=Телепортирует к сохранённым точкам
+tooltip.relocator.personal.line2=Добавить текущую локацию
+tooltip.relocator.personal.line3=Открыть меню выбора точки
+tooltip.relocator.personal.line4=Стоимость:\n- %s EU (в том же измерении)\n- %s EU (между измерениями)
+
+tooltip.relocator.translocator.line1=Выстреливает телепортационной сферой для перемещения существ
+tooltip.relocator.translocator.line2=Установить точку по умолчанию
+tooltip.relocator.translocator.line3=Выстрелить телепортационной сферой
+tooltip.relocator.translocator.line4=Стоимость: %s EU за выстрел
+
+tooltip.relocator.portal.line1=Создаёт временный портал между точками
+tooltip.relocator.portal.line2=Установить точку по умолчанию
+tooltip.relocator.portal.line3=Открыть портал на 30 секунд
+tooltip.relocator.portal.line4=Стоимость: %s EU за портал

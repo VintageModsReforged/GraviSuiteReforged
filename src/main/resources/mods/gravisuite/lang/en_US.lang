@@ -83,6 +83,8 @@ message.gravitation.engine.stat=Antigravity Engine
 message.gravitation.levitation.stat=Levitation
 
 message.info.press=Press %1$s for more info
+message.info.press.to1.custom=Press %1$s to %2$s
+message.info.press.to2.custom=Press %1$s and %2$s to %3$s
 message.info.press.to1=Press %1$s to change %2$s
 message.info.press.to2=Press %1$s and %2$s to change %3$s
 message.info.press.to.enable1=Press %1$s to enable %2$s
@@ -110,3 +112,18 @@ message.tool.relocator.mode.translocator.disabled=Translocator mode disabled on 
 message.tool.relocator.mode.portal=Portal
 message.tool.relocator.mode.portal.disabled=Portal mode disabled on server!
 message.tool.relocator.teleport.to=%s tried to teleport you!
+
+tooltip.relocator.personal.line1=Teleport yourself to saved points
+tooltip.relocator.personal.line2=Add current location
+tooltip.relocator.personal.line3=Open point selection menu
+tooltip.relocator.personal.line4=Cost:\n- %s EU (same dimension)\n- %s EU (cross-dimension)
+
+tooltip.relocator.translocator.line1=Shoot teleport orb to move entities
+tooltip.relocator.translocator.line2=Set default location
+tooltip.relocator.translocator.line3=Fire teleport orb
+tooltip.relocator.translocator.line4=Cost: %s EU per shot
+
+tooltip.relocator.portal.line1=Create temporary portal between points
+tooltip.relocator.portal.line2=Set default location
+tooltip.relocator.portal.line3=Open 30s portal
+tooltip.relocator.portal.line4=Cost: %s EU per portal
