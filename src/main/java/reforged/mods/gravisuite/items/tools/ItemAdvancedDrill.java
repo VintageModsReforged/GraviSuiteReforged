@@ -202,6 +202,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
 
         public static final DrillMode[] VALUES = values();
         public final String name;
+
         DrillMode(String name) {
             this.name = name;
         }

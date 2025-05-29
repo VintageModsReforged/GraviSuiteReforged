@@ -32,8 +32,8 @@ import java.util.logging.Logger;
 
 @Mod(modid = Refs.id, name = Refs.name, useMetadata = true, dependencies = Refs.deps)
 @NetworkMod(clientSideRequired = true,
-        clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.id }, packetHandler = NetworkHandlerClient.class),
-        serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.id }, packetHandler = NetworkHandler.class))
+        clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {Refs.id}, packetHandler = NetworkHandlerClient.class),
+        serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {Refs.id}, packetHandler = NetworkHandler.class))
 public class GraviSuite implements ILangProvider {
 
     @SidedProxy(clientSide = Refs.client, serverSide = Refs.common)

@@ -99,7 +99,7 @@ public class GraviSuiteConfig {
 
         log_wrench = ConfigHelper.getBoolean(main_config, Refs.general, "enable_wrench_logging", log_wrench, "Should GraviTool Wrench be logged? [Debug purposes only!]");
         inspect_mode = ConfigHelper.getBoolean(main_config, Refs.general, "enable_inspect_mode", inspect_mode, "Enable inspect mode. Helps identify block name, class and metadata.");
-        langs = ConfigHelper.getLocalizations(main_config, new String[] { "en_US", "ru_RU" }, Refs.id);
+        langs = ConfigHelper.getLocalizations(main_config, new String[]{"en_US", "ru_RU"}, Refs.id);
         magnet_range = ConfigHelper.getInt(main_config, Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
         magnet_max_capacity = ConfigHelper.getInt(main_config, Refs.general, "magnet_max_capacity", 1, Integer.MAX_VALUE, magnet_max_capacity, "Magnet Attraction Capacity.");
         enableTranslocator = ConfigHelper.getBoolean(main_config, Refs.general, "relocator_translocator", enableTranslocator, "Enable Relocator's Translocator Mode");

@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.items.tools.relocator.gui;
+package reforged.mods.gravisuite.client.gui;
 
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.Minecraft;
@@ -115,7 +115,7 @@ public class GuiRelocatorMain extends GuiContainer {
         int k = paramList.size();
         if (isPointInRegion(this.firstSelX, this.firstSelY + 1, this.selWidth, this.itemInterval * k - 2, this.mouseX, this.mouseY)) {
             double d = (double) (j - this.firstSelY + 1) / this.itemBGinterval;
-            selectedItem.selItem = (int)Math.ceil(d);
+            selectedItem.selItem = (int) Math.ceil(d);
             if (isPointInRegion(this.cancelBtnX1, this.firstSelY + 1, this.cancelBtnWidth, this.itemInterval * k - 1, this.mouseX, this.mouseY))
                 selectedItem.delFlag = true;
             return selectedItem;

@@ -199,7 +199,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             entity.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 1);
         }
         if (attacker != null && entity instanceof EntityCreeper && entity.getHealth() <= 0.0F) {
-            IC2.achievements.issueAchievement((EntityPlayer)attacker, "killCreeperChainsaw");
+            IC2.achievements.issueAchievement((EntityPlayer) attacker, "killCreeperChainsaw");
         }
         return false;
     }
@@ -314,7 +314,8 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
             public boolean onBlock(BlockPos pos, Block block, boolean isRightBlock) {
                 int metadata = BlockHelper.getBlockMetadata(world, pos) | 8;
                 boolean isLeave = metadata >= 8 && metadata <= 11;
-                if (block.isLeaves(world, pos.getX(), pos.getY(), pos.getZ()) && isLeave || isLeaves(world, pos)) leavesFound[0] = true;
+                if (block.isLeaves(world, pos.getX(), pos.getY(), pos.getZ()) && isLeave || isLeaves(world, pos))
+                    leavesFound[0] = true;
                 return true;
             }
         }, limit);

@@ -129,7 +129,7 @@ public class TileEntityRelocatorPortal extends TileEntity {
             worldServer.theChunkProviderServer.loadChunk(this.parentTeleportPoint.POS.getX() >> 4, this.parentTeleportPoint.POS.getZ() >> 4);
             TileEntity tileEntity = BlockHelper.getBlockTileEntity(worldServer, this.parentTeleportPoint.POS);
             if (tileEntity instanceof TileEntityRelocatorPortal)
-                ((TileEntityRelocatorPortal)tileEntity).addEntityToList(paramEntity);
+                ((TileEntityRelocatorPortal) tileEntity).addEntityToList(paramEntity);
             double d = this.parentTeleportPoint.YAW;
             if (!this.entityList.isEmpty()) {
                 for (EntityInfo entityInfo : this.entityList) {

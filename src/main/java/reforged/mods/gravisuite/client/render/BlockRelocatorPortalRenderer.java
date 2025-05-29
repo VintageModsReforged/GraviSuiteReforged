@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.render;
+package reforged.mods.gravisuite.client.render;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;

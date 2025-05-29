@@ -44,7 +44,8 @@ public class ArmorAudioTicker implements IAudioTicker {
             } else {
                 if (this.AUDIO != null) {
                     this.USED = used;
-                    this.AUDIO.remove();;
+                    this.AUDIO.remove();
+                    ;
                     this.AUDIO = null;
                 }
             }

@@ -27,7 +27,7 @@ public class ClientArmorHandler extends TickEvents.PlayerTickEvent {
             EntityPlayer player = (EntityPlayer) objects[0];
             ItemStack itemstack = player.getCurrentArmor(2);
             if (itemstack != null) {
-                if(itemstack.getItem() instanceof ItemAdvancedQuant) {
+                if (itemstack.getItem() instanceof ItemAdvancedQuant) {
                     if (firstLoad && CommonProxy.wasUndressed(player)) {
                         GraviSuite.network.sendWorldLoadState();
                         if (ItemAdvancedQuant.readFlyStatus(itemstack)) {

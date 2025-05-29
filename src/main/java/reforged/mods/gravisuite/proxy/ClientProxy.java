@@ -26,9 +26,9 @@ import reforged.mods.gravisuite.events.client.OverlayHandler;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.items.tools.relocator.EntityRelocatorBall;
-import reforged.mods.gravisuite.render.BlockRelocatorPortalRenderer;
-import reforged.mods.gravisuite.render.RelocatorBallRenderer;
-import reforged.mods.gravisuite.render.TileRelocatorPortalRenderer;
+import reforged.mods.gravisuite.client.render.BlockRelocatorPortalRenderer;
+import reforged.mods.gravisuite.client.render.RelocatorBallRenderer;
+import reforged.mods.gravisuite.client.render.TileRelocatorPortalRenderer;
 import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
 import reforged.mods.gravisuite.utils.Helpers;
 

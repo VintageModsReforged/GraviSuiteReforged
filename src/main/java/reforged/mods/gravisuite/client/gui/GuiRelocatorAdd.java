@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.items.tools.relocator.gui;
+package reforged.mods.gravisuite.client.gui;
 
 import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.client.gui.GuiTextField;

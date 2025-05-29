@@ -25,13 +25,16 @@ public class CommonProxy {
         GraviSuiteConfig.initConfig();
     }
 
-    public void init(FMLInitializationEvent e) {}
+    public void init(FMLInitializationEvent e) {
+    }
 
     public void postInit(FMLPostInitializationEvent e) {
         GraviSuiteRecipes.initRecipes();
     }
 
-    public int addArmor(String armorName) { return 0; }
+    public int addArmor(String armorName) {
+        return 0;
+    }
 
     public static boolean isFlyActive(EntityPlayer player) {
         return isFlyActive.containsKey(player) ? isFlyActive.get(player) : false;

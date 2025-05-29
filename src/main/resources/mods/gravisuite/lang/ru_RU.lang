@@ -94,7 +94,7 @@ message.info.filter.set=чтобы установить фильтр
 message.info.relocator.default=Точка по умолчанию: %s
 
 message.vein.active=Активный режим добычи рудной жилы
-message.info.filter=Уничтожать предмет: %s
+message.info.filter=Фильтр уничтожителя установлен на: %s
 message.info.quick_change=[!] Быстрое переключение режимов [!]
 ## USE TOGETHER: AQUA.format("message.info.energy", WHITE.format("message.info.energy.tier", tier))
 message.info.energy=%s/%s EU %s
@@ -127,3 +127,8 @@ tooltip.relocator.portal.line1=Создаёт временный портал м
 tooltip.relocator.portal.line2=Установить точку по умолчанию
 tooltip.relocator.portal.line3=Открыть портал на 30 секунд
 tooltip.relocator.portal.line4=Стоимость: %s EU за портал
+
+message.tool.voider.removed=Инвентарь очищен!
+message.tool.voider.removed.none=Нечего очищать!
+message.tool.voider.remove.all=Очистить инвентарь
+message.tool.voider.hotbar=Держите в панели быстрого доступа, чтобы удалять предметы при подборе!

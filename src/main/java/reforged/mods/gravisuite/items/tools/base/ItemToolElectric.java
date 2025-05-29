@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
 import mods.vintage.core.platform.lang.FormattedTranslator;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 import java.util.Locale;
@@ -24,12 +22,10 @@ import java.util.Locale;
 public class ItemToolElectric extends ItemToolBase implements IElectricItem {
 
     public int tier, transfer, capacity;
-    public String name;
 
     protected ItemToolElectric(int id, String name, int tier, int transfer, int capacity, EnumToolMaterial material) {
         super(id, name, material);
         this.setMaxDamage(27);
-        this.name = name;
         this.tier = tier;
         this.transfer = transfer;
         this.capacity = capacity;
@@ -39,12 +35,6 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
     @SideOnly(Side.CLIENT)
     public EnumRarity getRarity(ItemStack stack) {
         return EnumRarity.uncommon;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister icons) {
-        this.itemIcon = icons.registerIcon(Refs.id + ":" + this.name);
     }
 
     @Override

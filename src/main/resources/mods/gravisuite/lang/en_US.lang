@@ -94,7 +94,7 @@ message.info.filter.set=Set the filter
 message.info.relocator.default=Default: %s
 
 message.vein.active=Active Vein Miner
-message.info.filter=Void Filter: %s
+message.info.filter=Voider Filter set to: %s
 message.info.quick_change=[!] Quick Mode Change [!]
 ## USE TOGETHER: AQUA.format("message.info.energy", WHITE.format("message.info.energy.tier", tier))
 message.info.energy=%s/%s EU %s
@@ -127,3 +127,8 @@ tooltip.relocator.portal.line1=Create temporary portal between points
 tooltip.relocator.portal.line2=Set default location
 tooltip.relocator.portal.line3=Open 30s portal
 tooltip.relocator.portal.line4=Cost: %s EU per portal
+
+message.tool.voider.removed=Inventory Cleared!
+message.tool.voider.removed.none=Nothing to clear!
+message.tool.voider.remove.all=Clear the Inventory
+message.tool.voider.hotbar=Keep it inside your hotbar to remove items on pickup!

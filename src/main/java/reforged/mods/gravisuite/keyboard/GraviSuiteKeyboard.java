@@ -18,7 +18,8 @@ public class GraviSuiteKeyboard {
         return magnetToggleKeyState.containsKey(player) ? magnetToggleKeyState.get(player) : false;
     }
 
-    public void sendKeyUpdate() {}
+    public void sendKeyUpdate() {
+    }
 
     public void processKeyUpdate(EntityPlayer player, int keyState) {
         this.engineToggleKeyState.put(player, (keyState & 1) != 0);

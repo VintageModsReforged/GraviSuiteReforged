@@ -44,7 +44,7 @@ public class ItemRelocator extends ItemToolElectric {
     @Override
     @SideOnly(Side.CLIENT)
     public EnumRarity getRarity(ItemStack stack) {
-        EnumRarity[] CYCLING_RARITIES = new EnumRarity[] { EnumRarity.epic, EnumRarity.rare };
+        EnumRarity[] CYCLING_RARITIES = new EnumRarity[]{EnumRarity.epic, EnumRarity.rare};
         if (Minecraft.getMinecraft().theWorld == null) return EnumRarity.common; // fallback
 
         long time = Minecraft.getMinecraft().theWorld.getTotalWorldTime();
@@ -85,7 +85,6 @@ public class ItemRelocator extends ItemToolElectric {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
     }
-
 
 
     @Override

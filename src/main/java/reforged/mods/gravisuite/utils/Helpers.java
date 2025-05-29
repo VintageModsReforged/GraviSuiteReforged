@@ -36,12 +36,12 @@ public class Helpers {
                 entity = teleportEntity(entity, point);
             }
             if (entityToTeleport instanceof EntityPlayerMP) {
-                EntityPlayerMP entityPlayerMP = (EntityPlayerMP)entityToTeleport;
+                EntityPlayerMP entityPlayerMP = (EntityPlayerMP) entityToTeleport;
                 entityPlayerMP.setPositionAndUpdate(point.POS.getX(), point.POS.getY(), point.POS.getZ());
             } else {
                 entityToTeleport.setPosition(point.POS.getX(), point.POS.getY(), point.POS.getZ());
             }
-            entityToTeleport.setLocationAndAngles(point.POS.getX(), point.POS.getY(), point.POS.getZ(), (float)point.YAW, (float)point.PITCH);
+            entityToTeleport.setLocationAndAngles(point.POS.getX(), point.POS.getY(), point.POS.getZ(), (float) point.YAW, (float) point.PITCH);
             if (entity != null)
                 entityToTeleport.mountEntity(entity);
         }

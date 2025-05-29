@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.render;
+package reforged.mods.gravisuite.client.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -32,7 +32,7 @@ public class RelocatorBallRenderer extends Render {
     public int ticker;
 
     public static int getTextureSize(String path, int paramInt) {
-        List<Serializable> key = Arrays.asList(new Serializable[] { path, paramInt});
+        List<Serializable> key = Arrays.asList(new Serializable[]{path, paramInt});
         if (textureSizeCache.get(key) != null)
             return textureSizeCache.get(key);
         try {
@@ -61,8 +61,8 @@ public class RelocatorBallRenderer extends Render {
         float f4 = ActiveRenderInfo.rotationYZ;
         float f5 = ActiveRenderInfo.rotationXY;
         float f6 = 1.0F;
-        double d1 = (float)paramDouble2;
-        double d2 = (float)paramDouble3;
+        double d1 = (float) paramDouble2;
+        double d2 = (float) paramDouble3;
         Tessellator tessellator = Tessellator.instance;
         Color color = Helpers.convertRGBtoColor(226, 88, 255);
         if (paramEntityPlasmaBall.getActionType() == 0)
@@ -72,7 +72,7 @@ public class RelocatorBallRenderer extends Render {
         GL11.glEnable(3042);
         GL11.glBlendFunc(770, 1);
         (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(plazmaTextloc);
-        int k = ((Entity)paramEntityPlasmaBall).ticksExisted % 16;
+        int k = ((Entity) paramEntityPlasmaBall).ticksExisted % 16;
         float f7 = (i * 4);
         float f8 = i - 0.01F;
         float f9 = 1.0F / (i * i) * 2.0F;
@@ -97,7 +97,7 @@ public class RelocatorBallRenderer extends Render {
         GL11.glEnable(3042);
         GL11.glBlendFunc(770, 1);
         (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(particlesTextloc);
-        int m = ((Entity)paramEntityPlasmaBall).ticksExisted % 16;
+        int m = ((Entity) paramEntityPlasmaBall).ticksExisted % 16;
         k = 24 + m;
         float f15 = (j * 8);
         f8 = j - 0.01F;
@@ -107,7 +107,7 @@ public class RelocatorBallRenderer extends Render {
         f12 = ((k % 8 * j) + f8) / f15;
         f13 = ((k / 8 * j) + 0.0F) / f15;
         f14 = ((k / 8 * j) + f8) / f15;
-        float f16 = MathHelper.sin((((Entity)paramEntityPlasmaBall).ticksExisted + paramFloat2) / 10.0F) * 0.1F;
+        float f16 = MathHelper.sin((((Entity) paramEntityPlasmaBall).ticksExisted + paramFloat2) / 10.0F) * 0.1F;
         f6 = 0.4F + f16;
         tessellator.startDrawingQuads();
         tessellator.setBrightness(240);

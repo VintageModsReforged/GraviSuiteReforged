@@ -1,4 +1,4 @@
-package reforged.mods.gravisuite.render;
+package reforged.mods.gravisuite.client.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -32,7 +32,7 @@ public class TileRelocatorPortalRenderer extends TileEntitySpecialRenderer {
     public int ticker;
 
     public static int getTextureSize(String path, int paramInt) {
-        List<Serializable> key = Arrays.asList(new Serializable[] { path, paramInt});
+        List<Serializable> key = Arrays.asList(new Serializable[]{path, paramInt});
         if (textureSizeCache.get(key) != null)
             return textureSizeCache.get(key);
         try {
@@ -51,7 +51,7 @@ public class TileRelocatorPortalRenderer extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity paramTileEntity, double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat) {
-        renderTileEntityAt((TileEntityRelocatorPortal)paramTileEntity, paramDouble1, paramDouble2, paramDouble3, paramFloat);
+        renderTileEntityAt((TileEntityRelocatorPortal) paramTileEntity, paramDouble1, paramDouble2, paramDouble3, paramFloat);
     }
 
     public void renderCore(TileEntity paramTileEntity, double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat) {
@@ -68,9 +68,9 @@ public class TileRelocatorPortalRenderer extends TileEntitySpecialRenderer {
         float f4 = ActiveRenderInfo.rotationYZ;
         float f5 = ActiveRenderInfo.rotationXY;
         float f6 = 1.2F;
-        float f7 = (float)paramDouble1 + 0.5F;
-        float f8 = (float)paramDouble2 + 0.5F;
-        float f9 = (float)paramDouble3 + 0.5F;
+        float f7 = (float) paramDouble1 + 0.5F;
+        float f8 = (float) paramDouble2 + 0.5F;
+        float f9 = (float) paramDouble3 + 0.5F;
         Tessellator tessellator = Tessellator.instance;
         GL11.glPushMatrix();
         GL11.glDepthMask(false);
@@ -128,7 +128,7 @@ public class TileRelocatorPortalRenderer extends TileEntitySpecialRenderer {
 
     public void renderTileEntityAt(TileEntityRelocatorPortal paramTileEntityRelocatorPortal, double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat) {
         GL11.glPushMatrix();
-        GL11.glTranslatef((float)paramDouble1 + 0.5F, (float)paramDouble2 + 1.5F, (float)paramDouble3 + 0.5F);
+        GL11.glTranslatef((float) paramDouble1 + 0.5F, (float) paramDouble2 + 1.5F, (float) paramDouble3 + 0.5F);
         GL11.glPushMatrix();
         GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
         GL11.glPopMatrix();

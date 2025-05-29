@@ -3,13 +3,17 @@ package reforged.mods.gravisuite.utils;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import reforged.mods.gravisuite.items.tools.relocator.gui.GuiRelocatorAdd;
-import reforged.mods.gravisuite.items.tools.relocator.gui.GuiRelocatorMain;
+import reforged.mods.gravisuite.client.gui.GuiRelocatorAdd;
+import reforged.mods.gravisuite.client.gui.GuiRelocatorMain;
+import reforged.mods.gravisuite.client.gui.GuiVoider;
 
 public class GraviSuiteGuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+        if (id == 4) {
+            return new VoiderContainer(player);
+        }
         return null;
     }
 
@@ -22,6 +26,8 @@ public class GraviSuiteGuiHandler implements IGuiHandler {
                 return new GuiRelocatorMain(0);
             case 3:
                 return new GuiRelocatorMain(1);
+            case 4:
+                return new GuiVoider(player);
         }
         return null;
     }

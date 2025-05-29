@@ -173,11 +173,11 @@ public class EntityRelocatorBall extends EntityThrowable {
                     TeleportPoint teleportPoint = new TeleportPoint();
                     teleportPoint.DIMENSION_ID = this.worldObj.provider.dimensionId;
                     teleportPoint.POS = new BlockPos(x, y, z);
-                    ((TileEntityRelocatorPortal)tileEntity1).setParentPortal(teleportPoint);
+                    ((TileEntityRelocatorPortal) tileEntity1).setParentPortal(teleportPoint);
                 }
                 TileEntity tileEntity2 = this.worldObj.getBlockTileEntity(x, y, z);
                 if (tileEntity1 instanceof TileEntityRelocatorPortal)
-                    ((TileEntityRelocatorPortal)tileEntity2).setParentPortal(this.targetTpPoint);
+                    ((TileEntityRelocatorPortal) tileEntity2).setParentPortal(this.targetTpPoint);
             }
         }
         if (!worldObj.isRemote) {

@@ -28,4 +28,4 @@ public class ItemLappack {
             return EnumRarity.epic;
         }
     }
- }
+}

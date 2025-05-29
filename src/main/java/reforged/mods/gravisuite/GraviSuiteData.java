@@ -20,7 +20,7 @@ import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
 
 public class GraviSuiteData {
 
-    public static final EnumArmorMaterial GRAVI_MATERIAL = EnumHelper.addArmorMaterial("g_mat", 0, new int[] { 0, 0, 0, 0 }, 0);
+    public static final EnumArmorMaterial GRAVI_MATERIAL = EnumHelper.addArmorMaterial("g_mat", 0, new int[]{0, 0, 0, 0}, 0);
 
     public static Item component;
     public static ItemStack superconductor_cover, superconductor, cooling_core, gravi_engine, magnetron, vajra_core, engine_booster;

@@ -2,7 +2,6 @@ package reforged.mods.gravisuite.items.tools;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.block.Block;
@@ -16,16 +15,16 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.items.tools.base.ItemToolBase;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemVoider extends ItemToolElectric {
+public class ItemVoider extends ItemToolBase {
 
     public ItemVoider() {
-        super(GraviSuiteConfig.VOIDER_ID, "voider", 1, 500, 10000, EnumToolMaterial.STONE);
+        super(GraviSuiteConfig.VOIDER_ID, "voider", EnumToolMaterial.STONE);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -37,13 +36,15 @@ public class ItemVoider extends ItemToolElectric {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         NBTTagCompound filterStackTag = tag.getCompoundTag("FilterStack");
         ItemStack filterStack = ItemStack.loadItemStackFromNBT(filterStackTag);
-        if (GraviSuite.proxy.isSneakKeyDown()) {
-            tooltip.add(Helpers.clickFor("Right Click", "message.info.filter.set"));
-        } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
-        }
+        tooltip.add(FormattedTranslator.GREEN.format("message.tool.voider.hotbar"));
         if (filterStack != null) {
             tooltip.add(FormattedTranslator.GOLD.format("message.info.filter", FormattedTranslator.AQUA.literal(filterStack.getDisplayName())));
+        }
+        if (GraviSuite.proxy.isSneakKeyDown()) {
+            tooltip.add(Helpers.clickFor(Refs.SNEAK_KEY + " & Right Click", "message.info.filter.set"));
+            tooltip.add(Helpers.pressXAndYForZ(Refs.to_custom_2, "Mode Switch Key", "Right Click", "message.tool.voider.remove.all"));
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
     }
 
@@ -51,22 +52,28 @@ public class ItemVoider extends ItemToolElectric {
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         ItemStack filterStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("FilterStack"));
-        if (IC2.platform.isSimulating()) {
-            if (player.isSneaking()) {
-                if (filterStack != null) {
-                    for (int i = 0; i < player.inventory.mainInventory.length; i++) {
-                        ItemStack slotStack = player.inventory.getStackInSlot(i);
-                        if (slotStack != null) {
-                            if (slotStack.isItemEqual(filterStack)) {
-                                if (ElectricItem.manager.canUse(stack, 5)) {
-                                    player.inventory.setInventorySlotContents(i, null);
-                                    ElectricItem.manager.use(stack, slotStack.stackSize * 5, player);
-                                }
-                            }
+        if (IC2.keyboard.isModeSwitchKeyDown(player)) {
+            if (filterStack != null) {
+                int removed = 0;
+                for (int i = 0; i < player.inventory.mainInventory.length; i++) {
+                    ItemStack slotStack = player.inventory.getStackInSlot(i);
+                    if (slotStack != null) {
+                        if (slotStack.isItemEqual(filterStack)) {
+                            player.inventory.setInventorySlotContents(i, null);
+                            removed++;
                         }
                     }
                 }
+                if (IC2.platform.isRendering()) {
+                    if (removed > 0) {
+                        IC2.platform.messagePlayer(player, FormattedTranslator.GREEN.format("message.tool.voider.removed"));
+                    } else {
+                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.voider.removed.none"));
+                    }
+                }
             }
+        } else if (!player.isSneaking()) {
+            player.openGui(GraviSuite.instance, 4, world, (int) player.posX, (int) player.posY, (int) player.posZ);
         }
         return stack;
     }
@@ -80,12 +87,10 @@ public class ItemVoider extends ItemToolElectric {
         NBTTagCompound filterTag = blockStack.writeToNBT(new NBTTagCompound());
         NBTTagCompound tag = Helpers.getOrCreateTag(stack);
         if (IC2.platform.isSimulating()) {
-            if (!player.isSneaking()) {
-                if (ElectricItem.manager.canUse(stack, 500)) {
-                    tag.setTag("FilterStack", filterTag);
-                    ElectricItem.manager.use(stack, 500, player);
-                    return true;
-                }
+            if (player.isSneaking()) {
+                tag.setTag("FilterStack", filterTag);
+                IC2.platform.messagePlayer(player, FormattedTranslator.GOLD.format("message.info.filter", FormattedTranslator.AQUA.literal(blockStack.getDisplayName())));
+                return true;
             }
         }
         return false;
@@ -110,12 +115,9 @@ public class ItemVoider extends ItemToolElectric {
             ItemStack filterStack = ItemStack.loadItemStackFromNBT(Helpers.getOrCreateTag(voider).getCompoundTag("FilterStack"));
             if (filterStack != null) {
                 ItemStack drop = e.item.getEntityItem();
-                if (ElectricItem.manager.canUse(voider, 1)) {
-                    if (drop.isItemEqual(filterStack)) {
-                        ElectricItem.manager.use(voider, 1, player);
-                        e.item.setDead();
-                        e.setCanceled(true);
-                    }
+                if (drop.isItemEqual(filterStack)) {
+                    e.item.setDead();
+                    e.setCanceled(true);
                 }
             }
         }

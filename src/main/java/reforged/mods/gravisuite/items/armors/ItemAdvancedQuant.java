@@ -75,7 +75,6 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     }
 
 
-
     @Override
     public void onArmorTickUpdate(World worldObj, EntityPlayer player, ItemStack itemStack) {
         NBTTagCompound tag = Helpers.getOrCreateTag(itemStack);

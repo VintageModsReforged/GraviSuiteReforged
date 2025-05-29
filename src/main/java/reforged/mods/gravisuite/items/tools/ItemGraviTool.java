@@ -202,9 +202,9 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                 } else {
                     if (IC2.platform.isSimulating()) {
                         if (side != 0 && side != 1) {
-                            wrenchable.setFacing((short)side);
+                            wrenchable.setFacing((short) side);
                         } else if (wrenchable instanceof IEnergySource && wrenchable instanceof IEnergySink) {
-                            wrenchable.setFacing((short)side);
+                            wrenchable.setFacing((short) side);
                         }
                         ElectricItem.manager.use(stack, this.energy_per_use, player);
                         return true;
@@ -283,11 +283,9 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
 
     /**
-     *
      * {@link IToolWrench} and
      * {@link IToolConfigurator}
-     *
-     * */
+     */
 
     @Override
     public boolean canWrench(EntityPlayer player, int x, int y, int z) {
@@ -303,10 +301,8 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     }
 
     /**
-     *
      * {@link IToolCrowbar}
-     *
-     * */
+     */
 
     @Override
     public boolean canWhack(EntityPlayer player, ItemStack stack, int x, int y, int z) {
@@ -327,7 +323,8 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     }
 
     @Override
-    public void onLink(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {}
+    public void onLink(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {
+    }
 
     @Override
     public boolean canBoost(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {
@@ -335,7 +332,8 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     }
 
     @Override
-    public void onBoost(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {}
+    public void onBoost(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {
+    }
 
     public enum ToolMode {
         HOE(Refs.tool_mode_hoe), TREETAP(Refs.tool_mode_treetap), WRENCH(Refs.tool_mode_wrench), SCREWDRIVER(Refs.tool_mode_screwdriver);

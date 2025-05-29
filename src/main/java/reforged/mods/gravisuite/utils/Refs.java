@@ -70,7 +70,6 @@ public class Refs {
     public static final String quick_charge = "message.info.quick_change";
 
 
-
     // Formatted Messages // \247
 
     public static final String energy_level = FormattedTranslator.WHITE.format(ENERGY_LEVEL);

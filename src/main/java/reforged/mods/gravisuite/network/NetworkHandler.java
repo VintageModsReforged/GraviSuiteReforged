@@ -64,7 +64,12 @@ public class NetworkHandler implements IPacketHandler {
         }
     }
 
-    public void sendKeyStateUpdate(int keyState) {}
-    public void sendWorldLoadState() {}
-    public void sendRelocatorPoints(String name, byte actionID) {}
+    public void sendKeyStateUpdate(int keyState) {
+    }
+
+    public void sendWorldLoadState() {
+    }
+
+    public void sendRelocatorPoints(String name, byte actionID) {
+    }
 }
