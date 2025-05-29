@@ -136,7 +136,7 @@ message.tool.relocator.teleport.to=%s попытался телепортиро�
 tooltip.relocator.personal.line1=Телепортирует к сохранённым точкам
 tooltip.relocator.personal.line2=Добавить текущую локацию
 tooltip.relocator.personal.line3=Открыть меню выбора точки
-tooltip.relocator.personal.line4=Стоимость:\n- %s EU (в том же измерении)\n- %s EU (между измерениями)
+tooltip.relocator.personal.line4=Стоимость:#- %s EU (в том же измерении)#- %s EU (между измерениями)
 
 tooltip.relocator.translocator.line1=Выстреливает телепортационной сферой для перемещения существ
 tooltip.relocator.translocator.line2=Установить точку по умолчанию

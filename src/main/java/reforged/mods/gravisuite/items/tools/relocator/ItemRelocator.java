@@ -76,7 +76,7 @@ public class ItemRelocator extends ItemBaseElectricItem {
                 String cost = Translator.format("tooltip.relocator.personal.line4",
                         FormattedTranslator.AQUA.literal(this.ENERGY_STANDARD_TP + ""),
                         FormattedTranslator.AQUA.literal(this.ENERGY_CROSS_TP + ""));
-                Collections.addAll(tooltip, cost.split("\n"));
+                Collections.addAll(tooltip, cost.split("#"));
             } else {
                 int energy = mode == ToolMode.TRANSLOCATOR ? ENERGY_SHOOT : ENERGY_PORTAL;
                 tooltip.add(Translator.format("tooltip.relocator." + type + ".line4",
