@@ -30,7 +30,9 @@ item.advanced_chainsaw.name=Advanced Chainsaw
 item.gravitool.name=GraviTool
 item.magnet.name=Magnet
 item.vajra.name=Vajra
+item.voider.name=Voider
 item.relocator.name=Relocator
+
 item.wooden_hammer.name=Wooden Hammer
 item.stone_hammer.name=Stone Hammer
 item.iron_hammer.name=Iron Hammer
