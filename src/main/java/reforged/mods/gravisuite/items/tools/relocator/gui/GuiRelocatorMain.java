@@ -223,6 +223,7 @@ public class GuiRelocatorMain extends GuiContainer {
                 this.mc.thePlayer.closeScreen();
             }
         }
+        super.keyTyped(paramChar, paramInt);
     }
 
     public static List<TeleportPoint> getPoints() {
