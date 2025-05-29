@@ -1,5 +1,6 @@
 package reforged.mods.gravisuite.proxy;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -18,12 +19,18 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.input.Keyboard;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.client.render.BlockRelocatorPortalRenderer;
+import reforged.mods.gravisuite.client.render.RelocatorBallRenderer;
+import reforged.mods.gravisuite.client.render.TileRelocatorPortalRenderer;
 import reforged.mods.gravisuite.events.client.AudioHandler;
 import reforged.mods.gravisuite.events.client.ClientArmorHandler;
 import reforged.mods.gravisuite.events.client.KeyboardHandler;
 import reforged.mods.gravisuite.events.client.OverlayHandler;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
+import reforged.mods.gravisuite.items.tools.relocator.EntityRelocatorBall;
+import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
 import reforged.mods.gravisuite.utils.Helpers;
 
 @SideOnly(Side.CLIENT)
@@ -39,6 +46,11 @@ public class ClientProxy extends CommonProxy {
         registerTickHandlers(KeyboardHandler.THIS);
         registerTickHandlers(ClientArmorHandler.THIS);
         MinecraftForge.EVENT_BUS.register(this);
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityRelocatorBall.class, new RelocatorBallRenderer());
+        GraviSuite.blockRelocatorPortalRenderID = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(new BlockRelocatorPortalRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRelocatorPortal.class, new TileRelocatorPortalRenderer());
     }
 
     @Override

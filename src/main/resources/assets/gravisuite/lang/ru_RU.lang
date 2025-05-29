@@ -31,6 +31,7 @@ item.gravitool.name=Грави-инструмент
 item.magnet.name=Магнит
 item.vajra.name=Ваджра
 item.voider.name=Уничтожитель
+item.relocator.name=Релокатор
 
 ####################
 # messages
@@ -82,16 +83,52 @@ message.gravitation.engine.stat=Гравитационный двигатель
 message.gravitation.levitation.stat=Режим левитации
 
 message.info.press=Зажмите %1$s для дополнительной информации
+message.info.press.to1.custom=Зажмите %1$s, чтобы %2$s
+message.info.press.to2.custom=Зажмите %1$s и %2$s, чтобы %3$s
 message.info.press.to1=Зажмите %1$s, чтобы сменить %2$s
 message.info.press.to2=Зажмите %1$s и %2$s, чтобы сменить %3$s
 message.info.press.to.enable1=Зажмите %1$s, чтобы включить %2$s
 message.info.press.to.enable2=Зажмите %1$s и %2$s, чтобы включить %3$s
 message.info.click.block=%1$s по блоку, %2$s
 message.info.filter.set=чтобы установить фильтр
+message.info.relocator.default=Точка по умолчанию: %s
 
 message.vein.active=Активный режим добычи рудной жилы
-message.info.filter=Уничтожать предмет: %s
+message.info.filter=Фильтр уничтожителя установлен на: %s
 message.info.quick_change=[!] Быстрое переключение режимов [!]
 ## USE TOGETHER: AQUA.format("message.info.energy", WHITE.format("message.info.energy.tier", tier))
 message.info.energy=%s/%s EU %s
 message.info.energy.tier=(Т: %s)
+
+message.text.relocator.full=Не возможно добавить точку. Память заполнена.
+message.text.relocator.added=%s добавлена в память релокатора!
+message.text.relocator.default.set=Точка по умолчанию задана на %s!
+message.text.relocator.default.none=Не возможно задать точку по умолчанию. Точка не найдена.
+message.text.relocator.default.not_set=Точка по умоланию не задана
+message.text.relocator.add=Добавить новую точку
+message.tool.relocator.mode.personal=Личный
+message.tool.relocator.mode.translocator=Транслокатор
+message.tool.relocator.mode.translocator.disabled=Режим транслокатора отключен на сервере!
+message.tool.relocator.mode.portal=Портал
+message.tool.relocator.mode.portal.disabled=Режим портала отключен на сервере!
+message.tool.relocator.teleport.to=%s попытался телепортировать вас!
+
+tooltip.relocator.personal.line1=Телепортирует к сохранённым точкам
+tooltip.relocator.personal.line2=Добавить текущую локацию
+tooltip.relocator.personal.line3=Открыть меню выбора точки
+tooltip.relocator.personal.line4=Стоимость:\n- %s EU (в том же измерении)\n- %s EU (между измерениями)
+
+tooltip.relocator.translocator.line1=Выстреливает телепортационной сферой для перемещения существ
+tooltip.relocator.translocator.line2=Установить точку по умолчанию
+tooltip.relocator.translocator.line3=Выстрелить телепортационной сферой
+tooltip.relocator.translocator.line4=Стоимость: %s EU за выстрел
+
+tooltip.relocator.portal.line1=Создаёт временный портал между точками
+tooltip.relocator.portal.line2=Установить точку по умолчанию
+tooltip.relocator.portal.line3=Открыть портал на 30 секунд
+tooltip.relocator.portal.line4=Стоимость: %s EU за портал
+
+message.tool.voider.removed=Инвентарь очищен!
+message.tool.voider.removed.none=Нечего очищать!
+message.tool.voider.remove.all=Очистить инвентарь
+message.tool.voider.hotbar=Держите в панели быстрого доступа, чтобы удалять предметы при подборе!

@@ -14,11 +14,18 @@ public class GraviSuiteConfig {
     public static int magnet_range = 8;
     public static int magnet_max_capacity = 200;
 
+    public static int ENERGY_STANDARD_TP = 1000000;
+    public static int ENERGY_CROSS_TP = 1500000;
+    public static int ENERGY_PORTAL = 2500000;
+    public static int ENERGY_SHOOT = 2000000;
+
     public static boolean log_wrench = false;
     public static boolean enable_hud = true;
     public static boolean use_fixed_values = true;
     public static boolean chainsaw_tree_capitator = false;
     public static boolean inspect_mode = false;
+    public static boolean enableTranslocator = true;
+    public static boolean enablePortal = true;
 
     public static int hud_position = 1;
 
@@ -30,6 +37,8 @@ public class GraviSuiteConfig {
 
     public static int hud_pos_gravi_x = 3;
     public static int hud_pos_gravi_y = 15;
+
+    public static int RELOCATOR_PORTAL_BLOCK_ID = 3219;
 
     public static int COMPONENT_ID = 30219;
     public static int ADVANCED_DIAMOND_DRILL = 30226;
@@ -44,6 +53,8 @@ public class GraviSuiteConfig {
     public static int ADVANCED_NANO_ID = 30235;
     public static int ADVANCED_QUANT_ID = 30236;
     public static int VOIDER_ID = 30237;
+    public static int RELOCATOR_ID = 30238;
+    public static int RELOCATOR_PORTAL_ID = 30239;
 
     public static void initConfig() {
 
@@ -65,6 +76,9 @@ public class GraviSuiteConfig {
         ADVANCED_NANO_ID = ConfigHelper.getId(id_config, Refs.IDs, "advanced_nano_id", ADVANCED_NANO_ID);
         ADVANCED_QUANT_ID = ConfigHelper.getId(id_config, Refs.IDs, "advanced_quant_id", ADVANCED_QUANT_ID);
         VOIDER_ID = ConfigHelper.getId(id_config, Refs.IDs, "voider_id", VOIDER_ID);
+        RELOCATOR_ID = ConfigHelper.getId(id_config, Refs.IDs, "relocator_id", RELOCATOR_ID);
+        RELOCATOR_PORTAL_ID = ConfigHelper.getId(id_config, Refs.IDs, "relocator_portal_id", RELOCATOR_PORTAL_ID);
+        RELOCATOR_PORTAL_BLOCK_ID = ConfigHelper.getId(id_config, Refs.IDs, "relocator_portal_block_id", RELOCATOR_PORTAL_BLOCK_ID);
 
         if (id_config.hasChanged()) id_config.save();
 
@@ -87,6 +101,8 @@ public class GraviSuiteConfig {
         inspect_mode = ConfigHelper.getBoolean(main_config, Refs.general, "enable_inspect_mode", inspect_mode, "Enable inspect mode. Helps identify block name, class and metadata.");
         magnet_range = ConfigHelper.getInt(main_config, Refs.general, "magnet_range", 1, 16, magnet_range, "Magnet Range.");
         magnet_max_capacity = ConfigHelper.getInt(main_config, Refs.general, "magnet_max_capacity", 1, Integer.MAX_VALUE, magnet_max_capacity, "Magnet Attraction Capacity.");
+        enableTranslocator = ConfigHelper.getBoolean(main_config, Refs.general, "relocator_translocator", enableTranslocator, "Enable Relocator's Translocator Mode");
+        enablePortal = ConfigHelper.getBoolean(main_config, Refs.general, "relocator_portal", enablePortal, "Enable Relocator's Portal Mode");
 
         chainsaw_tree_capitator = ConfigHelper.getBoolean(main_config, Refs.tree_capitator, "chainsaw_tree_capitator", chainsaw_tree_capitator, "Enable TreeCapitator Mode for Advanced Chainsaw");
         logs = ConfigHelper.getStrings(main_config, Refs.tree_capitator, "logs", new String[]{"thaumcraft.common.world.BlockMagicalLog"}, "Support for custom logs block that aren't instances of `BlockLog`. Enable inspect_mode and right click with a stick to get more info in the log.");

@@ -31,12 +31,7 @@ item.gravitool.name=GraviTool
 item.magnet.name=Magnet
 item.vajra.name=Vajra
 item.voider.name=Voider
-item.wooden_hammer.name=Wooden Hammer
-item.stone_hammer.name=Stone Hammer
-item.iron_hammer.name=Iron Hammer
-item.diamond_hammer.name=Diamond Hammer
-item.bronze_hammer.name=Bronze Hammer
-item.quartz_hammer.name=Quartz Hammer
+item.relocator.name=Relocator
 
 ####################
 # messages
@@ -88,16 +83,52 @@ message.gravitation.engine.stat=Antigravity Engine
 message.gravitation.levitation.stat=Levitation
 
 message.info.press=Press %1$s for more info
+message.info.press.to1.custom=Press %1$s to %2$s
+message.info.press.to2.custom=Press %1$s and %2$s to %3$s
 message.info.press.to1=Press %1$s to change %2$s
 message.info.press.to2=Press %1$s and %2$s to change %3$s
 message.info.press.to.enable1=Press %1$s to enable %2$s
 message.info.press.to.enable2=Press %1$s and %2$s to enable %3$s
 message.info.click.block=%1$s on block to %2$s
 message.info.filter.set=Set the filter
+message.info.relocator.default=Default: %s
 
 message.vein.active=Active Vein Miner
-message.info.filter=Void Filter: %s
+message.info.filter=Voider Filter set to: %s
 message.info.quick_change=[!] Quick Mode Change [!]
 ## USE TOGETHER: AQUA.format("message.info.energy", WHITE.format("message.info.energy.tier", tier))
 message.info.energy=%s/%s EU %s
 message.info.energy.tier=(Tier: %s)
+
+message.text.relocator.full=Can't add point. Memory is full.
+message.text.relocator.added=%s added to teleport list!
+message.text.relocator.default.set=Default teleport point set to %s!
+message.text.relocator.default.none=Can't set default teleport point. Teleport point not found.
+message.text.relocator.default.not_set=Default teleport point not set
+message.text.relocator.add=Add New Point
+message.tool.relocator.mode.personal=Personal
+message.tool.relocator.mode.translocator=Translocator
+message.tool.relocator.mode.translocator.disabled=Translocator mode disabled on server!
+message.tool.relocator.mode.portal=Portal
+message.tool.relocator.mode.portal.disabled=Portal mode disabled on server!
+message.tool.relocator.teleport.to=%s tried to teleport you!
+
+tooltip.relocator.personal.line1=Teleport yourself to saved points
+tooltip.relocator.personal.line2=Add current location
+tooltip.relocator.personal.line3=Open point selection menu
+tooltip.relocator.personal.line4=Cost:#- %s EU (same dimension)#- %s EU (cross-dimension)
+
+tooltip.relocator.translocator.line1=Shoot teleport orb to move entities
+tooltip.relocator.translocator.line2=Set default location
+tooltip.relocator.translocator.line3=Fire teleport orb
+tooltip.relocator.translocator.line4=Cost: %s EU per shot
+
+tooltip.relocator.portal.line1=Create temporary portal between points
+tooltip.relocator.portal.line2=Set default location
+tooltip.relocator.portal.line3=Open 30s portal
+tooltip.relocator.portal.line4=Cost: %s EU per portal
+
+message.tool.voider.removed=Inventory Cleared!
+message.tool.voider.removed.none=Nothing to clear!
+message.tool.voider.remove.all=Clear the Inventory
+message.tool.voider.hotbar=Keep it inside your hotbar to remove items on pickup!

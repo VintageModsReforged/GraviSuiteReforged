@@ -1,14 +1,22 @@
 package reforged.mods.gravisuite;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
+import reforged.mods.gravisuite.blocks.BlockRelocatorPortal;
 import reforged.mods.gravisuite.items.ItemComponent;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedJetpack;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.tools.*;
+import reforged.mods.gravisuite.items.tools.relocator.EntityRelocatorBall;
+import reforged.mods.gravisuite.items.tools.relocator.ItemRelocator;
+import reforged.mods.gravisuite.items.tools.relocator.ItemRelocatorPortal;
+import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
 
 public class GraviSuiteData {
 
@@ -20,6 +28,8 @@ public class GraviSuiteData {
     public static Item vajra, magnet, gravitool, voider, debug;
     public static Item advanced_lappack, ultimate_lappack;
     public static Item advanced_jetpack, advanced_nano, advanced_quant;
+    public static Item relocator;
+    public static Block relocator_portal;
 
     public static void init() {
 
@@ -47,5 +57,16 @@ public class GraviSuiteData {
         advanced_jetpack = new ItemAdvancedJetpack();
         advanced_nano = new ItemAdvancedJetpack.ItemAdvancedNano();
         advanced_quant = new ItemAdvancedQuant();
+
+        relocator = new ItemRelocator();
+        relocator_portal = new BlockRelocatorPortal(GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID);
+        GameRegistry.registerTileEntity(TileEntityRelocatorPortal.class, "Relocator Portal");
+        GameRegistry.registerBlock(relocator_portal, ItemRelocatorPortal.class, "BlockRelocatorPortal");
+        registerEntity(EntityRelocatorBall.class, "RelocatorBall");
+    }
+
+    public static void registerEntity(Class paramClass, String paramString) {
+        int i = EntityRegistry.findGlobalUniqueEntityId();
+        EntityRegistry.registerModEntity(paramClass, paramString, i, GraviSuite.instance, 64, 1, true);
     }
 }
