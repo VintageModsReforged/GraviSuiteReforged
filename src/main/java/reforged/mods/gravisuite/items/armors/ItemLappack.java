@@ -6,20 +6,21 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
+import reforged.mods.gravisuite.utils.EnergyValues;
 
 public class ItemLappack {
 
     public static class ItemAdvancedLappack extends ItemArmorElectric {
 
         public ItemAdvancedLappack() {
-            super(GraviSuiteConfig.ADVANCED_LAPPACK_ID, "advanced_lappack", 3, 1000, 1000000);
+            super(GraviSuiteConfig.ADVANCED_LAPPACK_ID, "advanced_lappack", EnergyValues.ADV_LAPPACK.tier, EnergyValues.ADV_LAPPACK.transfer, EnergyValues.ADV_LAPPACK.maxCapacity);
         }
     }
 
     public static class ItemUltimateLappack extends ItemArmorElectric {
 
         public ItemUltimateLappack() {
-            super(GraviSuiteConfig.ULTIMATE_LAPPACK_ID, "ultimate_lappack", 3, 20000, 10000000);
+            super(GraviSuiteConfig.ULTIMATE_LAPPACK_ID, "ultimate_lappack", EnergyValues.ULT_LAPPACK.tier, EnergyValues.ULT_LAPPACK.transfer, EnergyValues.ULT_LAPPACK.maxCapacity);
         }
 
         @Override

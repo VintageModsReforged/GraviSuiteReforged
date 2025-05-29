@@ -30,6 +30,7 @@ import net.minecraftforge.common.ForgeDirection;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import universalelectricity.prefab.implement.IToolConfigurator;
@@ -48,7 +49,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     public String TOOL_WRENCH = "Tools/wrench.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", 2, 5000, 100000, EnumToolMaterial.IRON);
+        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", EnergyValues.GRAVITOOL.tier, EnergyValues.GRAVITOOL.transfer, EnergyValues.GRAVITOOL.maxCapacity, EnumToolMaterial.IRON);
     }
 
     @SideOnly(Side.CLIENT)
@@ -297,7 +298,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     @Override
     public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
         IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
-        ElectricItem.manager.use(player.getHeldItem(), this.energy_per_use, player);
+        ElectricItem.manager.use(player.getHeldItem(), 500, player);
     }
 
     /**
@@ -313,7 +314,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     @Override
     public void onWhack(EntityPlayer player, ItemStack stack, int x, int y, int z) {
         IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
-        ElectricItem.manager.use(player.getHeldItem(), this.energy_per_use, player);
+        ElectricItem.manager.use(player.getHeldItem(), 500, player);
     }
 
     @Override
@@ -323,7 +324,8 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     }
 
     @Override
-    public void onLink(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {
+    public void onLink(EntityPlayer player, ItemStack stack, EntityMinecart minecart) {
+        ElectricItem.manager.use(player.getHeldItem(), this.energy_per_use, player);
     }
 
     @Override

@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -46,7 +47,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
 
     public ItemAdvancedChainsaw() {
-        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", 2, 500, 15000, EnumToolMaterial.EMERALD);
+        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", EnergyValues.CHAINSAW.tier, EnergyValues.CHAINSAW.transfer, EnergyValues.CHAINSAW.maxCapacity, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 35.0F;
         MinecraftForge.setToolClass(this, "axe", 4);
         MinecraftForge.EVENT_BUS.register(this);

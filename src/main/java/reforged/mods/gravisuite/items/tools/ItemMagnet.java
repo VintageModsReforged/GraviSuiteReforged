@@ -27,6 +27,7 @@ import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -42,7 +43,7 @@ public class ItemMagnet extends ItemToolElectric {
     public byte MAGNET_TICKER;
 
     public ItemMagnet() {
-        super(GraviSuiteConfig.MAGNET_ID, "magnet", 1, 500, 10000, EnumToolMaterial.WOOD);
+        super(GraviSuiteConfig.MAGNET_ID, "magnet", EnergyValues.MAGNET.tier, EnergyValues.MAGNET.transfer, EnergyValues.MAGNET.maxCapacity, EnumToolMaterial.WOOD);
         this.MAGNET_TICKER = 10;
     }
 
