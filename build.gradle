@@ -54,7 +54,7 @@ dependencies {
 	forge "net.minecraftforge:forge:${forgeVersion}:universal" //no @zip classifier this time
 	mappings "net.minecraftforge:forge:${forgeVersion}:src@zip"
 
-	modImplementation files("libs/VintageCore-1.6.4-1.0.5-dev.jar")
+	modImplementation files("libs/VintageCore-1.6.4-1.0.6-dev.jar")
 	modImplementation files("libs/ic2exp.jar")
 	modImplementation files("libs/gregtechmod408s.zip")
 
