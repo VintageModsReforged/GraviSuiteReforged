@@ -53,13 +53,13 @@ public class TileEntityRelocatorPortal extends TileEntity {
             if (this.parentTeleportPoint != null) {
                 WorldServer worldServer = minecraftServer.worldServerForDimension(this.parentTeleportPoint.DIMENSION_ID);
                 worldServer.theChunkProviderServer.loadChunk(this.parentTeleportPoint.POS.getX() >> 4, this.parentTeleportPoint.POS.getZ() >> 4);
-                Block block = BlockHelper.getBlock(worldServer, this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
+                Block block = BlockHelper.getBlock(worldServer, this.parentTeleportPoint.POS);
                 if (block == null)
                     return;
                 if (block instanceof BlockRelocatorPortal) {
-                    worldServer.setBlockToAir(this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
-                    worldServer.markBlockForRenderUpdate(this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
-                    worldServer.removeBlockTileEntity(this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
+                    BlockHelper.setBlockToAir(worldServer, this.parentTeleportPoint.POS);
+                    BlockHelper.markBlockForRenderUpdate(worldServer, this.parentTeleportPoint.POS);
+                    BlockHelper.removeBlockTileEntity(worldServer, this.parentTeleportPoint.POS);
                 }
             }
         }
@@ -70,7 +70,7 @@ public class TileEntityRelocatorPortal extends TileEntity {
             MinecraftServer minecraftServer = MinecraftServer.getServer();
             WorldServer worldServer = minecraftServer.worldServerForDimension(this.parentTeleportPoint.DIMENSION_ID);
             worldServer.theChunkProviderServer.loadChunk(this.parentTeleportPoint.POS.getX() >> 4, this.parentTeleportPoint.POS.getZ() >> 4);
-            Block block = BlockHelper.getBlock(worldServer, this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
+            Block block = BlockHelper.getBlock(worldServer, this.parentTeleportPoint.POS);
             if (block == null)
                 return;
             if (!(block instanceof BlockRelocatorPortal)) {
@@ -127,7 +127,7 @@ public class TileEntityRelocatorPortal extends TileEntity {
             MinecraftServer minecraftServer = MinecraftServer.getServer();
             WorldServer worldServer = minecraftServer.worldServerForDimension(this.parentTeleportPoint.DIMENSION_ID);
             worldServer.theChunkProviderServer.loadChunk(this.parentTeleportPoint.POS.getX() >> 4, this.parentTeleportPoint.POS.getZ() >> 4);
-            TileEntity tileEntity = worldServer.getBlockTileEntity(this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
+            TileEntity tileEntity = BlockHelper.getBlockTileEntity(worldServer, this.parentTeleportPoint.POS);
             if (tileEntity instanceof TileEntityRelocatorPortal)
                 ((TileEntityRelocatorPortal)tileEntity).addEntityToList(paramEntity);
             double d = this.parentTeleportPoint.YAW;
@@ -151,13 +151,13 @@ public class TileEntityRelocatorPortal extends TileEntity {
             MinecraftServer minecraftServer = MinecraftServer.getServer();
             WorldServer worldServer = minecraftServer.worldServerForDimension(this.parentTeleportPoint.DIMENSION_ID);
             worldServer.theChunkProviderServer.loadChunk(this.parentTeleportPoint.POS.getX() >> 4, this.parentTeleportPoint.POS.getZ() >> 4);
-            Block block = BlockHelper.getBlock(worldServer, this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
+            Block block = BlockHelper.getBlock(worldServer, this.parentTeleportPoint.POS);
             if (block == null)
                 return;
             if (block instanceof BlockRelocatorPortal) {
-                worldServer.setBlockToAir(this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
-                worldServer.markBlockForRenderUpdate(this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
-                worldServer.removeBlockTileEntity(this.parentTeleportPoint.POS.getX(), this.parentTeleportPoint.POS.getY(), this.parentTeleportPoint.POS.getZ());
+                BlockHelper.setBlockToAir(worldServer, this.parentTeleportPoint.POS);
+                BlockHelper.markBlockForRenderUpdate(worldServer, this.parentTeleportPoint.POS);
+                BlockHelper.removeBlockTileEntity(worldServer, this.parentTeleportPoint.POS);
             }
         }
         this.parentTeleportPoint = paramTeleportPoint;

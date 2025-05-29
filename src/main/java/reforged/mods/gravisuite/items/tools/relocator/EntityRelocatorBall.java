@@ -165,10 +165,10 @@ public class EntityRelocatorBall extends EntityThrowable {
                 worldServer.theChunkProviderServer.loadChunk(this.targetTpPoint.POS.getX() >> 4, this.targetTpPoint.POS.getZ() >> 4);
                 Block block = BlockHelper.getBlock(worldServer, this.targetTpPoint.POS);
                 if (!(block instanceof BlockRelocatorPortal)) {
-                    worldServer.setBlock(this.targetTpPoint.POS.getX(), this.targetTpPoint.POS.getY(), this.targetTpPoint.POS.getZ(), GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID);
-                    worldServer.markBlockForUpdate(this.targetTpPoint.POS.getX(), this.targetTpPoint.POS.getY(), this.targetTpPoint.POS.getZ());
+                    BlockHelper.setBlock(worldServer, this.targetTpPoint.POS, GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID);
+                    BlockHelper.markBlockForUpdate(worldServer, this.targetTpPoint.POS);
                 }
-                TileEntity tileEntity1 = worldServer.getBlockTileEntity(this.targetTpPoint.POS.getX(), this.targetTpPoint.POS.getY(), this.targetTpPoint.POS.getZ());
+                TileEntity tileEntity1 = BlockHelper.getBlockTileEntity(worldServer, this.targetTpPoint.POS);
                 if (tileEntity1 instanceof TileEntityRelocatorPortal) {
                     TeleportPoint teleportPoint = new TeleportPoint();
                     teleportPoint.DIMENSION_ID = this.worldObj.provider.dimensionId;
