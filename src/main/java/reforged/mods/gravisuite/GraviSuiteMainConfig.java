@@ -8,6 +8,8 @@ public class GraviSuiteMainConfig {
 
     public static Configuration MAIN_CONFIG;
 
+    public static int RELOCATOR_PORTAL_BLOCK_ID = 3219;
+
     public static int COMPONENT_ID = 30219;
     public static int ADVANCED_LAPPACK_ID = 30226;
     public static int ULTIMATE_LAPPACK_ID = 30227;
@@ -40,6 +42,9 @@ public class GraviSuiteMainConfig {
     public static int GREEN_SAPPHIRE_EXCAVATOR_ID = 30252;
     public static int BRONZE_EXCAVATOR_ID = 30253;
 
+    public static int RELOCATOR_ID = 30254;
+    public static int RELOCATOR_PORTAL_ID = 30255;
+
     public static String[] LANGUAGES;
     public static String[] LOGS;
     public static String[] LEAVES;
@@ -47,6 +52,12 @@ public class GraviSuiteMainConfig {
     public static int MAGNET_RANGE = 8;
     public static int MAGNET_MAX_CAPACITY = 200;
     public static double DURABILITY_FACTOR = 1.0;
+
+    public static int ENERGY_STANDARD_TP = 1000000;
+    public static int ENERGY_CROSS_TP = 1500000;
+    public static int ENERGY_PORTAL = 2500000;
+    public static int ENERGY_SHOOT = 2000000;
+
     public static boolean LOG_WRENCH = false;
     public static boolean ENABLE_HAMMERS = true;
     public static boolean ENABLE_EXCAVATORS = true;
@@ -54,6 +65,9 @@ public class GraviSuiteMainConfig {
     public static boolean USE_FIXED_VALUES = true;
     public static boolean CHAINSAW_TREE_CAPITATOR = false;
     public static boolean INSPECT_MODE = false;
+
+    public static boolean enableTranslocator = true;
+    public static boolean enablePortal = true;
 
     public static int HUD_POSITION = 1;
 
@@ -72,6 +86,8 @@ public class GraviSuiteMainConfig {
 
         MAGNET_RANGE = ConfigHelper.getInt(MAIN_CONFIG, Refs.GENERAL, "magnet_range", 1, 16, MAGNET_RANGE, "Magnet Range.");
         MAGNET_MAX_CAPACITY = ConfigHelper.getInt(MAIN_CONFIG, Refs.GENERAL, "magnet_max_capacity", 1, Integer.MAX_VALUE, MAGNET_MAX_CAPACITY, "Magnet Attraction Capacity.");
+        enableTranslocator = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "relocator_translocator", enableTranslocator, "Enable Relocator's Translocator Mode");
+        enablePortal = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.GENERAL, "relocator_portal", enablePortal, "Enable Relocator's Portal Mode");
 
         HUD_POSITION = ConfigHelper.getInt(MAIN_CONFIG, Refs.HUD, "hud_position", 1, 4, HUD_POSITION, "GraviSuite Status HUD Position. 1 - Top Left, 2 - Top Right, 3 - Bottom Left, 4 - Bottom Right.");
         ENABLE_HUD = ConfigHelper.getBoolean(MAIN_CONFIG, Refs.HUD, "enable_hud", ENABLE_HUD, "Enable GraviSuite Status HUD.");
@@ -110,6 +126,10 @@ public class GraviSuiteMainConfig {
         GRAVI_TOOL_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "gravitool_id", GRAVI_TOOL_ID);
         VAJRA_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "vajra", VAJRA_ID);
         MAGNET_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "magnet", MAGNET_ID);
+
+        RELOCATOR_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "relocator_id", RELOCATOR_ID);
+        RELOCATOR_PORTAL_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "relocator_portal_id", RELOCATOR_PORTAL_ID);
+        RELOCATOR_PORTAL_BLOCK_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "relocator_portal_block_id", RELOCATOR_PORTAL_BLOCK_ID);
 
         WOOD_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "wooden_hammer", WOOD_HAMMER_ID);
         STONE_HAMMER_ID = ConfigHelper.getId(MAIN_CONFIG, Refs.IDS, "stone_hammer", STONE_HAMMER_ID);

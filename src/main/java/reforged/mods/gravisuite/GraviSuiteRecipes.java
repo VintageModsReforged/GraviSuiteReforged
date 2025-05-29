@@ -246,6 +246,12 @@ public class GraviSuiteRecipes {
                         'S', Item.stick);
             }
         }
+
+        Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.RELOCATOR),
+                "CEC", "EPE", "CEC",
+                'C', GraviSuiteData.COOLING_CORE,
+                'E', Item.enderPearl,
+                'P', Items.getItem("teleporter"));
     }
 
     public static ItemStack count(Item item, int count) {

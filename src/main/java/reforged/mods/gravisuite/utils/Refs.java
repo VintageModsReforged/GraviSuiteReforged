@@ -61,6 +61,8 @@ public class Refs {
     public static final String ENCH_MODE = "message.ench.mode";
     public static final String BOOST_MODE = "message.text.jetpack.boost.stat";
 
+    public static final String to_custom_1 = "message.info.press.to1.custom";
+    public static final String to_custom_2 = "message.info.press.to2.custom";
     public static final String to_change_1 = "message.info.press.to1";
     public static final String to_change_2 = "message.info.press.to2";
     public static final String to_enable_1 = "message.info.press.to.enable1";

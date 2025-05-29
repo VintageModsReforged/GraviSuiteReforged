@@ -1,11 +1,15 @@
 package reforged.mods.gravisuite;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
+import reforged.mods.gravisuite.blocks.BlockRelocatorPortal;
 import reforged.mods.gravisuite.items.ItemComponent;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.ItemJetpack;
@@ -13,6 +17,10 @@ import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.tools.*;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseExcavator;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseHammer;
+import reforged.mods.gravisuite.items.tools.relocator.EntityRelocatorBall;
+import reforged.mods.gravisuite.items.tools.relocator.ItemRelocator;
+import reforged.mods.gravisuite.items.tools.relocator.ItemRelocatorPortal;
+import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
 
 public class GraviSuiteData {
 
@@ -28,6 +36,8 @@ public class GraviSuiteData {
     public static Item WOOD_HAMMER, STONE_HAMMER, IRON_HAMMER, DIAMOND_HAMMER, QUARTZ_HAMMER, RUBY_HAMMER, SAPPHIRE_HAMMER, GREEN_SAPPHIRE_HAMMER, BRONZE_HAMMER;
     public static Item WOOD_EXCAVATOR, STONE_EXCAVATOR, IRON_EXCAVATOR, DIAMOND_EXCAVATOR, QUARTZ_EXCAVATOR, RUBY_EXCAVATOR, SAPPHIRE_EXCAVATOR, GREEN_SAPPHIRE_EXCAVATOR, BRONZE_EXCAVATOR;
 
+    public static Item RELOCATOR;
+    public static Block RELOCATOR_PORTAL;
 
     public static void init() {
         // Components
@@ -84,5 +94,16 @@ public class GraviSuiteData {
         ADVANCED_JETPACK = new ItemJetpack.ItemAdvancedElectricJetpack();
         ADVANCED_NANO = new ItemJetpack.ItemAdvancedNano();
         ADVANCED_QUANT = new ItemAdvancedQuant();
+
+        RELOCATOR = new ItemRelocator();
+        RELOCATOR_PORTAL = new BlockRelocatorPortal(GraviSuiteMainConfig.RELOCATOR_PORTAL_BLOCK_ID);
+        GameRegistry.registerTileEntity(TileEntityRelocatorPortal.class, "Relocator Portal");
+        GameRegistry.registerBlock(RELOCATOR_PORTAL, ItemRelocatorPortal.class, "BlockRelocatorPortal");
+        registerEntity(EntityRelocatorBall.class, "RelocatorBall");
+    }
+
+    public static void registerEntity(Class paramClass, String paramString) {
+        int i = EntityRegistry.findGlobalUniqueEntityId();
+        EntityRegistry.registerModEntity(paramClass, paramString, i, GraviSuite.instance, 64, 1, true);
     }
 }
