@@ -116,7 +116,7 @@ message.tool.relocator.teleport.to=%s tried to teleport you!
 tooltip.relocator.personal.line1=Teleport yourself to saved points
 tooltip.relocator.personal.line2=Add current location
 tooltip.relocator.personal.line3=Open point selection menu
-tooltip.relocator.personal.line4=Cost:\n- %s EU (same dimension)\n- %s EU (cross-dimension)
+tooltip.relocator.personal.line4=Cost:#- %s EU (same dimension)#- %s EU (cross-dimension)
 
 tooltip.relocator.translocator.line1=Shoot teleport orb to move entities
 tooltip.relocator.translocator.line2=Set default location
