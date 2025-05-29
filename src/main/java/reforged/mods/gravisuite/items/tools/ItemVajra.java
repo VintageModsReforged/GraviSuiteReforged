@@ -25,6 +25,7 @@ import net.minecraftforge.common.MinecraftForge;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -36,7 +37,7 @@ import java.util.Set;
 public class ItemVajra extends ItemToolElectric {
 
     public ItemVajra() {
-        super(GraviSuiteConfig.VAJRA_ID, "vajra", 3, 5000, 1000000, EnumToolMaterial.EMERALD);
+        super(GraviSuiteConfig.VAJRA_ID, "vajra", EnergyValues.VAJRA.tier, EnergyValues.VAJRA.transfer, EnergyValues.VAJRA.maxCapacity, EnumToolMaterial.EMERALD);
         MinecraftForge.setToolClass(this, "axe", 4);
         MinecraftForge.setToolClass(this, "pickaxe", 4);
     }
@@ -252,9 +253,9 @@ public class ItemVajra extends ItemToolElectric {
     }
 
     public enum VajraProps {
-        NORMAL(128.0F, 3200, Refs.eff_tool_mode_normal),
-        LOW_POWER(24.0F, 1600, Refs.eff_tool_mode_low),
-        FINE(10.0F, 800, Refs.eff_tool_mode_fine);
+        NORMAL(20000.0F, 3200, Refs.eff_tool_mode_normal),
+        LOW_POWER(1000.0F, 1600, Refs.eff_tool_mode_low),
+        FINE(100.0F, 800, Refs.eff_tool_mode_fine);
         public static final VajraProps[] VALUES = values();
         public final String name;
 

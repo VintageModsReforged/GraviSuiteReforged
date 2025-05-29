@@ -30,6 +30,7 @@ import net.minecraftforge.common.ForgeDirection;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 import universalelectricity.prefab.implement.IToolConfigurator;
@@ -48,7 +49,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     public String TOOL_WRENCH = "Tools/wrench.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", 2, 5000, 100000, EnumToolMaterial.IRON);
+        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", EnergyValues.GRAVITOOL.tier, EnergyValues.GRAVITOOL.transfer, EnergyValues.GRAVITOOL.maxCapacity, EnumToolMaterial.IRON);
     }
 
     @SideOnly(Side.CLIENT)

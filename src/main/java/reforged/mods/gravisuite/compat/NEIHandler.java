@@ -27,7 +27,8 @@ public class NEIHandler {
                     GraviSuiteData.ultimate_lappack.itemID,
                     GraviSuiteData.advanced_jetpack.itemID,
                     GraviSuiteData.advanced_nano.itemID,
-                    GraviSuiteData.advanced_quant.itemID
+                    GraviSuiteData.advanced_quant.itemID,
+                    GraviSuiteData.relocator.itemID
             );
         }
     }

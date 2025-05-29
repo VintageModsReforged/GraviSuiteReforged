@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -258,7 +259,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
     public static class ItemAdvancedDiamondDrill extends ItemAdvancedDrill {
 
         public ItemAdvancedDiamondDrill() {
-            super(GraviSuiteConfig.ADVANCED_DIAMOND_DRILL, "advanced_diamond_drill", 2, 500, 45000);
+            super(GraviSuiteConfig.ADVANCED_DIAMOND_DRILL, "advanced_diamond_drill", EnergyValues.DIAMOND_DRILL.tier, EnergyValues.DIAMOND_DRILL.transfer, EnergyValues.DIAMOND_DRILL.maxCapacity);
         }
     }
 
@@ -268,7 +269,7 @@ public class ItemAdvancedDrill extends ItemToolElectric {
         private final float efficiency;
 
         public ItemAdvancedIridiumDrill() {
-            super(GraviSuiteConfig.ADVANCED_IRIDIUM_DRILL, "advanced_iridium_drill", 3, 5000, 100000);
+            super(GraviSuiteConfig.ADVANCED_IRIDIUM_DRILL, "advanced_iridium_drill", EnergyValues.IRIDIUM_DRILL.tier, EnergyValues.IRIDIUM_DRILL.transfer, EnergyValues.IRIDIUM_DRILL.maxCapacity);
             this.energy_per_use = 1000;
             this.efficiency = 24.0F;
         }
