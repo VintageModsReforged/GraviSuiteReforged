@@ -35,26 +35,28 @@ public class NetworkHandler implements IPacketHandler {
                     case 2:
                         ServerArmorHandler.firstLoad = true;
                     case 3:
-                        ItemStack handStack = player.getCurrentEquippedItem();
-                        if (handStack.getItem() instanceof ItemRelocator) {
-                            ItemRelocator relocator = (ItemRelocator) handStack.getItem();
-                            stream = new DataInputStream(buffer);
-                            String name = stream.readUTF();
-                            byte actionID = stream.readByte();
-                            if (actionID == 1) {
-                                TeleportPoint point = new TeleportPoint();
-                                point.DIMENSION_ID = player.worldObj.provider.dimensionId;
-                                point.NAME = name;
-                                point.POS = new BlockPos(player.posX, player.posY, player.posZ);
-                                point.YAW = player.rotationYaw;
-                                point.PITCH = player.cameraPitch;
-                                relocator.addNewPoint(player, player.getCurrentEquippedItem(), point);
-                            } else if (actionID == 0) {
-                                relocator.removePoint(player.getCurrentEquippedItem(), name);
-                            } else if (actionID == 2) {
-                                relocator.telepoerPlayer(player, player.getCurrentEquippedItem(), name);
-                            } else if (actionID == 3) {
-                                relocator.setDefaultPoint(player, player.getCurrentEquippedItem(), name);
+                        if (player.getCurrentEquippedItem() != null) {
+                            ItemStack handStack = player.getCurrentEquippedItem();
+                            if (handStack.getItem() instanceof ItemRelocator) {
+                                ItemRelocator relocator = (ItemRelocator) handStack.getItem();
+                                stream = new DataInputStream(buffer);
+                                String name = stream.readUTF();
+                                byte actionID = stream.readByte();
+                                if (actionID == 1) {
+                                    TeleportPoint point = new TeleportPoint();
+                                    point.DIMENSION_ID = player.worldObj.provider.dimensionId;
+                                    point.NAME = name;
+                                    point.POS = new BlockPos(player.posX, player.posY, player.posZ);
+                                    point.YAW = player.rotationYaw;
+                                    point.PITCH = player.cameraPitch;
+                                    relocator.addNewPoint(player, player.getCurrentEquippedItem(), point);
+                                } else if (actionID == 0) {
+                                    relocator.removePoint(player.getCurrentEquippedItem(), name);
+                                } else if (actionID == 2) {
+                                    relocator.telepoerPlayer(player, player.getCurrentEquippedItem(), name);
+                                } else if (actionID == 3) {
+                                    relocator.setDefaultPoint(player, player.getCurrentEquippedItem(), name);
+                                }
                             }
                         }
                 }
