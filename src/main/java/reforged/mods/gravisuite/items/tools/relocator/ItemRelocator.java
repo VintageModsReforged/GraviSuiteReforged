@@ -56,6 +56,7 @@ public class ItemRelocator extends ItemBaseElectricItem {
 
     @SuppressWarnings({"unchecked"})
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         super.addInformation(stack, player, tooltip, isDebugMode);
         ToolMode mode = readToolMode(stack);

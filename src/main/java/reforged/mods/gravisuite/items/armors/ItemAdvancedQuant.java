@@ -59,6 +59,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
 
     @SuppressWarnings({"unchecked"})
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean par4) {
         super.addInformation(stack, player, tooltip, par4);
         boolean isGraviEngineOn = readFlyStatus(stack);
