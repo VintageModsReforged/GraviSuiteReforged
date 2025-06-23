@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
-import reforged.mods.gravisuite.utils.Helpers;
 
 public class ItemJetpack {
 
@@ -54,16 +53,20 @@ public class ItemJetpack {
 
         @Override
         public ArmorProperties getProperties(EntityLiving entityLiving, ItemStack armor, DamageSource damageSource, double damage, int slot) {
-            int damageLimit = Math.min(Integer.MAX_VALUE, 25 * Helpers.getCharge(armor) / ENERGY_PER_DAMAGE);
-            double absorptionRatio = 0.4D * 0.9D;
-            return new ArmorProperties(8, absorptionRatio, damageLimit);
+            if (damageSource.isUnblockable()) {
+                return new ArmorProperties(0, 0, 0);
+            } else {
+                double absorptionRatio = 0.4D * 0.9D;
+                int energyPerDamage = ENERGY_PER_DAMAGE;
+                int damageLimit = energyPerDamage > 0 ? 25 * ElectricItem.discharge(armor, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true) / energyPerDamage : 0;
+                return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
+            }
         }
 
         @Override
-        public int getArmorDisplay(EntityPlayer entityPlayer, ItemStack itemStack, int i) {
-            return 8;
+        public int getArmorDisplay(EntityPlayer entityPlayer, ItemStack stack, int slot) {
+            return ElectricItem.discharge(stack, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true) >= this.ENERGY_PER_DAMAGE ? (int) Math.round((double) 20.0F * 1.1D * 0.4D) : 0;
         }
-
         @Override
         public void damageArmor(EntityLiving entityLiving, ItemStack stack, DamageSource damageSource, int damage, int slot) {
             ElectricItem.discharge(stack, damage * ENERGY_PER_DAMAGE, Integer.MAX_VALUE, true, false);

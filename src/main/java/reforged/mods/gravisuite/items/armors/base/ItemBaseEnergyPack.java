@@ -6,6 +6,7 @@ import ic2.api.IElectricItem;
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,19 @@ public class ItemBaseEnergyPack extends ItemArmor implements IElectricItem, IHas
 
     public ItemBaseEnergyPack(int id, int meta, String name, int tier, int transfer, int capacity) {
         super(id, GraviSuiteData.GRAVI_MATERIAL, GraviSuite.PROXY.addArmor("gravisuite/" + name), 1);
+        this.setItemName(name);
+        this.setCreativeTab(GraviSuite.TAB);
+        this.setMaxDamage(27);
+        this.iconIndex = Refs.ARMOR_PACK_ID + meta;
+        this.NAME = name;
+        this.TIER = tier;
+        this.TRANSFER = transfer;
+        this.CAPACITY = capacity;
+        this.META = meta;
+    }
+
+    public ItemBaseEnergyPack(int id, EnumArmorMaterial armorMaterial, int meta, String name, int tier, int transfer, int capacity) {
+        super(id, armorMaterial, GraviSuite.PROXY.addArmor("gravisuite/" + name), 1);
         this.setItemName(name);
         this.setCreativeTab(GraviSuite.TAB);
         this.setMaxDamage(27);

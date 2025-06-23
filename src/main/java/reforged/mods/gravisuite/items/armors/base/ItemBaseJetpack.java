@@ -9,6 +9,7 @@ import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -33,7 +34,7 @@ public class ItemBaseJetpack extends ItemBaseEnergyPack implements IAudioProvide
     public static final String NBT_TOGGLE_TIMER = "toggle_timer";
 
     public ItemBaseJetpack(int id, int meta, String name) {
-        super(id, meta, name, EnergyValues.ADV_JETPACK.tier, EnergyValues.ADV_JETPACK.transfer, EnergyValues.ADV_JETPACK.maxCapacity);
+        super(id, EnumArmorMaterial.DIAMOND, meta, name, EnergyValues.ADV_JETPACK.tier, EnergyValues.ADV_JETPACK.transfer, EnergyValues.ADV_JETPACK.maxCapacity);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }

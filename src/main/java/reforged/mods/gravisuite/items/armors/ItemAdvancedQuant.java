@@ -10,6 +10,7 @@ import ic2.core.util.StackUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +43,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, 4, "advanced_quant", EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
+        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, EnumArmorMaterial.DIAMOND, 4, "advanced_quant", EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPEED = 0.5F;
@@ -220,18 +221,19 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
 
     @Override
     public ArmorProperties getProperties(EntityLiving entityLiving, ItemStack armor, DamageSource damageSource, double damage, int slot) {
-        int energyPerDamage = ENERGY_PER_DAMAGE;
-        int damageLimit = Integer.MAX_VALUE;
-        if (energyPerDamage > 0) {
-            damageLimit = Math.min(damageLimit, 25 * Helpers.getCharge(armor) / energyPerDamage);
+        if (damageSource.isUnblockable()) {
+            return new ArmorProperties(0, 0, 0);
+        } else {
+            double absorptionRatio = 1.1D * 0.4D;
+            int energyPerDamage = ENERGY_PER_DAMAGE;
+            int damageLimit = energyPerDamage > 0 ? 25 * ElectricItem.discharge(armor, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true) / energyPerDamage : 0;
+            return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
         }
-        double absorptionRatio = 1.1D * 0.4D;
-        return new ArmorProperties(8, absorptionRatio, damageLimit);
     }
 
     @Override
-    public int getArmorDisplay(EntityPlayer entityPlayer, ItemStack itemStack, int i) {
-        return 9;
+    public int getArmorDisplay(EntityPlayer entityPlayer, ItemStack stack, int slot) {
+        return ElectricItem.discharge(stack, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true) >= this.ENERGY_PER_DAMAGE ? (int) Math.round((double) 20.0F * 1.1D * 0.4D) : 0;
     }
 
     @Override
