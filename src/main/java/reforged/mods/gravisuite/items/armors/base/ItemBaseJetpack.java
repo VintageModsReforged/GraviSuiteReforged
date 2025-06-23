@@ -33,8 +33,8 @@ public class ItemBaseJetpack extends ItemBaseEnergyPack implements IAudioProvide
     public static final String NBT_HOVER_ACTIVE = "hover_active";
     public static final String NBT_TOGGLE_TIMER = "toggle_timer";
 
-    public ItemBaseJetpack(int id, int meta, String name) {
-        super(id, EnumArmorMaterial.DIAMOND, meta, name, EnergyValues.ADV_JETPACK.tier, EnergyValues.ADV_JETPACK.transfer, EnergyValues.ADV_JETPACK.maxCapacity);
+    public ItemBaseJetpack(int id, EnumArmorMaterial armorMaterial, int meta, String name) {
+        super(id, armorMaterial, meta, name, EnergyValues.ADV_JETPACK.tier, EnergyValues.ADV_JETPACK.transfer, EnergyValues.ADV_JETPACK.maxCapacity);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }

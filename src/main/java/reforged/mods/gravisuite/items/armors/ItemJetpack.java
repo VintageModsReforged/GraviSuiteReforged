@@ -4,10 +4,12 @@ import ic2.api.Items;
 import ic2.core.item.ElectricItem;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
+import reforged.mods.gravisuite.GraviSuiteData;
 import reforged.mods.gravisuite.GraviSuiteMainConfig;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 
@@ -16,7 +18,7 @@ public class ItemJetpack {
     public static class ItemAdvancedElectricJetpack extends ItemBaseJetpack {
 
         public ItemAdvancedElectricJetpack() {
-            super(GraviSuiteMainConfig.ADVANCED_JETPACK_ID, 2, "advanced_jetpack");
+            super(GraviSuiteMainConfig.ADVANCED_JETPACK_ID, GraviSuiteData.GRAVI_MATERIAL, 2, "advanced_jetpack");
         }
     }
 
@@ -28,7 +30,7 @@ public class ItemJetpack {
         public int ENERGY_PER_DAMAGE = 800;
 
         public ItemAdvancedNano() {
-            super(GraviSuiteMainConfig.ADVANCED_NANO_ID, 3, "advanced_nano");
+            super(GraviSuiteMainConfig.ADVANCED_NANO_ID, EnumArmorMaterial.DIAMOND, 3, "advanced_nano");
         }
 
         @Override
