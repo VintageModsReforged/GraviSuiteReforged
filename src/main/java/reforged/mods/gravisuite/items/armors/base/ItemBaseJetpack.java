@@ -8,6 +8,7 @@ import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -24,7 +25,6 @@ import java.util.List;
 public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider {
 
     public static byte TOGGLE_TIMER;
-    public static AudioSource AUDIO_SOURCE;
     public double HOVER_FALL_SPEED;
 
     public static final String NBT_ACTIVE = "fly_active";
@@ -33,6 +33,12 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
 
     public ItemBaseJetpack(int id, String name) {
         super(id, name, EnergyValues.ADV_JETPACK.tier, EnergyValues.ADV_JETPACK.transfer, EnergyValues.ADV_JETPACK.maxCapacity);
+        this.HOVER_FALL_SPEED = 0.03D;
+        TOGGLE_TIMER = 5;
+    }
+
+    public ItemBaseJetpack(int id, String name, EnumArmorMaterial armorMaterial) {
+        super(id, name, armorMaterial, EnergyValues.ADV_JETPACK.tier, EnergyValues.ADV_JETPACK.transfer, EnergyValues.ADV_JETPACK.maxCapacity);
         this.HOVER_FALL_SPEED = 0.03D;
         TOGGLE_TIMER = 5;
     }
