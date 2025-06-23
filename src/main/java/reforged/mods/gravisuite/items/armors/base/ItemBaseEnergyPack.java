@@ -24,19 +24,6 @@ public class ItemBaseEnergyPack extends ItemArmor implements IElectricItem, IHas
     public int TIER, TRANSFER, CAPACITY, META;
     public String NAME;
 
-    public ItemBaseEnergyPack(int id, int meta, String name, int tier, int transfer, int capacity) {
-        super(id, GraviSuiteData.GRAVI_MATERIAL, GraviSuite.PROXY.addArmor("gravisuite/" + name), 1);
-        this.setItemName(name);
-        this.setCreativeTab(GraviSuite.TAB);
-        this.setMaxDamage(27);
-        this.iconIndex = Refs.ARMOR_PACK_ID + meta;
-        this.NAME = name;
-        this.TIER = tier;
-        this.TRANSFER = transfer;
-        this.CAPACITY = capacity;
-        this.META = meta;
-    }
-
     public ItemBaseEnergyPack(int id, EnumArmorMaterial armorMaterial, int meta, String name, int tier, int transfer, int capacity) {
         super(id, armorMaterial, GraviSuite.PROXY.addArmor("gravisuite/" + name), 1);
         this.setItemName(name);
@@ -48,6 +35,10 @@ public class ItemBaseEnergyPack extends ItemArmor implements IElectricItem, IHas
         this.TRANSFER = transfer;
         this.CAPACITY = capacity;
         this.META = meta;
+    }
+
+    public ItemBaseEnergyPack(int id, int meta, String name, int tier, int transfer, int capacity) {
+        this(id, GraviSuiteData.GRAVI_MATERIAL, meta, name, tier, transfer, capacity);
     }
 
     @SideOnly(Side.CLIENT)
