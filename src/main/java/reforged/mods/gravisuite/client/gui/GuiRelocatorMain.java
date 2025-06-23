@@ -4,8 +4,6 @@ import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -13,6 +11,7 @@ import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.items.tools.relocator.ItemRelocator;
 import reforged.mods.gravisuite.items.tools.relocator.TeleportPoint;
 import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.RelocatorContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,12 +67,7 @@ public class GuiRelocatorMain extends GuiContainer {
     public static final int GUI_POINT_DISPLAY_DEFSELECT = 1;
 
     public GuiRelocatorMain(int type) {
-        super(new Container() {
-            @Override
-            public boolean canInteractWith(EntityPlayer entityPlayer) {
-                return true;
-            }
-        });
+        super(new RelocatorContainer());
 
         this.xSize = 162;
         this.ySize = 129;
