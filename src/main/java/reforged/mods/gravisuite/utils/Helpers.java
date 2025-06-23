@@ -3,7 +3,6 @@ package reforged.mods.gravisuite.utils;
 import ic2.api.IElectricItem;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
-import ic2.core.util.StackUtil;
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

@@ -3,7 +3,6 @@ package reforged.mods.gravisuite.client.gui;
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.common.DimensionManager;
