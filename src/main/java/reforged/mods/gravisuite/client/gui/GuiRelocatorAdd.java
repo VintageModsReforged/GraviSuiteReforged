@@ -1,5 +1,6 @@
 package reforged.mods.gravisuite.client.gui;
 
+import mods.vintage.core.platform.lang.FormattedTranslator;
 import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -68,7 +69,7 @@ public class GuiRelocatorAdd extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        String addText = Translator.format("message.text.relocator.add");
+        String addText = FormattedTranslator.WHITE.format("message.text.relocator.add");
         this.fontRenderer.drawString(addText, 13, 5, 16777215);
     }
 

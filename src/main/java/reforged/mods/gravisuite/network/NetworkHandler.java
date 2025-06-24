@@ -53,7 +53,7 @@ public class NetworkHandler implements IPacketHandler {
                                 } else if (actionID == 0) {
                                     relocator.removePoint(player.getCurrentEquippedItem(), name);
                                 } else if (actionID == 2) {
-                                    relocator.telepoerPlayer(player, player.getCurrentEquippedItem(), name);
+                                    relocator.teleportPlayer(player, player.getCurrentEquippedItem(), name);
                                 } else if (actionID == 3) {
                                     relocator.setDefaultPoint(player, player.getCurrentEquippedItem(), name);
                                 }
