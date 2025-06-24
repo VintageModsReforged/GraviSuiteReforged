@@ -152,7 +152,7 @@ public class ItemRelocator extends ItemBaseElectricItem {
         return stack;
     }
 
-    public void telepoerPlayer(EntityPlayer player, ItemStack stack, String name) {
+    public void teleportPlayer(EntityPlayer player, ItemStack stack, String name) {
         if (stack != null && player != null) {
             TeleportPoint point = getTeleportPointByName(stack, name);
             if (point != null) {
