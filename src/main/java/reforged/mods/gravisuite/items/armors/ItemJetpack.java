@@ -1,6 +1,7 @@
 package reforged.mods.gravisuite.items.armors;
 
 import ic2.api.Items;
+import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,19 +37,15 @@ public class ItemJetpack {
         @Override
         public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack stack) {
             super.onArmorTickUpdate(world, player, stack);
-            if (TICKER++ % TICK_RATE == 0) {
-                if (player.isBurning()) {
-                    if (ElectricItem.canUse(stack, ENERGY_PER_EXTINGUISH)) {
-                        for (ItemStack item : player.inventory.mainInventory) {
-                            if (item != null && item.getItem() == Items.getItem("waterCell").getItem()) {
-                                if (item.stackSize > 0) {
-                                    item.stackSize--;
-                                }
-                                ElectricItem.discharge(stack, ENERGY_PER_EXTINGUISH, Integer.MAX_VALUE, true, false);
-                                player.extinguish();
-                            }
-                        }
+            if (IC2.platform.isRendering() || !player.isBurning() || TICKER++ % TICK_RATE != 0) return;
+            if (ElectricItem.canUse(stack, ENERGY_PER_EXTINGUISH)) return;
+            for (ItemStack item : player.inventory.mainInventory) {
+                if (item != null && item.getItem() == Items.getItem("waterCell").getItem()) {
+                    if (item.stackSize > 0) {
+                        item.stackSize--;
                     }
+                    ElectricItem.discharge(stack, ENERGY_PER_EXTINGUISH, Integer.MAX_VALUE, true, false);
+                    player.extinguish();
                 }
             }
         }
