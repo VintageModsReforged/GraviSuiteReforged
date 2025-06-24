@@ -4,8 +4,6 @@ import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.input.Keyboard;
@@ -15,6 +13,7 @@ import reforged.mods.gravisuite.items.tools.relocator.ItemRelocator;
 import reforged.mods.gravisuite.items.tools.relocator.TeleportPoint;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.RelocatorContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,12 +69,7 @@ public class GuiRelocatorMain extends GuiContainer {
     public static final int GUI_POINT_DISPLAY_DEFSELECT = 1;
 
     public GuiRelocatorMain(int type) {
-        super(new Container() {
-            @Override
-            public boolean canInteractWith(EntityPlayer entityPlayer) {
-                return true;
-            }
-        });
+        super(new RelocatorContainer());
 
         this.xSize = 162;
         this.ySize = 129;
@@ -178,10 +172,10 @@ public class GuiRelocatorMain extends GuiContainer {
         this.mc.renderEngine.bindTexture(TEXTURE);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        GL11.glEnable(3042);
-        GL11.glBlendFunc(770, 771);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
-        GL11.glDisable(3042);
+        GL11.glDisable(GL11.GL_BLEND);
         List<TeleportPoint> points = getPoints();
         if (!points.isEmpty()) {
             for (byte b = 0; b < points.size(); b++) {

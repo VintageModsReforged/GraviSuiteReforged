@@ -1,16 +1,14 @@
 package reforged.mods.gravisuite.client.gui;
 
 import mods.vintage.core.platform.lang.FormattedTranslator;
-import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.RelocatorContainer;
 
 public class GuiRelocatorAdd extends GuiContainer {
 
@@ -23,12 +21,7 @@ public class GuiRelocatorAdd extends GuiContainer {
     private int MOUSE_Y;
 
     public GuiRelocatorAdd() {
-        super(new Container() {
-            @Override
-            public boolean canInteractWith(EntityPlayer player) {
-                return true;
-            }
-        });
+        super(new RelocatorContainer());
 
         this.xSize = 135;
         this.ySize = 59;
