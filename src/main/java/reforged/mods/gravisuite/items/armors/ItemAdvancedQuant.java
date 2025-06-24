@@ -8,6 +8,7 @@ import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,7 +37,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
+        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", EnumArmorMaterial.DIAMOND, EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPEED = 0.5F;

@@ -9,12 +9,15 @@ import mods.vintage.core.platform.lang.FormattedTranslator;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
+import reforged.mods.gravisuite.GraviSuiteData;
 import reforged.mods.gravisuite.utils.Helpers;
 import reforged.mods.gravisuite.utils.Refs;
 
@@ -28,7 +31,11 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     public String name;
 
     public ItemArmorElectric(int id, String name, int tier, int transfer, int capacity) {
-        super(id, name);
+        this(id, name, GraviSuiteData.GRAVI_MATERIAL, tier, transfer, capacity);
+    }
+
+    public ItemArmorElectric(int id, String name, EnumArmorMaterial armorMaterial, int tier, int transfer, int capacity) {
+        super(id, name, armorMaterial);
         this.setMaxDamage(27);
         this.name = name;
         this.tier = tier;
@@ -73,15 +80,20 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     }
 
     @Override
-    public ArmorProperties getProperties(EntityLivingBase entityLiving, ItemStack armor, DamageSource damageSource, double damage, int slot) {
-        double absorption = this.base_absorption * this.damage_absorption;
-        int damageLimit = (int) (this.energy_per_damage > 0 ? 25.0D * ElectricItem.manager.getCharge(armor) / this.energy_per_damage : 0.0D);
-        return new ArmorProperties(this.damage_priority, absorption, damageLimit);
+    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+        if (source.isUnblockable()) {
+            return new ArmorProperties(0, 0.0F, 0);
+        } else {
+            double absorptionRatio = this.base_absorption * this.damage_absorption;
+            int energyPerDamage = this.energy_per_damage;
+            int damageLimit = energyPerDamage > 0 ? 25 * ElectricItem.manager.getCharge(armor) / energyPerDamage : 0;
+            return new ArmorProperties(0, absorptionRatio, damageLimit);
+        }
     }
 
     @Override
-    public int getArmorDisplay(EntityPlayer entityPlayer, ItemStack itemStack, int i) {
-        return (int) Math.round(20.0D * this.base_absorption * this.damage_absorption);
+    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+        return ElectricItem.manager.getCharge(armor) >= this.energy_per_damage ? (int) Math.round((double) 20.0F * this.base_absorption * this.damage_absorption) : 0;
     }
 
     @Override
