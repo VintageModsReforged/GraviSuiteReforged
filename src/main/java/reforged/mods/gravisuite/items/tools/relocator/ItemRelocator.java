@@ -117,19 +117,22 @@ public class ItemRelocator extends ItemBaseElectricItem {
                     energy = this.ENERGY_SHOOT;
                     actionType = 0;
                     if (!GraviSuiteMainConfig.enableTranslocator) {
-                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.translocator.disabled"));
+                        if (IC2.platform.isRendering())
+                            IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.translocator.disabled"));
                         return stack;
                     }
                 } else {
                     energy = this.ENERGY_PORTAL;
                     actionType = 1;
                     if (!GraviSuiteMainConfig.enablePortal) {
-                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.portal.disabled"));
+                        if (IC2.platform.isRendering())
+                            IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.portal.disabled"));
                         return stack;
                     }
                 }
                 if (!ElectricItem.canUse(stack, energy) && !player.capabilities.isCreativeMode) {
-                    IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.low_energy"));
+                    if (IC2.platform.isRendering())
+                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.low_energy"));
                 } else {
                     if (IC2.platform.isSimulating() && !player.capabilities.isCreativeMode) {
                         ElectricItem.use(stack, energy, player);
