@@ -115,19 +115,22 @@ public class ItemRelocator extends ItemToolElectric {
                     energy = this.ENERGY_SHOOT;
                     actionType = 0;
                     if (!GraviSuiteConfig.enableTranslocator) {
-                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.translocator.disabled"));
+                        if (IC2.platform.isRendering())
+                            IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.translocator.disabled"));
                         return stack;
                     }
                 } else {
                     energy = this.ENERGY_PORTAL;
                     actionType = 1;
                     if (!GraviSuiteConfig.enablePortal) {
-                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.portal.disabled"));
+                        if (IC2.platform.isRendering())
+                            IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.portal.disabled"));
                         return stack;
                     }
                 }
                 if (!ElectricItem.manager.canUse(stack, energy) && !player.capabilities.isCreativeMode) {
-                    IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.low_energy"));
+                    if (IC2.platform.isRendering())
+                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.low_energy"));
                 } else {
                     if (IC2.platform.isSimulating() && !player.capabilities.isCreativeMode) {
                         ElectricItem.manager.use(stack, energy, player);
@@ -147,7 +150,7 @@ public class ItemRelocator extends ItemToolElectric {
         return stack;
     }
 
-    public void telepoerPlayer(EntityPlayer player, ItemStack stack, String name) {
+    public void teleportPlayer(EntityPlayer player, ItemStack stack, String name) {
         if (stack != null && player != null) {
             TeleportPoint point = getTeleportPointByName(stack, name);
             if (point != null) {
