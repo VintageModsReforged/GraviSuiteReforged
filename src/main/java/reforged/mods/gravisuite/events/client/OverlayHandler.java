@@ -3,6 +3,7 @@ package reforged.mods.gravisuite.events.client;
 import cpw.mods.fml.common.TickType;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.helpers.Utils;
 import mods.vintage.core.platform.events.tick.TickEvents;
 import mods.vintage.core.platform.lang.FormattedTranslator;
 import mods.vintage.core.platform.lang.Translator;
@@ -49,7 +50,7 @@ public class OverlayHandler extends TickEvents.RenderTickEvent {
             EntityPlayer player = mc.thePlayer;
             ItemStack armor = player.getCurrentArmor(2);
 
-            if (armor != null && armor.getItem() instanceof IElectricItem) {
+            if (armor != null && armor.getItem() instanceof IElectricItem && !Utils.instanceOf(armor.getItem(), "net.machinemuse.powersuits.item.ItemPowerArmor")) {
                 NBTTagCompound tag = Helpers.getOrCreateTag(armor);
                 IElectricItem electricItem = (IElectricItem) armor.getItem();
                 int curCharge = Helpers.getCharge(armor);
