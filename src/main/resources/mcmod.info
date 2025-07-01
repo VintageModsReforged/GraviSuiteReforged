@@ -2,8 +2,8 @@
   {
     "modid": "gravisuite",
     "name": "GraviSuite - Addon",
-    "description": "Gravitation Suite give you ability to fly. This is addon for IndustrialCraft 2",
-    "version": "1.4.7-2.2.2.7",
-    "authors": ["SeNtiMeL", "CrossVas"]
+    "description": "A powerful IndustrialCraft 2 addon that gives you the ability to fly and introduces advanced tools to boost your mining and harvesting efficiency.",
+    "version": "${version}",
+    "authors": ["Original: SeNtiMeL", "Reforged: CrossVas"]
   }
 ]

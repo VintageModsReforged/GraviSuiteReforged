@@ -48,6 +48,13 @@ dependencies {
 	modImplementation files("libs/VintageCore-1.4.7-1.0.6-dev.jar")
 }
 
+processResources {
+	inputs.property 'version', version
+	filesMatching('mcmod.info') {
+		expand version: version
+	}
+}
+
 sourceSets {
 	main {
 		resources {

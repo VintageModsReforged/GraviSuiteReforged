@@ -4,6 +4,7 @@ import cpw.mods.fml.common.TickType;
 import mods.vintage.core.platform.events.tick.TickEvents;
 import net.minecraft.entity.player.EntityPlayer;
 import reforged.mods.gravisuite.audio.IAudioTicker;
+import reforged.mods.gravisuite.audio.IAudioTickerFactory;
 import reforged.mods.gravisuite.audio.tickers.ArmorAudioTicker;
 import reforged.mods.gravisuite.audio.tickers.ChainsawAudioTicker;
 import reforged.mods.gravisuite.utils.Refs;
@@ -19,21 +20,33 @@ public class AudioHandler extends TickEvents.PlayerTickEvent {
         super(Refs.ID);
     }
 
+    public void initTickers(final EntityPlayer player) {
+        String playerName = player.username;
+
+        if (!playerTickers.containsKey(playerName)) {
+            playerTickers.put(playerName, new ArrayList<IAudioTicker>());
+        }
+
+        List<IAudioTicker> tickers = playerTickers.get(playerName);
+
+        addTickerIfAbsent(tickers, ChainsawAudioTicker.class, new IAudioTickerFactory() {
+            public IAudioTicker create() {
+                return new ChainsawAudioTicker(player);
+            }
+        });
+        addTickerIfAbsent(tickers, ArmorAudioTicker.class, new IAudioTickerFactory() {
+            public IAudioTicker create() {
+                return new ArmorAudioTicker(player);
+            }
+        });
+    }
+
     @Override
     public void tickStart(EnumSet<TickType> enumSet, Object... objects) {
         if (shouldTick(enumSet)) {
             EntityPlayer player = (EntityPlayer) objects[0];
             if (player != null) {
-                String playerName = player.username;
-
-                if (!playerTickers.containsKey(playerName)) {
-                    playerTickers.put(playerName, new ArrayList<IAudioTicker>());
-                }
-
-                List<IAudioTicker> tickers = playerTickers.get(playerName);
-
-                addTickerIfAbsent(tickers, new ChainsawAudioTicker(player));
-                addTickerIfAbsent(tickers, new ArmorAudioTicker(player));
+                initTickers(player);
             }
         }
     }
@@ -53,17 +66,11 @@ public class AudioHandler extends TickEvents.PlayerTickEvent {
         }
     }
 
-    private void addTickerIfAbsent(List<IAudioTicker> tickers, IAudioTicker ticker) {
-        boolean hasTicker = false;
-        for (IAudioTicker existingTicker : tickers) {
-            if (existingTicker.getClass().equals(ticker.getClass())) {
-                hasTicker = true;
-                break;
-            }
+    private void addTickerIfAbsent(List<IAudioTicker> tickers, Class<? extends IAudioTicker> tickerClass, IAudioTickerFactory factory) {
+        for (IAudioTicker existing : tickers) {
+            if (existing.getClass().equals(tickerClass)) return;
         }
-        if (!hasTicker) {
-            tickers.add(ticker);
-        }
+        tickers.add(factory.create());
     }
 
     public Map<String, List<IAudioTicker>> getPlayerTickers() {
