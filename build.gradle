@@ -61,6 +61,13 @@ dependencies {
 	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 }
 
+processResources {
+	inputs.property 'version', version
+	filesMatching('mcmod.info') {
+		expand version: version
+	}
+}
+
 sourceSets {
 	main {
 		resources {
