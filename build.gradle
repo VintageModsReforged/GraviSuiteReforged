@@ -49,7 +49,7 @@ dependencies {
 	forge "net.minecraftforge:forge:${forgeVersion}:universal@zip"
 	mappings "net.minecraftforge:forge:${forgeVersion}:src@zip"
 
-	modImplementation files("libs/VintageCore-1.5.2-1.0.6-dev.jar")
+	modImplementation files("libs/VintageCore-1.5.2-2.0.0-dev.jar")
 	modImplementation files("libs/industrialcraft-2_1.117.385-lf.jar")
 	modImplementation files("libs/gregtechmod311.jar")
 	modImplementation files("libs/buildcraft-A-3.7.2.jar")

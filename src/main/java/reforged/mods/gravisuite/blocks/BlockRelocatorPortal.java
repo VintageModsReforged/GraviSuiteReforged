@@ -3,6 +3,7 @@ package reforged.mods.gravisuite.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
+import mods.vintage.core.platform.config.IItemBlockIDProvider;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -13,17 +14,18 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.Random;
 
-public class BlockRelocatorPortal extends BlockContainer {
+public class BlockRelocatorPortal extends BlockContainer implements IItemBlockIDProvider {
 
     private Icon ICON;
 
-    public BlockRelocatorPortal(int id) {
-        super(id, Material.portal);
+    public BlockRelocatorPortal() {
+        super(GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID.get(), Material.portal);
         this.setLightValue(1f);
     }
 

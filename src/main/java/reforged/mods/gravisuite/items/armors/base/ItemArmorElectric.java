@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IMetalArmor;
-import mods.vintage.core.platform.lang.FormattedTranslator;
+import mods.vintage.core.helpers.ElectricHelper;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -17,7 +17,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.IArmorTextureProvider;
 import net.minecraftforge.common.ISpecialArmor;
 import reforged.mods.gravisuite.GraviSuiteData;
-import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Messages;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(int id, CreativeTabs creativeTab, List items) {
-        Helpers.addChargeVariants(this, items);
+        ElectricHelper.addChargeVariants(this, items);
     }
 
     @SideOnly(Side.CLIENT)
@@ -75,7 +75,7 @@ public class ItemArmorElectric extends ItemArmorBase implements IElectricItem, I
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
-        tooltip.add(FormattedTranslator.AQUA.format("message.info.energy", Helpers.getCharge(stack), this.getMaxCharge(stack), FormattedTranslator.WHITE.format("message.info.energy.tier", FormattedTranslator.YELLOW.literal(this.tier + ""))));
+        tooltip.add(Messages.energyValue(ElectricHelper.getCharge(stack), this.getMaxCharge(stack), this.tier));
     }
 
     @Override

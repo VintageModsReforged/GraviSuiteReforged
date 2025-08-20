@@ -39,36 +39,42 @@ item.relocator.name=Relocator
 
 key.toggle.engine.desc=[GraviSuite] Armor Toggle Key
 key.toggle.magnet.desc=[GraviSuite] Magnet Toggle Key
-message.gravitation.engine=Antigravity Engine:
-message.gravitation.levitation=Levitation:
-message.text.energy_level=Energy Level:
-message.text.jetpack.engine=Jetpack Engine:
-message.text.jetpack.hover=Hover Mode:
+message.gravitation.engine=Antigravity Engine: %s
+message.gravitation.levitation=Levitation: %s
+message.text.energy_level=Energy Level: %s%%
+message.text.jetpack.engine=Jetpack Engine: %s
+message.text.jetpack.hover=Hover Mode: %s
 message.text.low_energy=Not enough energy for this operation!
 message.text.off=Off
 message.text.on=On
 message.text.shutdown=Low energy! Shutting down!
-message.tool.eff.mode=Efficiency Mode:
-message.tool.eff.mode.stat=Efficiency Mode
+message.tool.eff.mode=Efficiency Mode: %s
+
 message.tool.eff.mode.fine=Fine
 message.tool.eff.mode.low_power=Low Power
 message.tool.eff.mode.normal=Normal
 message.tool.mining.mode=Mining Mode:
 message.tool.mining.mode.stat=Mining Mode
-message.tool.mode=Tool Mode:
+message.tool.mode=GraviTool Mode: %s
 message.tool.mode.stat=Tool Mode
 message.tool.mode.big_holes=Big Holes
+
+message.tool.mode.ench=Enchantment Mode: %s
 message.tool.mode.fortune=Fortune III
+message.tool.mode.silk=Silk Touch
+
 message.tool.mode.hoe=Hoe
 message.tool.mode.magnet=Magnet Mode:
 message.tool.mode.normal=Normal
 message.tool.mode.screwdriver=Screwdriver
-message.tool.mode.shear=Shears Mode:
-message.tool.mode.capitator=Tree Capitator Mode:
-message.tool.mode.silk=Silk Touch
+message.tool.mode.shear=Shears Mode: %s
+message.tool.mode.capitator=Tree Capitator Mode: %s
+
 message.tool.mode.treetap=Treetap
-message.tool.mode.vein=Vein
-message.tool.mode.vein_extended=Extended Vein
+message.tool.mode.vein=Vein Mode: %s
+message.tool.mode.vein.off=Off
+message.tool.mode.vein.ores=Ores
+message.tool.mode.vein.extended=Extended Vein
 message.tool.mode.wrench=Wrench
 
 message.ench.mode=Enchantment Mode:
@@ -132,3 +138,8 @@ message.tool.voider.removed=Inventory Cleared!
 message.tool.voider.removed.none=Nothing to clear!
 message.tool.voider.remove.all=Clear the Inventory
 message.tool.voider.hotbar=Keep it inside your hotbar to remove items on pickup!
+
+message.key.description=Press %s to %s
+message.key.joiner= +
+message.key.change=to change %s
+message.key.enable=to enable %s

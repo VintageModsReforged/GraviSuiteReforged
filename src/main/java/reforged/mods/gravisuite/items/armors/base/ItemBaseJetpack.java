@@ -6,19 +6,19 @@ import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
-import net.minecraft.client.Minecraft;
+import mods.vintage.core.helpers.ElectricHelper;
+import mods.vintage.core.helpers.StackHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.audio.IAudioProvider;
-import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.KeyDescriptionHelper;
+import reforged.mods.gravisuite.utils.Messages;
 
 import java.util.List;
 
@@ -54,20 +54,20 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
         String hoverStatus = Helpers.getStatusMessage(isHoverMode);
         String jetpackStatus = Helpers.getStatusMessage(isEngineOn);
 
-        tooltip.add(Refs.jetpack_engine_gold + " " + jetpackStatus);
-        tooltip.add(Refs.jetpack_hover_gold + " " + hoverStatus);
+        tooltip.add(Messages.Translations.JETPACK_ENGINE.toTooltip().format(jetpackStatus));
+        tooltip.add(Messages.Translations.JETPACK_HOVER.toTooltip().format(hoverStatus));
         if (GraviSuite.proxy.isSneakKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.JETPACK_ENGINE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.JETPACK_HOVER + ".stat"));
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.TOGGLE_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.JETPACK_ENGINE_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.JUMP_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.JETPACK_HOVER_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.BOOST_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.BOOST_MODE.format()));
         } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+            tooltip.add(Helpers.pressForInfo(Messages.Translations.KEY_SNEAK.format()));
         }
     }
 
     @Override
     public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         boolean hoverMode = readWorkMode(stack);
         byte toggleTimer = tag.getByte(NBT_TOGGLE_TIMER);
 
@@ -94,7 +94,7 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
 
     public void useJetpack(EntityPlayer player, ItemStack stack, boolean hover) {
         int usage = 12;
-        double charge = Helpers.getCharge(stack);
+        double charge = ElectricHelper.getCharge(stack);
         if (charge < usage && !player.capabilities.isCreativeMode)
             return;
         float power = 1.0F;
@@ -157,12 +157,12 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
     }
 
     public static boolean readWorkMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         return tag.getBoolean(NBT_HOVER_ACTIVE);
     }
 
     public static void saveWorkMode(ItemStack stack, boolean workMode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         tag.setBoolean(NBT_HOVER_ACTIVE, workMode);
         tag.setByte(NBT_TOGGLE_TIMER, TOGGLE_TIMER);
     }
@@ -171,10 +171,10 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
         String message;
         if (readWorkMode(stack)) {
             saveWorkMode(stack, false);
-            message = Refs.jetpack_hover + " " + Refs.status_off;
+            message = Messages.Translations.JETPACK_HOVER.format(Messages.Translations.STATUS_OFF.format());
         } else {
             saveWorkMode(stack, true);
-            message = Refs.jetpack_hover + " " + Refs.status_on;
+            message = Messages.Translations.JETPACK_HOVER.format(Messages.Translations.STATUS_ON.format());
         }
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);
@@ -182,12 +182,12 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
     }
 
     public static boolean readFlyStatus(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         return tag.getBoolean(NBT_ACTIVE);
     }
 
     public static void saveFlyStatus(ItemStack stack, boolean flyMode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         tag.setBoolean(NBT_ACTIVE, flyMode);
         tag.setByte(NBT_TOGGLE_TIMER, TOGGLE_TIMER);
     }
@@ -196,10 +196,10 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
         String message;
         if (readFlyStatus(stack)) {
             saveFlyStatus(stack, false);
-            message = Refs.jetpack_engine + " " + Refs.status_off;
+            message = Messages.Translations.JETPACK_ENGINE.format(Messages.Translations.STATUS_OFF);
         } else {
             saveFlyStatus(stack, true);
-            message = Refs.jetpack_engine + " " + Refs.status_on;
+            message = reforged.mods.gravisuite.utils.Messages.Translations.JETPACK_ENGINE.format(Messages.Translations.STATUS_ON);
         }
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);

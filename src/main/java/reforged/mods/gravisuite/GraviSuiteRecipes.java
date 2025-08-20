@@ -3,9 +3,9 @@ package reforged.mods.gravisuite;
 import ic2.api.item.Items;
 import ic2.api.recipe.Recipes;
 import mods.vintage.core.helpers.RecipeHelper;
+import mods.vintage.core.helpers.StackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import reforged.mods.gravisuite.utils.Helpers;
 
 public class GraviSuiteRecipes {
 
@@ -110,13 +110,13 @@ public class GraviSuiteRecipes {
                 'L', new ItemStack(Item.dyePowder, 1, 4),
                 'C', Items.getItem("refinedIronIngot"));
 
-        Recipes.advRecipes.addRecipe(Helpers.withSize(GraviSuiteData.superconductor_cover, 3),
+        Recipes.advRecipes.addRecipe(StackHelper.copyWithSize(GraviSuiteData.superconductor_cover, 3),
                 "RBR", "CCC", "RBR",
                 'R', Items.getItem("advancedAlloy"),
                 'B', Items.getItem("iridiumPlate"),
                 'C', Items.getItem("carbonPlate"));
 
-        Recipes.advRecipes.addRecipe(Helpers.withSize(GraviSuiteData.superconductor, 3),
+        Recipes.advRecipes.addRecipe(StackHelper.copyWithSize(GraviSuiteData.superconductor, 3),
                 "RRR", "CBC", "RRR",
                 'R', GraviSuiteData.superconductor_cover,
                 'B', Item.ingotGold,

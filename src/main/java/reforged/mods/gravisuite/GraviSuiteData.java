@@ -59,7 +59,7 @@ public class GraviSuiteData {
         advanced_quant = new ItemAdvancedQuant();
 
         relocator = new ItemRelocator();
-        relocator_portal = new BlockRelocatorPortal(GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID);
+        relocator_portal = new BlockRelocatorPortal();
         GameRegistry.registerTileEntity(TileEntityRelocatorPortal.class, "Relocator Portal");
         GameRegistry.registerBlock(relocator_portal, ItemRelocatorPortal.class, "BlockRelocatorPortal");
         registerEntity(EntityRelocatorBall.class, "RelocatorBall");

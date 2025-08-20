@@ -7,14 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.Messages;
 
 @SideOnly(Side.CLIENT)
 public class GraviSuiteKeyboardClient extends GraviSuiteKeyboard {
 
-    public static KeyBinding engine_toggle = new KeyBinding(Refs.KEY_TOGGLE_DESC, Keyboard.KEY_F);
-    public static KeyBinding magnet_toggle = new KeyBinding(Refs.KEY_MAGNET_TOGGLE_DESC, Keyboard.KEY_G);
+    public static KeyBinding engine_toggle = new KeyBinding(Messages.Translations.KEY_TOGGLE_DESC.getKey(), Keyboard.KEY_F);
+    public static KeyBinding magnet_toggle = new KeyBinding(Messages.Translations.KEY_MAGNET_TOGGLE_DESC.getKey(), Keyboard.KEY_G);
 
     private int lastKeyState = 0;
 

@@ -5,6 +5,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.helpers.ElectricHelper;
+import mods.vintage.core.helpers.StackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -17,7 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,10 +27,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
-import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,7 @@ public class ItemMagnet extends ItemToolElectric {
     public byte MAGNET_TICKER;
 
     public ItemMagnet() {
-        super(GraviSuiteConfig.MAGNET_ID, "magnet", EnergyValues.MAGNET.tier, EnergyValues.MAGNET.transfer, EnergyValues.MAGNET.maxCapacity, EnumToolMaterial.WOOD);
+        super(GraviSuiteConfig.MAGNET_ID.get(), "magnet", EnergyValues.MAGNET.tier, EnergyValues.MAGNET.transfer, EnergyValues.MAGNET.maxCapacity, EnumToolMaterial.WOOD);
         this.MAGNET_TICKER = 10;
     }
 
@@ -52,8 +50,9 @@ public class ItemMagnet extends ItemToolElectric {
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         super.addInformation(stack, player, tooltip, isDebugMode);
+        tooltip.add(Messages.Translations.TOOL_MODE_MAGNET.toTooltip().format(Helpers.getStatusMessage(StackHelper.getOrCreateTag(stack).getBoolean(NBT_ACTIVE))));
         if (GraviSuite.proxy.isSneakKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MAGNET_TOGGLE_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.MAGNET_MODE_STAT.format()));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -62,22 +61,18 @@ public class ItemMagnet extends ItemToolElectric {
     @Override
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack stack) {
-        return Helpers.getOrCreateTag(stack).getBoolean(NBT_ACTIVE);
+        return StackHelper.getOrCreateTag(stack).getBoolean(NBT_ACTIVE);
     }
 
     public void changeMode(ItemStack stack, EntityPlayer player) {
         String message;
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        if (Helpers.getCharge(stack) > ENERGY_COST) {
-            if (tag.getBoolean(NBT_ACTIVE)) {
-                tag.setBoolean(NBT_ACTIVE, false);
-                message = Refs.tool_mode_magnet + " " + Refs.status_off;
-            } else {
-                tag.setBoolean(NBT_ACTIVE, true);
-                message = Refs.tool_mode_magnet + " " + Refs.status_on;
-            }
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        if (ElectricHelper.getCharge(stack) > ENERGY_COST) {
+            boolean status = !tag.getBoolean(NBT_ACTIVE);
+            tag.setBoolean(NBT_ACTIVE, status);
+            message = Messages.Translations.TOOL_MODE_MAGNET.format(Helpers.getStatusMessage(status));
         } else {
-            message = Refs.status_low;
+            message = Messages.Translations.STATUS_LOW.format();
         }
         IC2.platform.messagePlayer(player, message);
     }
@@ -86,7 +81,7 @@ public class ItemMagnet extends ItemToolElectric {
     public void onUpdate(ItemStack stack, World world, Entity entity, int hand, boolean update) {
         if (IC2.platform.isSimulating()) {
             EntityPlayer player = (EntityPlayer) entity;
-            NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+            NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
             byte ticker = tag.getByte(NBT_TICKER);
             if (ticker > 0) {
                 ticker--;

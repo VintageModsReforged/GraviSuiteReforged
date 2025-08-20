@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
-import mods.vintage.core.platform.lang.FormattedTranslator;
+import mods.vintage.core.helpers.ElectricHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
-import reforged.mods.gravisuite.utils.Helpers;
+import reforged.mods.gravisuite.utils.Messages;
 
 import java.util.List;
 import java.util.Locale;
@@ -40,18 +40,19 @@ public class ItemToolElectric extends ItemToolBase implements IElectricItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(int is, CreativeTabs tabs, List items) {
-        Helpers.addChargeVariants(this, items);
+        ElectricHelper.addChargeVariants(this, items);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         addEnergyInfo(stack, tooltip);
+
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void addEnergyInfo(ItemStack stack, List tooltip) {
-        tooltip.add(FormattedTranslator.AQUA.format("message.info.energy", Helpers.getCharge(stack), this.getMaxCharge(stack), FormattedTranslator.WHITE.format("message.info.energy.tier", FormattedTranslator.YELLOW.literal(this.tier + ""))));
+        tooltip.add(Messages.energyValue(ElectricHelper.getCharge(stack), this.getMaxCharge(stack), this.tier));
     }
 
     @Override

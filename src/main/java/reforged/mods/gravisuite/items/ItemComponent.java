@@ -1,5 +1,6 @@
 package reforged.mods.gravisuite.items;
 
+import mods.vintage.core.platform.config.IItemBlockIDProvider;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -11,13 +12,13 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.List;
 
-public class ItemComponent extends Item {
+public class ItemComponent extends Item implements IItemBlockIDProvider {
 
     public String[] names = new String[]{"superconductor_cover", "superconductor", "cooling_core", "gravi_engine", "magnetron", "vajra_core", "engine_booster"};
     public Icon[] icons = new Icon[7];
 
     public ItemComponent() {
-        super(GraviSuiteConfig.COMPONENT_ID);
+        super(GraviSuiteConfig.COMPONENT_ID.get());
         this.setUnlocalizedName("component");
         this.setCreativeTab(GraviSuite.graviTab);
         this.setHasSubtypes(true);

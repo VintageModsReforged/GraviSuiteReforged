@@ -13,7 +13,7 @@ import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 public class ItemAdvancedJetpack extends ItemBaseJetpack {
 
     public ItemAdvancedJetpack() {
-        super(GraviSuiteConfig.ADVANCED_JETPACK_ID, "advanced_jetpack");
+        super(GraviSuiteConfig.ADVANCED_JETPACK_ID.get(), "advanced_jetpack");
     }
 
     public static class ItemAdvancedNano extends ItemBaseJetpack {
@@ -23,7 +23,7 @@ public class ItemAdvancedJetpack extends ItemBaseJetpack {
         public final int ENERGY_PER_EXTINGUISH = 50000;
 
         public ItemAdvancedNano() {
-            super(GraviSuiteConfig.ADVANCED_NANO_ID, "advanced_nano", EnumArmorMaterial.DIAMOND);
+            super(GraviSuiteConfig.ADVANCED_NANO_ID.get(), "advanced_nano", EnumArmorMaterial.DIAMOND);
             this.energy_per_damage = 800;
             this.damage_priority = 8;
             this.base_absorption = 0.4D;
