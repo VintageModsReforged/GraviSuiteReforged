@@ -66,10 +66,11 @@ processResources {
 	}
 }
 
-sourceSets {
-	main {
-		resources {
-			srcDirs 'src/main/java'
-		}
-	}
+task sourcesJar(type: Jar) {
+	archiveClassifier.set("sources")
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives sourcesJar
 }
