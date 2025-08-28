@@ -24,7 +24,7 @@ import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.logging.Logger;
 
-@Mod(modid = Refs.id, name = Refs.name, useMetadata = true, dependencies = Refs.deps)
+@Mod(modid = Refs.id, useMetadata = true)
 @NetworkMod(clientSideRequired = true,
         clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {Refs.id}, packetHandler = NetworkHandlerClient.class),
         serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {Refs.id}, packetHandler = NetworkHandler.class))

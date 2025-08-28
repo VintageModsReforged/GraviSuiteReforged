@@ -4,6 +4,11 @@
     "name": "${modName}",
     "description": "${modDescription}",
     "version": "${modVersion}",
-    "authors": ["${modAuthors}"]
+    "mcversion": "${minecraft}",
+    "authorList": ["${modAuthors}"],
+    "url": "${url}",
+    "dependencies": [
+      "${modDeps}"
+    ]
   }
 ]
