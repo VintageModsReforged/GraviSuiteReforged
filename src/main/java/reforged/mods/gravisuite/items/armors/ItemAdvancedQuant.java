@@ -139,7 +139,6 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
                 }
             } else {
                 IC2.platform.messagePlayer(player, Messages.Translations.STATUS_LOW.format());
-
             }
         }
     }

@@ -69,8 +69,17 @@ processResources {
 task sourcesJar(type: Jar) {
 	archiveClassifier.set("sources")
 	from sourceSets.main.allSource
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 artifacts {
 	archives sourcesJar
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDirs 'src/main/java'
+		}
+	}
 }

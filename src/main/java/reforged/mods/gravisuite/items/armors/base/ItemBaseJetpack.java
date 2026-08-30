@@ -199,7 +199,7 @@ public class ItemBaseJetpack extends ItemArmorElectric implements IAudioProvider
             message = Messages.Translations.JETPACK_ENGINE.format(Messages.Translations.STATUS_OFF);
         } else {
             saveFlyStatus(stack, true);
-            message = reforged.mods.gravisuite.utils.Messages.Translations.JETPACK_ENGINE.format(Messages.Translations.STATUS_ON);
+            message = Messages.Translations.JETPACK_ENGINE.format(Messages.Translations.STATUS_ON);
         }
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);

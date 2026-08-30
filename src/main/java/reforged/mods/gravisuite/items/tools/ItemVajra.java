@@ -142,11 +142,12 @@ public class ItemVajra extends ItemToolElectric implements IPropsProvider, IVein
     public boolean onBlockDestroyed(ItemStack stack, World world, int blockID, int xPos, int yPos, int zPos, EntityLiving entity) {
         Block block = Block.blocksList[blockID];
         Props props = PropsHelper.getProps(stack);
+        int cost = props.COST.getVajra();
         if (block.getBlockHardness(world, xPos, yPos, zPos) != 0.0D) {
             if (entity != null) {
-                ElectricItem.manager.use(stack, props.COST.getVajra(), entity);
+                ElectricItem.manager.use(stack, cost, entity);
             } else {
-                ElectricItem.manager.discharge(stack, props.COST.getVajra(), this.tier, true, false);
+                ElectricItem.manager.discharge(stack, cost, this.tier, true, false);
             }
         }
         return true;

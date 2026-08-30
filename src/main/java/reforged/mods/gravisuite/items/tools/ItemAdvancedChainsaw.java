@@ -109,7 +109,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric implements IHighlight
                 return false;
             }
             World world = player.worldObj;
-            Block block = Block.blocksList[world.getBlockId(x, y, z)];
+            Block block = BlockHelper.getBlock(world, x, y, z);
             if (block instanceof IShearable && readToolMode(stack, NBT_SHEARS)) {
                 IShearable target = (IShearable) block;
                 if (target.isShearable(stack, player.worldObj, x, y, z)) {
@@ -206,6 +206,11 @@ public class ItemAdvancedChainsaw extends ItemToolElectric implements IHighlight
             IC2.achievements.issueAchievement((EntityPlayer) attacker, "killCreeperChainsaw");
         }
         return false;
+    }
+
+    @Override
+    public int getItemEnchantability() {
+        return 45;
     }
 
     @ForgeSubscribe

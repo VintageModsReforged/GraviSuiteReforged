@@ -90,7 +90,7 @@ public class ItemAdvancedDrill extends ItemToolElectric implements IPropsProvide
         if (canHarvestBlock(block, stack)) {
             return props.EFF.getDrill();
         }
-        return 0.0F;
+        return 0.1F;
     }
 
     @Override

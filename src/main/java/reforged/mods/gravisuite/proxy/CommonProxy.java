@@ -45,11 +45,11 @@ public class CommonProxy {
     }
 
     public static boolean isFlyActive(EntityPlayer player) {
-        return isFlyActive.containsKey(player) ? isFlyActive.get(player) : false;
+        return isFlyActive.containsKey(player) && isFlyActive.get(player);
     }
 
     public static boolean wasUndressed(EntityPlayer player) {
-        return wasUndressed.containsKey(player) ? wasUndressed.get(player) : false;
+        return wasUndressed.containsKey(player) && wasUndressed.get(player);
     }
 
     public boolean isFlying(EntityPlayer player) {

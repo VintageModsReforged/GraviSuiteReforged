@@ -11,11 +11,11 @@ public class GraviSuiteKeyboard {
     private final Map<EntityPlayer, Boolean> magnetToggleKeyState = new HashMap<EntityPlayer, Boolean>();
 
     public boolean isEngineToggleKeyDown(EntityPlayer player) {
-        return engineToggleKeyState.containsKey(player) ? engineToggleKeyState.get(player) : false;
+        return engineToggleKeyState.containsKey(player) && engineToggleKeyState.get(player);
     }
 
     public boolean isMagnetToggleKeyDown(EntityPlayer player) {
-        return magnetToggleKeyState.containsKey(player) ? magnetToggleKeyState.get(player) : false;
+        return magnetToggleKeyState.containsKey(player) && magnetToggleKeyState.get(player);
     }
 
     public void sendKeyUpdate() {
