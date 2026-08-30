@@ -6,24 +6,21 @@ import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
-import net.minecraft.client.Minecraft;
+import mods.vintage.core.helpers.ElectricHelper;
+import mods.vintage.core.helpers.StackHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.audio.IAudioProvider;
 import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
-import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.*;
 
 import java.util.List;
 
@@ -37,7 +34,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteConfig.ADVANCED_QUANT_ID, "advanced_quant", EnumArmorMaterial.DIAMOND, EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
+        super(GraviSuiteConfig.ADVANCED_QUANT_ID.get(), "advanced_quant", EnumArmorMaterial.DIAMOND, EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPEED = 0.5F;
@@ -65,12 +62,12 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
         boolean isLevitationOn = readWorkMode(stack);
         String gravitationEngine = Helpers.getStatusMessage(isGraviEngineOn);
         String levitationStatus = Helpers.getStatusMessage(isLevitationOn);
-        tooltip.add(Refs.gravitation_engine + " " + gravitationEngine);
-        tooltip.add(Refs.gravitation_levitation + " " + levitationStatus);
+        tooltip.add(Messages.Translations.GRAVITATION_ENGINE.format(gravitationEngine));
+        tooltip.add(Messages.Translations.GRAVITATION_LEVITATION.format(levitationStatus));
         if (GraviSuite.proxy.isSneakKeyDown()) {
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.LEVITATION + ".stat"));
-            tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.TOGGLE_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.GRAVITATION_ENGINE_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.JUMP_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.LEVITATION_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.BOOST_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.BOOST_MODE.format()));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -80,7 +77,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
 
     @Override
     public void onArmorTickUpdate(World worldObj, EntityPlayer player, ItemStack itemStack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(itemStack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(itemStack);
         byte toggleTimer = tag.getByte("toggleTimer");
 
         if (GraviSuite.keyboard.isEngineToggleKeyDown(player) && toggleTimer == 0) {
@@ -118,10 +115,10 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     }
 
     public void use(EntityPlayer player, ItemStack itemStack) {
-        double currCharge = Helpers.getCharge(itemStack);
+        double currCharge = ElectricHelper.getCharge(itemStack);
         if (!player.capabilities.isCreativeMode) {
             if (currCharge < USAGE_IN_AIR) {
-                GraviSuite.proxy.sendChatMessage(player, Refs.status_shutdown);
+                IC2.platform.messagePlayer(player, Messages.Translations.STATUS_SHUTDOWN.format());
                 switchFlyState(player, itemStack);
             } else if (!player.onGround) {
                 ElectricItem.manager.discharge(itemStack, USAGE_IN_AIR, 3, false, false);
@@ -143,8 +140,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
                     ElectricItem.manager.discharge(itemStack, USAGE_IN_AIR * BOOST_MULTIPLIER, 3, true, false);
                 }
             } else {
-                GraviSuite.proxy.sendChatMessage(player, Refs.status_low);
-
+                IC2.platform.messagePlayer(player, Messages.Translations.STATUS_LOW.format());
             }
         }
     }
@@ -152,7 +148,7 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     public void boostMode(EntityPlayer player, ItemStack itemstack) {
         if ((readFlyStatus(itemstack)) && (!player.onGround) && (player.capabilities.isFlying)
                 && (!player.isInWater())) {
-            double currCharge = Helpers.getCharge(itemstack);
+            double currCharge = ElectricHelper.getCharge(itemstack);
             if ((currCharge > USAGE_IN_AIR * BOOST_MULTIPLIER) || (player.capabilities.isCreativeMode)) {
                 player.moveFlying(0.0F, 0.4F, BOOST_SPEED + 0.1F);
 
@@ -164,12 +160,12 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     }
 
     public static boolean readWorkMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         return tag.getBoolean("isLevitationActive");
     }
 
     public static void saveWorkMode(ItemStack stack, boolean workMode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         tag.setBoolean("isLevitationActive", workMode);
         tag.setByte("toggleTimer", TOGGLE_TIMER);
     }
@@ -178,10 +174,10 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
         String message;
         if (readWorkMode(itemstack)) {
             saveWorkMode(itemstack, false);
-            message = Refs.gravitation_levitation + " " + Refs.status_off;
+            message = Messages.Translations.GRAVITATION_LEVITATION.format(Messages.Translations.STATUS_OFF.format());
         } else {
             saveWorkMode(itemstack, true);
-            message = Refs.gravitation_levitation + " " + Refs.status_on;
+            message = Messages.Translations.GRAVITATION_LEVITATION.format(Messages.Translations.STATUS_ON.format());
         }
         if (IC2.platform.isSimulating()) {
             GraviSuite.proxy.sendChatMessage(player, message);
@@ -189,12 +185,12 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
     }
 
     public static boolean readFlyStatus(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         return tag.getBoolean("isFlyActive");
     }
 
     public static void saveFlyStatus(ItemStack stack, boolean flyMode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         tag.setBoolean("isFlyActive", flyMode);
         tag.setByte("toggleTimer", TOGGLE_TIMER);
     }
@@ -203,14 +199,14 @@ public class ItemAdvancedQuant extends ItemArmorElectric implements IAudioProvid
         String message;
         if (readFlyStatus(itemstack)) {
             saveFlyStatus(itemstack, false);
-            message = Refs.gravitation_engine + " " + Refs.status_off;
+            message = Messages.Translations.GRAVITATION_ENGINE.format(Messages.Translations.STATUS_OFF.format());
         } else {
-            double currCharge = Helpers.getCharge(itemstack);
+            double currCharge = ElectricHelper.getCharge(itemstack);
             if ((currCharge >= MIN_CHARGE) || (player.capabilities.isCreativeMode)) {
-                message = Refs.gravitation_engine + " " + Refs.status_on;
+                message = Messages.Translations.GRAVITATION_ENGINE.format(Messages.Translations.STATUS_ON.format());
                 saveFlyStatus(itemstack, true);
             } else {
-                message = Refs.status_low;
+                message = Messages.Translations.STATUS_LOW.format();
             }
         }
         if (IC2.platform.isSimulating()) {

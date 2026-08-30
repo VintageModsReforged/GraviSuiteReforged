@@ -1,6 +1,5 @@
 package reforged.mods.gravisuite.items.tools;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
@@ -8,14 +7,11 @@ import ic2.core.IC2;
 import mods.vintage.core.helpers.BlockHelper;
 import mods.vintage.core.helpers.StackHelper;
 import mods.vintage.core.helpers.ToolHelper;
-import mods.vintage.core.helpers.Utils;
 import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLog;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -25,22 +21,28 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import org.jetbrains.annotations.Nullable;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.items.features.IHighlightProvider;
+import reforged.mods.gravisuite.items.features.IPropsProvider;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.KeyDescriptionHelper;
+import reforged.mods.gravisuite.utils.Messages;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class ItemAdvancedChainsaw extends ItemToolElectric {
+public class ItemAdvancedChainsaw extends ItemToolElectric implements IHighlightProvider {
 
     public int energyPerOperation = 100;
     public Set<Block> mineableBlocks = new HashSet<Block>();
@@ -48,7 +50,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     public static final String NBT_SHEARS = "shears", NBT_TCAPITATOR = "capitator";
 
     public ItemAdvancedChainsaw() {
-        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID, "advanced_chainsaw", EnergyValues.CHAINSAW.tier, EnergyValues.CHAINSAW.transfer, EnergyValues.CHAINSAW.maxCapacity, EnumToolMaterial.EMERALD);
+        super(GraviSuiteConfig.ADVANCED_CHAINSAW_ID.get(), "advanced_chainsaw", EnergyValues.CHAINSAW.tier, EnergyValues.CHAINSAW.transfer, EnergyValues.CHAINSAW.maxCapacity, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 35.0F;
         MinecraftForge.setToolClass(this, "axe", 4);
         MinecraftForge.EVENT_BUS.register(this);
@@ -64,17 +66,17 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         boolean isCapitatorOn = readToolMode(stack, NBT_TCAPITATOR);
         String modeShear = Helpers.getStatusMessage(isShearsOn);
         String modeCapitator = Helpers.getStatusMessage(isCapitatorOn);
-        tooltip.add(Refs.tool_mode_shear_gold + " " + modeShear);
+        tooltip.add(Messages.Translations.TOOL_MODE_SHEAR.toTooltip().format(modeShear));
         if (GraviSuiteConfig.chainsaw_tree_capitator) {
-            tooltip.add(Refs.tool_mode_capitator_gold + " " + modeCapitator);
+            tooltip.add(Messages.Translations.TOOL_MODE_CAPITATOR.toTooltip().format(modeCapitator));
         }
         if (GraviSuite.proxy.isSneakKeyDown()) {
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", "Right Click", Refs.SHEAR_MODE + ".stat"));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.SHEARS_STAT.format()));
             if (GraviSuiteConfig.chainsaw_tree_capitator) {
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, Refs.SNEAK_KEY, "Right Click", Refs.CAPITATOR_MODE + ".stat"));
+                tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.SNEAK_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.CAPITATOR_STAT.format()));
             }
         } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+            tooltip.add(Helpers.pressForInfo(KeyDescriptionHelper.Keys.SNEAK_KEY.getName()));
         }
     }
 
@@ -126,7 +128,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                 List<ItemStack> logs = StackHelper.getStackFromOre("log");
                 logs.addAll(StackHelper.getStackFromOre("wood")); // just in case some mod uses old oredict name
                 for (ItemStack check : logs) {
-                    if (StackHelper.areStacksEqual(check, blockStack) || isLog(block)) {
+                    if (StackHelper.areStacksEqual(check, blockStack) || BlockHelper.isLog(block)) {
                         isLog = true;
                         break;
                     }
@@ -134,7 +136,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
 
                 if (isLog) {
                     BlockPos origin = new BlockPos(x, y, z);
-                    LinkedList<BlockPos> connectedLogs = scanForTree(world, origin, player.isSneaking() ? 0 : 256);
+                    List<BlockPos> connectedLogs = BlockHelper.scanForTree(world, origin).getPositions();
                     for (BlockPos coord : connectedLogs) {
                         if (coord.equals(origin)) {
                             continue;
@@ -165,7 +167,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                 } else {
                     saveToolMode(itemStack, NBT_SHEARS, false);
                 }
-                GraviSuite.proxy.sendChatMessage(player, Refs.tool_mode_shear + " " + Helpers.getStatusMessage(shears));
+                IC2.platform.messagePlayer(player, Messages.Translations.TOOL_MODE_SHEAR.format(Helpers.getStatusMessage(shears)));
             }
             if (GraviSuiteConfig.chainsaw_tree_capitator) {
                 if (IC2.keyboard.isSneakKeyDown(player)) {
@@ -176,7 +178,7 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
                     } else {
                         saveToolMode(itemStack, NBT_TCAPITATOR, false);
                     }
-                    GraviSuite.proxy.sendChatMessage(player, Refs.tool_mode_capitator + " " + Helpers.getStatusMessage(capitator));
+                    IC2.platform.messagePlayer(player, Messages.Translations.TOOL_MODE_CAPITATOR.format(Helpers.getStatusMessage(capitator)));
                 }
             }
         }
@@ -231,12 +233,12 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
     }
 
     public static boolean readToolMode(ItemStack stack, String mode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         return tag.getBoolean(mode);
     }
 
     public static void saveToolMode(ItemStack stack, String mode, boolean value) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         tag.setBoolean(mode, value);
     }
 
@@ -256,111 +258,18 @@ public class ItemAdvancedChainsaw extends ItemToolElectric {
         this.mineableBlocks.add(Block.snow);
     }
 
-    public boolean isLog(Block block) {
-        String[] logs = GraviSuiteConfig.logs;
-        boolean configLogs = false;
-        for (String log : logs) {
-            if (Utils.instanceOf(block, log)) configLogs = true;
-            break;
-        }
-        return block instanceof BlockLog || configLogs;
+    @Override
+    public boolean isProvidingHighlight(ItemStack stack) {
+        return readToolMode(stack, NBT_TCAPITATOR);
     }
 
-    public boolean isLeaves(World world, BlockPos pos) {
-        Block block = BlockHelper.getBlock(world, pos);
-        String[] leaves = GraviSuiteConfig.leaves;
-        boolean configLeaves = false;
-        for (String leave : leaves) {
-            if (Utils.instanceOf(block, leave)) configLeaves = true;
-            break;
-        }
-        return getBOPStatus(world, pos) || configLeaves;
+    @Override
+    public List<BlockPos> getHighlightArea(BlockPos start, EntityPlayer player, MovingObjectPosition hitResult) {
+        return BlockHelper.scanForTree(player.worldObj, start).getPositions();
     }
 
-    private boolean getBOPStatus(World world, BlockPos pos) {
-        int meta = BlockHelper.getBlockMetadata(world, pos) | 8;
-        Block block = BlockHelper.getBlock(world, pos);
-        if (Loader.isModLoaded("BiomesOPlenty")) {
-            if (Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPPetals") ||
-                    Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPLeaves") ||
-                    Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPColorizedLeaves") ||
-                    Utils.instanceOf(block, "biomesoplenty.blocks.BlockBOPAppleLeaves")) {
-                return meta >= 8 && meta <= 15;
-            }
-        }
-        return false;
-    }
-
-    private interface BlockAction {
-        boolean onBlock(BlockPos pos, Block block, boolean isRightBlock);
-    }
-
-    public LinkedList<BlockPos> scanForTree(final World world, final BlockPos startPos, int limit) {
-        Block block = BlockHelper.getBlock(world, startPos);
-        ItemStack blockStack = new ItemStack(block, 1, 32767);
-        boolean isLog = false;
-        List<ItemStack> logs = StackHelper.getStackFromOre("log");
-        logs.addAll(StackHelper.getStackFromOre("wood")); // just in case some mod uses old oredict name
-        for (ItemStack check : logs) {
-            if (StackHelper.areStacksEqual(check, blockStack) || isLog(block)) {
-                isLog = true;
-                break;
-            }
-        }
-        if (!isLog) {
-            return new LinkedList<BlockPos>();
-        }
-        final boolean[] leavesFound = new boolean[1];
-        LinkedList<BlockPos> result = recursiveSearch(world, startPos, new BlockAction() {
-            @Override
-            public boolean onBlock(BlockPos pos, Block block, boolean isRightBlock) {
-                int metadata = BlockHelper.getBlockMetadata(world, pos) | 8;
-                boolean isLeave = metadata >= 8 && metadata <= 11;
-                if (block.isLeaves(world, pos.getX(), pos.getY(), pos.getZ()) && isLeave || isLeaves(world, pos)) leavesFound[0] = true;
-                return true;
-            }
-        }, limit);
-        return leavesFound[0] ? result : new LinkedList<BlockPos>();
-    }
-
-    // Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.
-    private static LinkedList<BlockPos> recursiveSearch(final World world, final BlockPos start, @Nullable final BlockAction action, int limit) {
-        Block wantedBlock = BlockHelper.getBlock(world, start);
-        boolean abort = false;
-        final LinkedList<BlockPos> result = new LinkedList<BlockPos>();
-        final Set<BlockPos> visited = new HashSet<BlockPos>();
-        final LinkedList<BlockPos> queue = new LinkedList<BlockPos>();
-        queue.push(start);
-
-        while (!queue.isEmpty()) {
-            final BlockPos center = queue.pop();
-            final int x0 = center.getX();
-            final int y0 = center.getY();
-            final int z0 = center.getZ();
-            for (int z = z0 - 1; z <= z0 + 1 && !abort; ++z) {
-                for (int y = y0 - 1; y <= y0 + 1 && !abort; ++y) {
-                    for (int x = x0 - 1; x <= x0 + 1 && !abort; ++x) {
-                        final BlockPos pos = new BlockPos(x, y, z);
-                        Block checkBlock = BlockHelper.getBlock(world, pos);
-                        if ((BlockHelper.isAir(world, pos) || !visited.add(pos))) {
-                            continue;
-                        }
-                        final boolean isRightBlock = checkBlock.blockID == wantedBlock.blockID;
-                        if (isRightBlock) {
-                            result.add(pos);
-                            if (queue.size() > limit) {
-                                abort = true;
-                                break;
-                            }
-                            queue.push(pos);
-                        }
-                        if (action != null) {
-                            abort = !action.onBlock(pos, checkBlock, isRightBlock);
-                        }
-                    }
-                }
-            }
-        }
-        return !abort ? result : new LinkedList<BlockPos>();
+    @Override
+    public int[] getHighlightColor(ItemStack stack) {
+        return IPropsProvider.Props.LOW_POWER.COLOR; // green?
     }
 }

@@ -26,7 +26,7 @@ compileJava {
 String minecraftVersion = project.minecraft
 String forgeVersion = project.minecraft_forge
 archivesBaseName = project.modid
-version = project.mod_version
+version = project.modVersion
 
 volde {
 	runs {
@@ -37,9 +37,6 @@ volde {
 }
 
 repositories {
-	maven {
-		url("https://mvnrepository.com/artifact/it.unimi.dsi/fastutil")
-	}
 	maven {
 		url = "https://api.modrinth.com/maven"
 	}
@@ -54,22 +51,19 @@ dependencies {
 	forge "net.minecraftforge:forge:${forgeVersion}:universal" //no @zip classifier this time
 	mappings "net.minecraftforge:forge:${forgeVersion}:src@zip"
 
-	modImplementation files("libs/VintageCore-1.6.4-1.0.6-dev.jar")
+	modImplementation files("libs/VintageCore-1.6.4-2.0.1-dev.jar")
 	modImplementation files("libs/ic2exp.jar")
 	modImplementation files("libs/gregtechmod408s.zip")
 
 	modImplementation files("libs/CodeChickenLib-dev-1.6.4-1.0.0.62.jar")
 	modImplementation files("libs/CodeChickenCore-1.6.4-0.9.0.9-universal.jar")
 	modImplementation files("libs/NotEnoughItems-1.6.4-1.6.1.9-universal.jar")
-
-
-	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 }
 
+def props = ['modName', 'modid', 'modVersion', 'modDescription', 'modAuthors', 'modDeps', 'minecraft', 'url']
 processResources {
-	inputs.property 'version', version
-	filesMatching('mcmod.info') {
-		expand version: version
+	filesMatching("mcmod.info") {
+		expand(project.properties.subMap(props))
 	}
 }
 
@@ -79,4 +73,14 @@ sourceSets {
 			srcDirs 'src/main/java'
 		}
 	}
+}
+
+task sourcesJar(type: Jar) {
+	archiveClassifier.set("sources")
+	from sourceSets.main.allSource
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+artifacts {
+	archives sourcesJar
 }

@@ -14,6 +14,7 @@ import ic2.core.audio.PositionSpec;
 import ic2.core.block.machine.tileentity.TileEntityTerra;
 import mods.railcraft.api.core.items.IToolCrowbar;
 import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.StackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
@@ -30,9 +31,7 @@ import net.minecraftforge.common.ForgeDirection;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.*;
 import universalelectricity.prefab.implement.IToolConfigurator;
 
 import java.lang.reflect.Method;
@@ -41,7 +40,7 @@ import java.util.List;
 
 public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToolCrowbar, IToolConfigurator {
 
-
+    public static final String TAG_MODE = "toolMode";
     public static Icon[] iconsList = new Icon[4];
     public int energy_per_use = 50;
 
@@ -49,7 +48,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     public String TOOL_WRENCH = "Tools/wrench.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteConfig.GRAVI_TOOL_ID, "gravitool", EnergyValues.GRAVITOOL.tier, EnergyValues.GRAVITOOL.transfer, EnergyValues.GRAVITOOL.maxCapacity, EnumToolMaterial.IRON);
+        super(GraviSuiteConfig.GRAVI_TOOL_ID.get(), "gravitool", EnergyValues.GRAVITOOL.tier, EnergyValues.GRAVITOOL.transfer, EnergyValues.GRAVITOOL.maxCapacity, EnumToolMaterial.IRON);
     }
 
     @SideOnly(Side.CLIENT)
@@ -65,7 +64,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(ItemStack stack, int pass) {
-        int index = readToolMode(stack).ordinal();
+        int index = getToolMode(stack).ordinal();
         return iconsList[index];
     }
 
@@ -80,10 +79,10 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         super.addInformation(stack, player, tooltip, isDebugMode);
-        ToolMode mode = readToolMode(stack);
-        tooltip.add(Refs.tool_mode_gold + " " + mode.name);
+        ToolMode mode = getToolMode(stack);
+        tooltip.add(Messages.Translations.TOOL_MODE.toTooltip().format(mode.name));
         if (GraviSuite.proxy.isSneakKeyDown()) {
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MODE + ".stat"));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.TOOL_MODE_STAT.format()));
         } else {
             tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
@@ -98,9 +97,8 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.keyboard.isModeSwitchKeyDown(player)) {
             if (IC2.platform.isSimulating()) {
-                ToolMode nextMode = readNextToolMode(stack);
-                saveToolMode(stack, nextMode);
-                GraviSuite.proxy.sendChatMessage(player, Refs.tool_mode + " " + nextMode.name);
+                ToolMode nextMode = cycleAndSave(stack);
+                IC2.platform.messagePlayer(player, Messages.Translations.TOOL_MODE.format(nextMode.name));
             }
             if (IC2.platform.isRendering())
                 IC2.audioManager.playOnce(player, PositionSpec.Hand, CHANGE_SOUND, false, 0.05F);
@@ -110,7 +108,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
@@ -121,7 +119,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
                     return Ic2Items.electricTreetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 }
             } else {
-                GraviSuite.proxy.sendChatMessage(player, Refs.status_low);
+                IC2.platform.messagePlayer(player, Messages.Translations.STATUS_LOW.format());
             }
         }
 
@@ -130,7 +128,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
@@ -293,7 +291,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     @Override
     public boolean canWrench(EntityPlayer player, int x, int y, int z) {
         ItemStack stack = player.getHeldItem();
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         return mode == ToolMode.WRENCH;
     }
 
@@ -311,7 +309,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
     @Override
     public boolean canWhack(EntityPlayer player, ItemStack stack, int x, int y, int z) {
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         return mode == ToolMode.WRENCH;
     }
 
@@ -323,7 +321,7 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
 
     @Override
     public boolean canLink(EntityPlayer player, ItemStack stack, EntityMinecart minecart) {
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         return mode == ToolMode.SCREWDRIVER;
     }
 
@@ -339,7 +337,10 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
     public void onBoost(EntityPlayer var1, ItemStack var2, EntityMinecart var3) {}
 
     public enum ToolMode {
-        HOE(Refs.tool_mode_hoe), TREETAP(Refs.tool_mode_treetap), WRENCH(Refs.tool_mode_wrench), SCREWDRIVER(Refs.tool_mode_screwdriver);
+        HOE(Messages.Translations.TOOL_MODE_HOE.format()),
+        TREETAP(Messages.Translations.TOOL_MODE_TREETAP.format()),
+        WRENCH(Messages.Translations.TOOL_MODE_WRENCH.format()),
+        SCREWDRIVER(Messages.Translations.TOOL_MODE_SCREWDRIVER.format());
 
         public static final ToolMode[] VALUES = values();
 
@@ -354,18 +355,16 @@ public class ItemGraviTool extends ItemToolElectric implements IToolWrench, IToo
         }
     }
 
-    public static ToolMode readToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        return ToolMode.getFromId(tag.getInteger("toolMode"));
+    public ToolMode getToolMode(ItemStack stack) {
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        return ToolMode.getFromId(tag.getInteger(TAG_MODE));
     }
 
-    public static ToolMode readNextToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        return ToolMode.getFromId(tag.getInteger("toolMode") + 1);
-    }
-
-    public static void saveToolMode(ItemStack stack, ToolMode mode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        tag.setInteger("toolMode", mode.ordinal());
+    public ToolMode cycleAndSave(ItemStack stack) {
+        ToolMode current = getToolMode(stack);
+        ToolMode next = ToolMode.getFromId(current.ordinal() + 1);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        tag.setInteger(TAG_MODE, next.ordinal());
+        return next;
     }
 }

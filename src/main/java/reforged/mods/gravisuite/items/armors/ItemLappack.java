@@ -13,14 +13,14 @@ public class ItemLappack {
     public static class ItemAdvancedLappack extends ItemArmorElectric {
 
         public ItemAdvancedLappack() {
-            super(GraviSuiteConfig.ADVANCED_LAPPACK_ID, "advanced_lappack", EnergyValues.ADV_LAPPACK.tier, EnergyValues.ADV_LAPPACK.transfer, EnergyValues.ADV_LAPPACK.maxCapacity);
+            super(GraviSuiteConfig.ADVANCED_LAPPACK_ID.get(), "advanced_lappack", EnergyValues.ADV_LAPPACK.tier, EnergyValues.ADV_LAPPACK.transfer, EnergyValues.ADV_LAPPACK.maxCapacity);
         }
     }
 
     public static class ItemUltimateLappack extends ItemArmorElectric {
 
         public ItemUltimateLappack() {
-            super(GraviSuiteConfig.ULTIMATE_LAPPACK_ID, "ultimate_lappack", EnergyValues.ULT_LAPPACK.tier, EnergyValues.ULT_LAPPACK.transfer, EnergyValues.ULT_LAPPACK.maxCapacity);
+            super(GraviSuiteConfig.ULTIMATE_LAPPACK_ID.get(), "ultimate_lappack", EnergyValues.ULT_LAPPACK.tier, EnergyValues.ULT_LAPPACK.transfer, EnergyValues.ULT_LAPPACK.maxCapacity);
         }
 
         @Override

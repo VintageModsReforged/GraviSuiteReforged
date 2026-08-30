@@ -5,8 +5,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.helpers.StackHelper;
 import mods.vintage.core.helpers.pos.BlockPos;
-import mods.vintage.core.platform.lang.FormattedTranslator;
 import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,12 +21,14 @@ import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.utils.EnergyValues;
 import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.KeyDescriptionHelper;
+import reforged.mods.gravisuite.utils.Messages;
 
 import java.util.*;
 
 public class ItemRelocator extends ItemToolElectric {
 
+    public static final String TAG_MODE = "toolMode";
     static int MAX_POINTS = 10;
 
     final int ENERGY_STANDARD_TP;
@@ -35,7 +37,7 @@ public class ItemRelocator extends ItemToolElectric {
     final int ENERGY_SHOOT;
 
     public ItemRelocator() {
-        super(GraviSuiteConfig.RELOCATOR_ID, "relocator", EnergyValues.RELOCATOR.tier, EnergyValues.RELOCATOR.transfer, EnergyValues.RELOCATOR.maxCapacity, EnumToolMaterial.STONE);
+        super(GraviSuiteConfig.RELOCATOR_ID.get(), "relocator", EnergyValues.RELOCATOR.tier, EnergyValues.RELOCATOR.transfer, EnergyValues.RELOCATOR.maxCapacity, EnumToolMaterial.STONE);
         this.ENERGY_STANDARD_TP = GraviSuiteConfig.ENERGY_STANDARD_TP;
         this.ENERGY_CROSS_TP = GraviSuiteConfig.ENERGY_CROSS_TP;
         this.ENERGY_PORTAL = GraviSuiteConfig.ENERGY_PORTAL;
@@ -57,33 +59,33 @@ public class ItemRelocator extends ItemToolElectric {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         super.addInformation(stack, player, tooltip, isDebugMode);
-        ToolMode mode = readToolMode(stack);
-        tooltip.add(Refs.tool_mode_gold + " " + mode.name);
+        ToolMode mode = getToolMode(stack);
+        tooltip.add(Messages.Translations.TOOL_MODE_RELOCATOR.toTooltip().format(mode.name));
         TeleportPoint point = getDefaultPoint(stack);
         if (point != null) {
-            tooltip.add(FormattedTranslator.GOLD.format("message.info.relocator.default", FormattedTranslator.AQUA.literal(point.NAME)));
+            tooltip.add(Translator.GOLD.format("message.info.relocator.default", Translator.AQUA.literal(point.NAME)));
         } else {
-            tooltip.add(FormattedTranslator.GOLD.format("message.info.relocator.default", FormattedTranslator.AQUA.literal(" - ")));
+            tooltip.add(Translator.GOLD.format("message.info.relocator.default", Translator.AQUA.literal(" - ")));
         }
         if (GraviSuite.proxy.isSneakKeyDown()) {
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", "Right Click", Refs.MODE + ".stat"));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.TOOL_RELOCATOR_STAT.format()));
             tooltip.add("");
             String type = mode.name().toLowerCase(Locale.ROOT);
-            tooltip.add(FormattedTranslator.LIGHT_PURPLE.format("tooltip.relocator." + type + ".line1"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_custom_2, Refs.SNEAK_KEY, "Right Click", "tooltip.relocator." + type + ".line2"));
-            tooltip.add(Helpers.pressXForY(Refs.to_custom_1, "Right Click", "tooltip.relocator." + type + ".line3"));
+            tooltip.add(Translator.LIGHT_PURPLE.format("tooltip.relocator." + type + ".line1"));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.SNEAK_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, Translator.YELLOW.format("tooltip.relocator." + type + ".line2")));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.RIGHT_CLICK, Translator.YELLOW.format("tooltip.relocator." + type + ".line3")));
             if (mode == ToolMode.PERSONAL) {
-                String cost = Translator.format("tooltip.relocator.personal.line4",
-                        FormattedTranslator.AQUA.literal(this.ENERGY_STANDARD_TP + ""),
-                        FormattedTranslator.AQUA.literal(this.ENERGY_CROSS_TP + ""));
+                String cost = Translator.RESET.format("tooltip.relocator.personal.line4",
+                        Translator.AQUA.literal(this.ENERGY_STANDARD_TP + ""),
+                        Translator.AQUA.literal(this.ENERGY_CROSS_TP + ""));
                 Collections.addAll(tooltip, cost.split("#"));
             } else {
                 int energy = mode == ToolMode.TRANSLOCATOR ? ENERGY_SHOOT : ENERGY_PORTAL;
-                tooltip.add(Translator.format("tooltip.relocator." + type + ".line4",
-                        FormattedTranslator.AQUA.literal(energy + "")));
+                tooltip.add(Translator.RESET.format("tooltip.relocator." + type + ".line4",
+                        Translator.AQUA.literal(energy + "")));
             }
         } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+            tooltip.add(Helpers.pressForInfo(Messages.Translations.KEY_SNEAK.format()));
         }
     }
 
@@ -91,13 +93,12 @@ public class ItemRelocator extends ItemToolElectric {
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.keyboard.isModeSwitchKeyDown(player)) {
-            ToolMode nextMode = readNextToolMode(stack);
-            saveToolMode(stack, nextMode);
+            ToolMode nextMode = cycleAndSave(stack);
             if (IC2.platform.isRendering())
-                IC2.platform.messagePlayer(player, Refs.tool_mode_gold + " " + nextMode.name);
+                IC2.platform.messagePlayer(player, Messages.Translations.TOOL_MODE_RELOCATOR.format(nextMode.name));
             return stack;
         }
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         if (player.isSneaking()) {
             if (mode == ToolMode.PERSONAL) {
                 player.openGui(GraviSuite.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
@@ -116,7 +117,7 @@ public class ItemRelocator extends ItemToolElectric {
                     actionType = 0;
                     if (!GraviSuiteConfig.enableTranslocator) {
                         if (IC2.platform.isRendering())
-                            IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.translocator.disabled"));
+                            IC2.platform.messagePlayer(player, Translator.RED.format("message.tool.relocator.mode.translocator.disabled"));
                         return stack;
                     }
                 } else {
@@ -124,13 +125,13 @@ public class ItemRelocator extends ItemToolElectric {
                     actionType = 1;
                     if (!GraviSuiteConfig.enablePortal) {
                         if (IC2.platform.isRendering())
-                            IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.relocator.mode.portal.disabled"));
+                            IC2.platform.messagePlayer(player, Translator.RED.format("message.tool.relocator.mode.portal.disabled"));
                         return stack;
                     }
                 }
                 if (!ElectricItem.manager.canUse(stack, energy) && !player.capabilities.isCreativeMode) {
                     if (IC2.platform.isRendering())
-                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.low_energy"));
+                        IC2.platform.messagePlayer(player, Translator.RED.format("message.text.low_energy"));
                 } else {
                     if (IC2.platform.isSimulating() && !player.capabilities.isCreativeMode) {
                         ElectricItem.manager.use(stack, energy, player);
@@ -143,7 +144,7 @@ public class ItemRelocator extends ItemToolElectric {
                 }
             } else {
                 if (IC2.platform.isRendering())
-                    IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.relocator.default.not_set"));
+                    IC2.platform.messagePlayer(player, Translator.RED.format("message.text.relocator.default.not_set"));
             }
         }
 
@@ -162,7 +163,7 @@ public class ItemRelocator extends ItemToolElectric {
                     energy = this.ENERGY_CROSS_TP;
                 }
                 if (!ElectricItem.manager.canUse(stack, energy) && !player.capabilities.isCreativeMode) {
-                    IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.low_energy"));
+                    IC2.platform.messagePlayer(player, Translator.RED.format("message.text.low_energy"));
                 } else {
                     if (IC2.platform.isSimulating() && !player.capabilities.isCreativeMode) {
                         ElectricItem.manager.use(stack, energy, player);
@@ -188,18 +189,18 @@ public class ItemRelocator extends ItemToolElectric {
         if (stack != null && point != null) {
             ArrayList<TeleportPoint> points = new ArrayList<TeleportPoint>(readPointsFromStack(stack));
             if (points.size() >= MAX_POINTS) {
-                IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.text.relocator.full"));
+                IC2.platform.messagePlayer(player, Translator.RED.format("message.text.relocator.full"));
             } else {
                 boolean alreadyAdded = false;
                 for (TeleportPoint teleportPoint : points) {
                     if (teleportPoint.NAME.equalsIgnoreCase(point.NAME)) {
-                        IC2.platform.messagePlayer(player, FormattedTranslator.WHITE.format("message.text.relocator.added", FormattedTranslator.GOLD.literal(point.NAME)));
+                        IC2.platform.messagePlayer(player, Translator.WHITE.format("message.text.relocator.added", Translator.GOLD.literal(point.NAME)));
                         alreadyAdded = true;
                         break;
                     }
                 }
                 if (!alreadyAdded) {
-                    IC2.platform.messagePlayer(player, FormattedTranslator.WHITE.format("message.text.relocator.added", FormattedTranslator.GOLD.literal(point.NAME)));
+                    IC2.platform.messagePlayer(player, Translator.WHITE.format("message.text.relocator.added", Translator.GOLD.literal(point.NAME)));
                     points.add(point);
                     writePointsToStack(stack, points);
                 }
@@ -239,9 +240,9 @@ public class ItemRelocator extends ItemToolElectric {
         }
         if (defaultSet) {
             writePointsToStack(stack, points);
-            IC2.platform.messagePlayer(player, FormattedTranslator.WHITE.format("message.text.relocator.default.set", FormattedTranslator.GOLD.literal(name)));
+            IC2.platform.messagePlayer(player, Translator.WHITE.format("message.text.relocator.default.set", Translator.GOLD.literal(name)));
         } else {
-            IC2.platform.messagePlayer(player, FormattedTranslator.WHITE.format("message.text.relocator.default.none"));
+            IC2.platform.messagePlayer(player, Translator.WHITE.format("message.text.relocator.default.none"));
         }
     }
 
@@ -259,7 +260,7 @@ public class ItemRelocator extends ItemToolElectric {
     public static List<TeleportPoint> readPointsFromStack(ItemStack stack) {
         if (stack == null)
             return null;
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         NBTTagList list = tag.getTagList("pointsList");
         ArrayList<TeleportPoint> arrayList = Lists.newArrayList();
         for (byte i = 0; i < list.tagCount(); i++) {
@@ -280,7 +281,7 @@ public class ItemRelocator extends ItemToolElectric {
     }
 
     public static void writePointsToStack(ItemStack stack, List<TeleportPoint> points) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         NBTTagList list = new NBTTagList();
         for (TeleportPoint point : points) {
             NBTTagCompound compound = new NBTTagCompound();
@@ -298,9 +299,9 @@ public class ItemRelocator extends ItemToolElectric {
     }
 
     public enum ToolMode {
-        PERSONAL(FormattedTranslator.YELLOW.format("message.tool.relocator.mode.personal")),
-        TRANSLOCATOR(FormattedTranslator.AQUA.format("message.tool.relocator.mode.translocator")),
-        PORTAL(FormattedTranslator.LIGHT_PURPLE.format("message.tool.relocator.mode.portal"));
+        PERSONAL(Translator.YELLOW.format("message.tool.relocator.mode.personal")),
+        TRANSLOCATOR(Translator.AQUA.format("message.tool.relocator.mode.translocator")),
+        PORTAL(Translator.LIGHT_PURPLE.format("message.tool.relocator.mode.portal"));
 
         public static final ToolMode[] VALUES = values();
 
@@ -315,18 +316,16 @@ public class ItemRelocator extends ItemToolElectric {
         }
     }
 
-    public static ToolMode readToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        return ToolMode.getFromId(tag.getInteger("toolMode"));
+    public ToolMode getToolMode(ItemStack stack) {
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        return ToolMode.getFromId(tag.getInteger(TAG_MODE));
     }
 
-    public static ToolMode readNextToolMode(ItemStack stack) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        return ToolMode.getFromId(tag.getInteger("toolMode") + 1);
-    }
-
-    public static void saveToolMode(ItemStack stack, ToolMode mode) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
-        tag.setInteger("toolMode", mode.ordinal());
+    public ToolMode cycleAndSave(ItemStack stack) {
+        ToolMode current = getToolMode(stack);
+        ToolMode next = ToolMode.getFromId(current.ordinal() + 1);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        tag.setInteger(TAG_MODE, next.ordinal());
+        return next;
     }
 }

@@ -2,6 +2,7 @@ package reforged.mods.gravisuite.items.tools.base;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.vintage.core.platform.config.IItemBlockIDProvider;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.EnumToolMaterial;
@@ -9,7 +10,7 @@ import net.minecraft.item.ItemTool;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.utils.Refs;
 
-public class ItemToolBase extends ItemTool {
+public class ItemToolBase extends ItemTool implements IItemBlockIDProvider {
 
     public String name;
 

@@ -3,6 +3,7 @@ package reforged.mods.gravisuite;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,13 +60,13 @@ public class GraviSuiteData {
         advanced_quant = new ItemAdvancedQuant();
 
         relocator = new ItemRelocator();
-        relocator_portal = new BlockRelocatorPortal(GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID);
+        relocator_portal = new BlockRelocatorPortal(GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID.get());
         GameRegistry.registerTileEntity(TileEntityRelocatorPortal.class, "Relocator Portal");
         GameRegistry.registerBlock(relocator_portal, ItemRelocatorPortal.class, "BlockRelocatorPortal");
         registerEntity(EntityRelocatorBall.class, "RelocatorBall");
     }
 
-    public static void registerEntity(Class paramClass, String paramString) {
+    public static void registerEntity(Class<? extends Entity> paramClass, String paramString) {
         int i = EntityRegistry.findGlobalUniqueEntityId();
         EntityRegistry.registerModEntity(paramClass, paramString, i, GraviSuite.instance, 64, 1, true);
     }

@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
+import mods.vintage.core.helpers.StackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,6 @@ import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.items.armors.base.ItemBaseJetpack;
 import reforged.mods.gravisuite.items.tools.relocator.EntityRelocatorBall;
 import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
-import reforged.mods.gravisuite.utils.Helpers;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -82,7 +82,7 @@ public class ClientProxy extends CommonProxy {
     public boolean isFlying(EntityPlayer player) {
         ItemStack armorStack = player.getCurrentArmor(2);
         if (armorStack != null) {
-            NBTTagCompound tag = Helpers.getOrCreateTag(armorStack);
+            NBTTagCompound tag = StackHelper.getOrCreateTag(armorStack);
             int energyStorage = ElectricItem.manager.getCharge(armorStack);
             if (energyStorage > 0) {
                 if (armorStack.getItem() instanceof ItemBaseJetpack) {
