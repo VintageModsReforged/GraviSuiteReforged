@@ -1,6 +1,6 @@
 package reforged.mods.gravisuite.client.gui;
 
-import mods.vintage.core.platform.lang.FormattedTranslator;
+import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraftforge.common.DimensionManager;
@@ -149,7 +149,7 @@ public class GuiRelocatorMain extends GuiContainer {
                     int k = selectedItem.selItem;
                     if (k == 10)
                         k = 0;
-                    arrayList1.add(FormattedTranslator.GOLD.literal("Hotkey: " + k));
+                    arrayList1.add(Translator.GOLD.literal("Hotkey: " + k));
                     arrayList1.add("Dimension: " + DimensionManager.getProvider(teleportPoint.DIMENSION_ID).getDimensionName());
                     arrayList1.add("Height: " + teleportPoint.POS.getY());
                     arrayList1.add("X: " + teleportPoint.POS.getX());

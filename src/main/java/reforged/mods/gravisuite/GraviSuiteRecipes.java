@@ -155,7 +155,7 @@ public class GraviSuiteRecipes {
                 'D', Items.getItem("overclockerUpgrade"),
                 'F', Items.getItem("reactorVentDiamond"));
 
-        if (GraviSuiteMainConfig.ENABLE_HAMMERS) {
+        if (GraviSuiteConfig.ENABLE_HAMMERS) {
             Ic2Recipes.addCraftingRecipe(new ItemStack(GraviSuiteData.WOOD_HAMMER),
                     "PPP", "PSP", " S ",
                     'P', Block.planks,

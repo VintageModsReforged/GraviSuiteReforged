@@ -5,39 +5,39 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
+import mods.vintage.core.VintageConfig;
+import mods.vintage.core.helpers.BlockHelper;
 import mods.vintage.core.helpers.ToolHelper;
 import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.IToolTipProvider;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.items.features.*;
+import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
-public class ItemAdvancedDrill extends ItemBaseElectricItem {
+public class ItemAdvancedDrill extends ItemToolElectric implements IPropsProvider, IAOEProvider, IHighlightProvider {
 
     public Set<Block> mineableBlocks = new HashSet<Block>();
     public Set<Material> mineableBlockMaterials = new HashSet<Material>();
 
-    public ItemAdvancedDrill() {
-        super(GraviSuiteMainConfig.ADVANCED_DRILL_ID, "advanced_diamond_drill", EnergyValues.DIAMOND_DRILL.tier, EnergyValues.DIAMOND_DRILL.transfer, EnergyValues.DIAMOND_DRILL.maxCapacity, EnumToolMaterial.EMERALD);
+    public ItemAdvancedDrill(int id, String name, int tier, int transfer, int capacity) {
+        super(id, name, tier, transfer, capacity, EnumToolMaterial.EMERALD);
         this.setIconIndex(Refs.TOOLS_ID);
         MinecraftForge.setToolClass(this, "pickaxe", 4);
         MinecraftForge.setToolClass(this, "shovel", 4);
@@ -47,19 +47,24 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
     @SuppressWarnings("unchecked")
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, final List toolTips, boolean flag) {
-        super.addInformation(stack, player, toolTips, flag);
-        DrillMode mode = readToolMode(stack);
-        DrillProps props = readToolProps(stack);
-        toolTips.add(Refs.tool_mining_mode_gold + " " + mode.NAME);
-        toolTips.add(Refs.eff_tool_mode_gold + " " + props.NAME);
-        addKeyTooltips(toolTips, new IToolTipProvider() {
-            @Override
-            public void addTooltip() {
-                toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", Refs.USE_KEY, Refs.MINING_MODE + ".stat"));
-                toolTips.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", Refs.USE_KEY, Refs.EFF_MODE + ".stat"));
-            }
-        });
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean flag) {
+        super.addInformation(stack, player, tooltip, flag);
+        Mode mode = AOEHelper.getMode(stack);
+        Props props = PropsHelper.getProps(stack);
+        tooltip.add(Messages.Translations.TOOL_MODE_AOE.toTooltip().format(mode.MESSAGE));
+        tooltip.add(Messages.Translations.EFF_TOOL_MODE.toTooltip().format(props.MESSAGE));
+        if (GraviSuite.PROXY.isSneakKeyDown()) {
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.AOE_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.ALT_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.EFF_MODE_STAT.format()));
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+        }
+    }
+
+    @Override
+    public boolean canOperate(ItemStack stack) {
+        Props props = PropsHelper.getProps(stack);
+        return ElectricItem.canUse(stack, props.COST.getDrill());
     }
 
     @Override
@@ -70,42 +75,38 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
 
     @Override
     public float getStrVsBlock(ItemStack stack, Block block, int meta) {
-        DrillProps props = readToolProps(stack);
-        if (!ElectricItem.canUse(stack, props.ENERGY_COST)) {
-            return 0.5F;
-        }
+        Props props = PropsHelper.getProps(stack);
+        if (!canOperate(stack)) return 0.1F;
         if (canHarvestBlock(block) || ForgeHooks.isToolEffective(stack, block, meta)) {
-            return props.EFFICIENCY;
+            return props.EFF.getDrill();
         }
-        return 0.5F;
+        return 0.1F;
     }
 
     @Override
     public float getStrVsBlock(ItemStack stack, Block block) {
-        DrillProps props = readToolProps(stack);
-        if (!ElectricItem.canUse(stack, props.ENERGY_COST)) {
-            return 0.5F;
-        }
+        Props props = PropsHelper.getProps(stack);
+        if (!canOperate(stack)) return 0.1F;
         if (canHarvestBlock(block) || ForgeHooks.isToolEffective(stack, block, 0)) {
-            return props.EFFICIENCY;
+            return props.EFF.getDrill();
         }
-        return 0.5F;
+        return 0.1F;
     }
 
     @Override
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             World world = player.worldObj;
-            DrillMode mode = readToolMode(stack);
-            DrillProps props = readToolProps(stack);
+            Mode mode = AOEHelper.getMode(stack);
+            Props props = PropsHelper.getProps(stack);
             int block = world.getBlockId(x, y, z);
             int radius = player.isSneaking() ? 0 : 1;
             float refStrength = Block.blocksList[block].getBlockHardness(world, x, y, z);
             if (block == 0)
                 return false;
-            if (!ElectricItem.canUse(stack, props.ENERGY_COST))
+            if (!canOperate(stack))
                 return false;
-            if (mode == DrillMode.BIG_HOLES) {
+            if (mode == Mode.BIG_HOLES) {
                 if (refStrength != 0.0D) {
                     BlockPos origin = new BlockPos(x, y, z);
                     for (BlockPos pos : ToolHelper.getAOE(player, origin, radius)) {
@@ -113,15 +114,17 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
                         if (!world.isAirBlock(pos.getX(), pos.getY(), pos.getZ())) {
                             float strength = adjBlock.getBlockHardness(world, pos.getX(), pos.getY(), pos.getZ());
                             if (strength > 0f && strength / refStrength <= 8f) {
-                                if (ElectricItem.canUse(stack, props.ENERGY_COST)) {
+                                if (canOperate(stack)) {
                                     if (canHarvestBlock(adjBlock) && ToolHelper.harvestBlock(world, pos.getX(), pos.getY(), pos.getZ(), player)) {
-                                        ElectricItem.use(stack, props.ENERGY_COST, player);
+                                        ElectricItem.use(stack, props.COST.getDrill(), player);
                                     }
                                 }
                             }
                         }
                     }
                 }
+            } else {
+                ElectricItem.use(stack, props.COST.getDrill(), player);
             }
         }
         return false;
@@ -131,131 +134,52 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLiving entity) {
-        DrillProps props = readToolProps(stack);
-        // will recharge only in NORMAL mode
-        if (blockId == 0) {
+        Mode mode = AOEHelper.getMode(stack);
+        Props props = PropsHelper.getProps(stack);
+        if (blockId != 0) {
             return false;
         }
-        if (Block.blocksList[blockId].getBlockHardness(world, x, y, z) != 0) {
+        if (!canOperate(stack)) return false;
+        if (mode == Mode.NORMAL && Block.blocksList[blockId].getBlockHardness(world, x, y, z) != 0) {
+            int cost = props.COST.getDrill();
             if (entity instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entity;
-                ElectricItem.use(stack, props.ENERGY_COST, player);
+                ElectricItem.use(stack, cost, player);
             } else {
-                ElectricItem.discharge(stack, props.ENERGY_COST, this.TIER, true, false);
+                ElectricItem.discharge(stack, cost, this.TIER, true, false);
             }
         }
         return true;
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
-        if (!IC2.keyboard.isModeSwitchKeyDown(player) && !IC2.keyboard.isAltKeyDown(player) && !IC2.keyboard.isSneakKeyDown(player)) {
-            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
-                ItemStack check = player.inventory.mainInventory[i];
-                if (check != null) {
-                    if(check.getItemName().toLowerCase(Locale.ROOT).contains("torch") && !check.getItemName().toLowerCase(Locale.ROOT).contains("redstone")) {
-                        Item item = check.getItem();
-                        if (item instanceof net.minecraft.item.ItemBlock) {
-                            int oldMeta = check.getItemDamage();
-                            int oldSize = check.stackSize;
-                            boolean result = check.tryPlaceItemIntoWorld(player, world, x, y, z, side, xOffset,
-                                    yOffset, zOffset);
-                            if (player.capabilities.isCreativeMode) {
-                                check.setItemDamage(oldMeta);
-                                check.stackSize = oldSize;
-                            } else if (check.stackSize <= 0) {
-                                ForgeEventFactory.onPlayerDestroyItem(player, check);
-                                player.inventory.mainInventory[i] = null;
-                            }
-                            if (result)
-                                return true;
-                        }
-                    }
-                }
-            }
-        }
-        return super.onItemUse(stack, player, world, x, y, z, side, xOffset, yOffset, zOffset);
-    }
-
-    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
-                DrillMode nextMode = readNextToolMode(stack);
-                saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + nextMode.NAME);
+                Mode nextMode = AOEHelper.cycleAndSave(stack);
+                IC2.platform.messagePlayer(player, Messages.Translations.TOOL_MODE_AOE.format(nextMode.MESSAGE));
             }
             if (IC2.keyboard.isAltKeyDown(player)) {
-                DrillProps nextProps = readNextToolProps(stack);
-                saveToolProps(stack, nextProps);
-                IC2.platform.messagePlayer(player, Refs.eff_tool_mode + " " + nextProps.NAME);
+                Props nextProps = PropsHelper.cycleAndSave(stack);
+                IC2.platform.messagePlayer(player, Messages.Translations.EFF_TOOL_MODE.format(nextProps.MESSAGE));
             }
         }
         return stack;
     }
 
-    public static DrillMode readToolMode(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return DrillMode.getFromId(tag.getInteger("toolMode"));
+    @Override
+    public boolean isProvidingHighlight(ItemStack stack) {
+        return AOEHelper.getMode(stack) == Mode.BIG_HOLES;
     }
 
-    public static DrillMode readNextToolMode(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return DrillMode.getFromId(tag.getInteger("toolMode") + 1);
+    @Override
+    public List<BlockPos> getHighlightArea(BlockPos start, EntityPlayer player, MovingObjectPosition hitResult) {
+        return ToolHelper.getAOE(player, start, player.isSneaking() ? 0 : 1);
     }
 
-    public static void saveToolMode(ItemStack stack, DrillMode mode) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        tag.setInteger("toolMode", mode.ordinal());
-    }
-
-    public static DrillProps readToolProps(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return DrillProps.getFromId(tag.getInteger("toolProps"));
-    }
-
-    public static DrillProps readNextToolProps(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return DrillProps.getFromId(tag.getInteger("toolProps") + 1);
-    }
-
-    public static void saveToolProps(ItemStack stack, DrillProps mode) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        tag.setInteger("toolProps", mode.ordinal());
-    }
-
-    public enum DrillMode {
-        NORMAL(Refs.tool_mode_normal), BIG_HOLES(Refs.tool_mode_big_holes);
-
-        public static final DrillMode[] VALUES = values();
-        public final String NAME;
-        DrillMode(String name) {
-            this.NAME = name;
-        }
-
-        public static DrillMode getFromId(int id) {
-            return VALUES[id % values().length];
-        }
-    }
-
-    public enum DrillProps {
-        NORMAL(35.0F, 160, Refs.eff_tool_mode_normal), LOW_POWER(16.0F, 80, Refs.eff_tool_mode_low),
-        FINE(10.0F, 50, Refs.eff_tool_mode_fine);
-
-        public static final DrillProps[] VALUES = values();
-        public final String NAME;
-        public final float EFFICIENCY;
-        public final int ENERGY_COST;
-
-        DrillProps(float efficiency, int energyCost, String name) {
-            this.NAME = name;
-            this.EFFICIENCY = efficiency;
-            this.ENERGY_COST = energyCost;
-        }
-
-        public static DrillProps getFromId(int id) {
-            return VALUES[id % VALUES.length];
-        }
+    @Override
+    public int[] getHighlightColor(ItemStack stack) {
+        return PropsHelper.getProps(stack).COLOR;
     }
 
     public void init() {
@@ -317,5 +241,117 @@ public class ItemAdvancedDrill extends ItemBaseElectricItem {
         this.mineableBlockMaterials.add(Material.rock);
         this.mineableBlockMaterials.add(Material.sand);
         this.mineableBlockMaterials.add(Material.snow);
+    }
+
+    public static class ItemAdvancedDiamondDrill extends ItemAdvancedDrill {
+
+        public ItemAdvancedDiamondDrill() {
+            super(GraviSuiteConfig.ADVANCED_DRILL_ID.get(), "advanced_diamond_drill", EnergyValues.DIAMOND_DRILL.tier, EnergyValues.DIAMOND_DRILL.transfer, EnergyValues.DIAMOND_DRILL.maxCapacity);
+        }
+    }
+
+    public static class ItemAdvancedIridiumDrill extends ItemAdvancedDrill implements IEnchantmentProvider, IVeinMiner {
+
+        private final int energy_per_use;
+        private final float efficiency;
+
+        public ItemAdvancedIridiumDrill() {
+            super(GraviSuiteConfig.ADVANCED_IRIDIUM_DRILL.get(), "advanced_iridium_drill", EnergyValues.IRIDIUM_DRILL.tier, EnergyValues.IRIDIUM_DRILL.transfer, EnergyValues.IRIDIUM_DRILL.maxCapacity);
+            this.energy_per_use = 1000;
+            this.efficiency = 24.0F;
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public EnumRarity getRarity(ItemStack stack) {
+            return EnumRarity.rare;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean flag) {
+            this.addEnergyInfo(stack, tooltip);
+            tooltip.add(Messages.Translations.VEIN_MINER.format());
+            tooltip.add(Messages.Translations.ENCH_MODE.toTooltip().format(EnchantHelper.getEnch(stack).MESSAGE));
+            if (GraviSuite.PROXY.isSneakKeyDown()) {
+                tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.SNEAK_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.ENCH_MODE_STAT.format()));
+            } else {
+                tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+            }
+        }
+
+        @Override
+        public float getStrVsBlock(ItemStack stack, Block block, int meta) {
+            if (!ElectricItem.canUse(stack, this.energy_per_use)) {
+                return 0.1F;
+            }
+            if (canHarvestBlock(block)) {
+                return this.efficiency;
+            }
+            return 0.0F;
+        }
+
+        @Override
+        public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+            if (IC2.platform.isSimulating()) {
+                if (IC2.keyboard.isSneakKeyDown(player)) {
+                    EnchantmentMode nextEnch = EnchantHelper.cycleAndSave(stack);
+                    IC2.platform.messagePlayer(player, Messages.Translations.ENCH_MODE.format(nextEnch.MESSAGE));
+                }
+            }
+            return stack;
+        }
+
+        @Override
+        public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
+            World world = player.worldObj;
+
+            if (!IC2.platform.isSimulating() || player.capabilities.isCreativeMode) return false;
+
+            if (!Vein.ORES.matches(world, x, y, z)) return super.onBlockStartBreak(stack, x, y, z, player);
+
+            if (!ElectricItem.canUse(stack, this.energy_per_use)) return false;
+
+            BlockPos origin = new BlockPos(x, y, z);
+
+            for (BlockPos coord : BlockHelper.veinPos(world, origin, VintageConfig.veinMaxCount)) {
+                if (coord.equals(origin)) continue; // Skip the origin block
+
+                if (!ElectricItem.canUse(stack, this.energy_per_use)) break;
+
+                Block block = BlockHelper.getBlock(world, coord);
+                if (!canHarvestBlock(block)) continue;
+
+                if (ToolHelper.harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
+                    ElectricItem.use(stack, this.energy_per_use, player);
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean hasEffect(ItemStack stack) {
+            return false;
+        }
+
+        @Override
+        public boolean isProvidingHighlight(ItemStack stack) {
+            return true;
+        }
+
+        @Override
+        public int[] getHighlightColor(ItemStack stack) {
+            return Props.FINE.COLOR;
+        }
+
+        @Override
+        public List<BlockPos> getHighlightArea(BlockPos start, EntityPlayer player, MovingObjectPosition hitResult) {
+            World world = player.worldObj;
+            if (Vein.ORES.matches(world, start.getX(), start.getY(), start.getZ())) {
+                return new ArrayList<BlockPos>(BlockHelper.veinPos(world, start, VintageConfig.veinMaxCount));
+            } else return Collections.emptyList();
+        }
     }
 }

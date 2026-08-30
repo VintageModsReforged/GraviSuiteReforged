@@ -17,6 +17,7 @@ public class NEIHandler {
                     GraviSuiteData.VAJRA_CORE.itemID,
                     GraviSuiteData.ENGINE_BOOSTER.itemID,
                     GraviSuiteData.ADVANCED_DRILL.itemID,
+                    GraviSuiteData.ADVANCED_IRIDIUM_DRILL.itemID,
                     GraviSuiteData.ADVANCED_CHAINSAW.itemID,
                     GraviSuiteData.VAJRA.itemID,
                     GraviSuiteData.MAGNET.itemID,

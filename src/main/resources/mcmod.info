@@ -1,9 +1,14 @@
 [
   {
-    "modid": "gravisuite",
-    "name": "GraviSuite - Addon",
-    "description": "A powerful IndustrialCraft 2 addon that gives you the ability to fly and introduces advanced tools to boost your mining and harvesting efficiency.",
-    "version": "${version}",
-    "authors": ["Original: SeNtiMeL", "Reforged: CrossVas"]
+    "modid": "${modid}",
+    "name": "${modName}",
+    "description": "${modDescription}",
+    "version": "${modVersion}",
+    "mcversion": "${minecraft}",
+    "authorList": ["${modAuthors}"],
+    "url": "${url}",
+    "dependencies": [
+      "${modDeps}"
+    ]
   }
 ]

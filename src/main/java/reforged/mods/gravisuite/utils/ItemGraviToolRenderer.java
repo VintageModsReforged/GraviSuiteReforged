@@ -6,7 +6,7 @@ import net.minecraftforge.client.IItemRenderer;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.items.tools.ItemGraviTool;
 
-import static reforged.mods.gravisuite.items.tools.ItemGraviTool.readToolMode;
+import static reforged.mods.gravisuite.items.tools.ItemGraviTool.getToolMode;
 
 public class ItemGraviToolRenderer implements IItemRenderer {
 
@@ -28,7 +28,7 @@ public class ItemGraviToolRenderer implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType itemRenderType, ItemStack itemStack, Object... objects) {
-        ItemGraviTool.ToolMode mode = readToolMode(itemStack);
+        ItemGraviTool.ToolMode mode = getToolMode(itemStack);
         if (itemRenderType == ItemRenderType.INVENTORY) {
             renderItem.renderTexturedQuad(0, 0, mode.index % 16 * 16, mode.index / 16 * 16, 16, 16);
         }

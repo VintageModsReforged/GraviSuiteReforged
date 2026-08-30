@@ -7,32 +7,25 @@ import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLiving;
+import mods.vintage.core.helpers.ElectricHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.audio.IAudioProvider;
-import reforged.mods.gravisuite.items.IToolTipProvider;
-import reforged.mods.gravisuite.items.armors.base.ItemBaseEnergyPack;
-import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
+import reforged.mods.gravisuite.items.armors.base.ItemArmorElectric;
 import reforged.mods.gravisuite.proxy.CommonProxy;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.*;
 
 import java.util.List;
 
-public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArmor, IAudioProvider {
+public class ItemAdvancedQuant extends ItemArmorElectric implements ISpecialArmor, IAudioProvider {
 
     public int ENERGY_PER_DAMAGE = 800;
     public static int MIN_CHARGE = 80000;
@@ -43,13 +36,17 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public static byte TOGGLE_TIMER;
 
     public ItemAdvancedQuant() {
-        super(GraviSuiteMainConfig.ADVANCED_QUANT_ID, EnumArmorMaterial.DIAMOND, 4, "advanced_quant", EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
+        super(GraviSuiteConfig.ADVANCED_QUANT_ID.get(), EnumArmorMaterial.DIAMOND, "advanced_quant", 4, EnergyValues.ADV_QUANT.tier, EnergyValues.ADV_QUANT.transfer, EnergyValues.ADV_QUANT.maxCapacity);
         this.USAGE_IN_AIR = 278;
         this.USAGE_ON_GROUND = 1;
         this.BOOST_SPEED = 0.5F;
         this.BOOST_MULTIPLIER = 3;
-        MinecraftForge.EVENT_BUS.register(this);
         TOGGLE_TIMER = 5;
+        MinecraftForge.EVENT_BUS.register(this);
+        this.ENERGY_PER_DAMAGE = 900;
+        this.DAMAGE_PRIORITY = 8;
+        this.BASE_ABSORPTION = 1.1D;
+        this.DAMAGE_ABSORPTION = 0.4D;
     }
 
     @Override
@@ -65,18 +62,17 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         super.addInformation(stack, player, tooltip, par4);
         boolean isGraviEngineOn = readFlyStatus(stack);
         boolean isLevitationOn = readWorkMode(stack);
-        String gravitationEngine = isGraviEngineOn ? Refs.status_on : Refs.status_off;
-        String levitationStatus = isLevitationOn ? Refs.status_on : Refs.status_off;
-        tooltip.add(Refs.gravitation_engine + " " + gravitationEngine);
-        tooltip.add(Refs.gravitation_levitation + " " + levitationStatus);
-        addKeyTooltips(tooltip, new IToolTipProvider() {
-            @Override
-            public void addTooltip() {
-                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, StatCollector.translateToLocal(GraviSuiteKeyboardClient.engine_toggle.keyDescription), Refs.GRAVITATION_ENGINE + ".stat"));
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_enable_2, "Mode Switch Key", StatCollector.translateToLocal(Minecraft.getMinecraft().gameSettings.keyBindJump.keyDescription), Refs.LEVITATION + ".stat"));
-                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, "Boost Key", Refs.BOOST_MODE));
-            }
-        });
+        String gravitationEngine = Helpers.getStatusMessage(isGraviEngineOn);
+        String levitationStatus = Helpers.getStatusMessage(isLevitationOn);
+        tooltip.add(Messages.Translations.GRAVITATION_ENGINE.format(gravitationEngine));
+        tooltip.add(Messages.Translations.GRAVITATION_LEVITATION.format(levitationStatus));
+        if (GraviSuite.PROXY.isSneakKeyDown()) {
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.TOGGLE_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.GRAVITATION_ENGINE_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.JUMP_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.LEVITATION_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.BOOST_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.BOOST_MODE.format()));
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+        }
     }
 
     @Override
@@ -119,10 +115,10 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     }
 
     public void use(EntityPlayer player, ItemStack itemStack) {
-        double currCharge = Helpers.getCharge(itemStack);
+        double currCharge = ElectricHelper.getCharge(itemStack);
         if (!player.capabilities.isCreativeMode) {
             if (currCharge < USAGE_IN_AIR) {
-                IC2.platform.messagePlayer(player, Refs.status_shutdown);
+                IC2.platform.messagePlayer(player, Messages.Translations.STATUS_SHUTDOWN.format());
                 switchFlyState(player, itemStack);
             } else if (!player.onGround) {
                 ElectricItem.discharge(itemStack, USAGE_IN_AIR, 3, false, false);
@@ -144,8 +140,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
                     ElectricItem.discharge(itemStack, USAGE_IN_AIR * BOOST_MULTIPLIER, 3, true, false);
                 }
             } else {
-                IC2.platform.messagePlayer(player, Refs.status_low);
-
+                IC2.platform.messagePlayer(player, Messages.Translations.STATUS_LOW.format());
             }
         }
     }
@@ -153,7 +148,7 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
     public void boostMode(EntityPlayer player, ItemStack itemstack) {
         if ((readFlyStatus(itemstack)) && (!player.onGround) && (player.capabilities.isFlying)
                 && (!player.isInWater())) {
-            double currCharge = Helpers.getCharge(itemstack);
+            double currCharge = ElectricHelper.getCharge(itemstack);
             if ((currCharge > USAGE_IN_AIR * BOOST_MULTIPLIER) || (player.capabilities.isCreativeMode)) {
                 player.moveFlying(0.0F, 0.4F, BOOST_SPEED + 0.1F);
 
@@ -179,10 +174,10 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         String message;
         if (readWorkMode(itemstack)) {
             saveWorkMode(itemstack, false);
-            message = Refs.gravitation_levitation + " " + Refs.status_off;
+            message = Messages.Translations.GRAVITATION_LEVITATION.format(Messages.Translations.STATUS_OFF.format());
         } else {
             saveWorkMode(itemstack, true);
-            message = Refs.gravitation_levitation + " " + Refs.status_on;
+            message = Messages.Translations.GRAVITATION_LEVITATION.format(Messages.Translations.STATUS_ON.format());
         }
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);
@@ -204,41 +199,19 @@ public class ItemAdvancedQuant extends ItemBaseEnergyPack implements ISpecialArm
         String message;
         if (readFlyStatus(itemstack)) {
             saveFlyStatus(itemstack, false);
-            message = Refs.gravitation_engine + " " + Refs.status_off;
+            message = Messages.Translations.GRAVITATION_ENGINE.format(Messages.Translations.STATUS_OFF.format());
         } else {
-            double currCharge = Helpers.getCharge(itemstack);
+            double currCharge = ElectricHelper.getCharge(itemstack);
             if ((currCharge >= MIN_CHARGE) || (player.capabilities.isCreativeMode)) {
-                message = Refs.gravitation_engine + " " + Refs.status_on;
+                message = Messages.Translations.GRAVITATION_ENGINE.format(Messages.Translations.STATUS_ON.format());
                 saveFlyStatus(itemstack, true);
             } else {
-                message = Refs.status_low;
+                message = Messages.Translations.STATUS_LOW.format();
             }
         }
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(player, message);
         }
-    }
-
-    @Override
-    public ArmorProperties getProperties(EntityLiving entityLiving, ItemStack armor, DamageSource damageSource, double damage, int slot) {
-        if (damageSource.isUnblockable()) {
-            return new ArmorProperties(0, 0, 0);
-        } else {
-            double absorptionRatio = 1.1D * 0.4D;
-            int energyPerDamage = ENERGY_PER_DAMAGE;
-            int damageLimit = energyPerDamage > 0 ? 25 * ElectricItem.discharge(armor, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true) / energyPerDamage : 0;
-            return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
-        }
-    }
-
-    @Override
-    public int getArmorDisplay(EntityPlayer entityPlayer, ItemStack stack, int slot) {
-        return ElectricItem.discharge(stack, Integer.MAX_VALUE, Integer.MAX_VALUE, true, true) >= this.ENERGY_PER_DAMAGE ? (int) Math.round((double) 20.0F * 1.1D * 0.4D) : 0;
-    }
-
-    @Override
-    public void damageArmor(EntityLiving entityLiving, ItemStack stack, DamageSource damageSource, int damage, int slot) {
-        ElectricItem.discharge(stack, damage * ENERGY_PER_DAMAGE, Integer.MAX_VALUE, true, false);
     }
 
     @Override

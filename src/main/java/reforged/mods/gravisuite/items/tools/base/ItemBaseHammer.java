@@ -1,9 +1,12 @@
 package reforged.mods.gravisuite.items.tools.base;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import mods.vintage.core.helpers.BlockHelper;
 import mods.vintage.core.helpers.ToolHelper;
 import mods.vintage.core.helpers.pos.BlockPos;
+import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -16,14 +19,15 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import reforged.mods.gravisuite.GraviSuite;
 import reforged.mods.gravisuite.GraviSuiteData;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.utils.Refs;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class ItemBaseHammer extends ItemBaseTool {
+public class ItemBaseHammer extends ItemToolBase {
 
     public Set<Block> mineableBlocks = new HashSet<Block>();
     public Set<Material> mineableBlockMaterials = new HashSet<Material>();
@@ -34,6 +38,15 @@ public class ItemBaseHammer extends ItemBaseTool {
         MinecraftForge.setToolClass(this, "pickaxe", enumToolMaterial.getHarvestLevel());
         this.setIconIndex(Refs.HAMMERS_ID + this.meta);
         init();
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean debug) {
+        super.addInformation(stack, player, list, debug);
+        list.add(Translator.RED.literal("DEPRECATED!"));
+        list.add(Translator.RED.literal("THIS ITEM WILL BE REMOVED IN THE NEXT VERSION!"));
     }
 
     @Override
@@ -83,7 +96,7 @@ public class ItemBaseHammer extends ItemBaseTool {
                     }
                 }
                 if (mined > 0) {
-                    stack.damageItem((int) (mined * GraviSuiteMainConfig.DURABILITY_FACTOR), player);
+                    stack.damageItem((int) (mined * GraviSuiteConfig.DURABILITY_FACTOR), player);
                 }
             } else {
                 return super.onBlockStartBreak(stack, x, y, z, player);

@@ -1,6 +1,7 @@
 package reforged.mods.gravisuite.blocks;
 
 import ic2.core.IC2;
+import mods.vintage.core.platform.config.IItemBlockIDProvider;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -13,7 +14,7 @@ import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
 
 import java.util.Random;
 
-public class BlockRelocatorPortal extends BlockContainer {
+public class BlockRelocatorPortal extends BlockContainer implements IItemBlockIDProvider {
 
     public BlockRelocatorPortal(int id) {
         super(id, Material.portal);

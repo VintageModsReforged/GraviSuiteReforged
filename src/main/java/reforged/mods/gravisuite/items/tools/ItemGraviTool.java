@@ -14,6 +14,7 @@ import ic2.core.block.machine.tileentity.TileEntityTerra;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
 import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.StackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,27 +25,26 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.IToolTipProvider;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.*;
 import thermalexpansion.api.core.IDismantleable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
+public class ItemGraviTool extends ItemToolElectric implements IToolWrench {
 
+    public static final String TAG_MODE = "toolMode";
     public int ENERGY_PER_USE = 50;
     public boolean LOW_ENERGY = false;
 
-    public String CHANGE_SOUND = "toolchange.ogg";
+    public String CHANGE_SOUND = "Tools/change.ogg";
     public String TOOL_WRENCH = "Tools/wrench.ogg";
 
     public ItemGraviTool() {
-        super(GraviSuiteMainConfig.GRAVI_TOOL_ID, "gravitool", EnergyValues.GRAVITOOL.tier, EnergyValues.GRAVITOOL.transfer, EnergyValues.GRAVITOOL.maxCapacity, EnumToolMaterial.IRON);
+        super(GraviSuiteConfig.GRAVI_TOOL_ID.get(), "gravitool", EnergyValues.GRAVITOOL.tier, EnergyValues.GRAVITOOL.transfer, EnergyValues.GRAVITOOL.maxCapacity, EnumToolMaterial.IRON);
         this.setIconIndex(Refs.GRAVITOOL_ID);
     }
 
@@ -53,17 +53,13 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean debugMode) {
         super.addInformation(stack, player, tooltip, debugMode);
-        ToolMode mode = readToolMode(stack);
-        tooltip.add(Refs.tool_mode_gold + " " + mode.name);
-        if (debugMode) {
-            tooltip.add("Texture Index: " + mode.index);
+        ToolMode mode = getToolMode(stack);
+        tooltip.add(Messages.Translations.TOOL_MODE.toTooltip().format(mode.name));
+        if (GraviSuite.PROXY.isSneakKeyDown()) {
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.TOOL_MODE_STAT.format()));
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
         }
-        addKeyTooltips(tooltip, new IToolTipProvider() {
-            @Override
-            public void addTooltip() {
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", Refs.USE_KEY, Refs.MODE + ".stat"));
-            }
-        });
     }
 
     @Override
@@ -75,9 +71,8 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.keyboard.isModeSwitchKeyDown(player)) {
             if (IC2.platform.isSimulating()) {
-                ToolMode nextMode = readNextToolMode(stack);
-                saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mode + " " + nextMode.name);
+                ToolMode nextMode = cycleAndSave(stack);
+                IC2.platform.messagePlayer(player, Messages.Translations.TOOL_MODE.format(nextMode.name));
             }
             IC2.audioManager.playOnce(player, PositionSpec.Hand, CHANGE_SOUND, false, IC2.audioManager.defaultVolume);
         }
@@ -86,7 +81,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
                 return false;
@@ -97,7 +92,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
                     return Ic2Items.electricTreetap.getItem().onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
                 }
             } else {
-                IC2.platform.messagePlayer(player, Refs.status_low);
+                IC2.platform.messagePlayer(player, Messages.Translations.STATUS_LOW.format());
             }
         }
         return false;
@@ -105,7 +100,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
 
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         boolean actionDone = false;
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
@@ -155,7 +150,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
 
                 if (wrenchable.wrenchCanRemove(player)) {
                     if (simulating) {
-                        if (GraviSuiteMainConfig.LOG_WRENCH) {
+                        if (GraviSuiteConfig.LOG_WRENCH) {
                             String blockName = block.translateBlockName();
                             MinecraftServer.getServer().logInfo("Player " + player.username + " used the wrench to remove the " + blockName + " (" + blockID + "-" + blockMetadata + ") at " + x + "/" + y + "/" + z);
                         }
@@ -296,7 +291,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
             IC2.audioManager.playOnce(player, PositionSpec.Hand, TOOL_WRENCH, false, IC2.audioManager.defaultVolume);
         }
         if (LOW_ENERGY && IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(player, Refs.status_low);
+            IC2.platform.messagePlayer(player, Messages.Translations.STATUS_LOW.format());
         }
         return IC2.platform.isSimulating();
     }
@@ -310,7 +305,7 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     @Override
     public boolean canWrench(EntityPlayer player, int x, int y, int z) {
         ItemStack stack = player.getHeldItem();
-        ToolMode mode = readToolMode(stack);
+        ToolMode mode = getToolMode(stack);
         return mode == ToolMode.WRENCH;
     }
 
@@ -321,8 +316,10 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
     }
 
     public enum ToolMode {
-        HOE(Refs.tool_mode_hoe, Refs.GRAVITOOL_ID), TREETAP(Refs.tool_mode_treetap, Refs.GRAVITOOL_ID + 1),
-        WRENCH(Refs.tool_mode_wrench, Refs.GRAVITOOL_ID + 2), SCREWDRIVER(Refs.tool_mode_screwdriver, Refs.GRAVITOOL_ID + 3);
+        HOE(Messages.Translations.TOOL_MODE_HOE.format(), Refs.GRAVITOOL_ID),
+        TREETAP(Messages.Translations.TOOL_MODE_TREETAP.format(), Refs.GRAVITOOL_ID + 1),
+        WRENCH(Messages.Translations.TOOL_MODE_WRENCH.format(), Refs.GRAVITOOL_ID + 2),
+        SCREWDRIVER(Messages.Translations.TOOL_MODE_SCREWDRIVER.format(), Refs.GRAVITOOL_ID + 3);
 
         public static final ToolMode[] VALUES = values();
 
@@ -339,18 +336,16 @@ public class ItemGraviTool extends ItemBaseElectricItem implements IToolWrench {
         }
     }
 
-    public static ToolMode readToolMode(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return ToolMode.getFromId(tag.getInteger("toolMode"));
+    public static ToolMode getToolMode(ItemStack stack) {
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        return ToolMode.getFromId(tag.getInteger(TAG_MODE));
     }
 
-    public static ToolMode readNextToolMode(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return ToolMode.getFromId(tag.getInteger("toolMode") + 1);
-    }
-
-    public static void saveToolMode(ItemStack stack, ToolMode mode) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        tag.setInteger("toolMode", mode.ordinal());
+    public ToolMode cycleAndSave(ItemStack stack) {
+        ToolMode current = getToolMode(stack);
+        ToolMode next = ToolMode.getFromId(current.ordinal() + 1);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        tag.setInteger(TAG_MODE, next.ordinal());
+        return next;
     }
 }

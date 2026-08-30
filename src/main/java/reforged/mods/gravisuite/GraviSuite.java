@@ -8,37 +8,27 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import mods.vintage.core.helpers.BlockHelper;
-import mods.vintage.core.helpers.Utils;
-import mods.vintage.core.platform.lang.FormattedTranslator;
-import mods.vintage.core.platform.lang.ILangProvider;
 import mods.vintage.core.platform.lang.LangManager;
-import net.minecraft.block.Block;
+import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import reforged.mods.gravisuite.compat.NEIHandler;
-import reforged.mods.gravisuite.items.tools.ItemGraviTool;
+import reforged.mods.gravisuite.events.client.HighlightHandler;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboard;
 import reforged.mods.gravisuite.network.NetworkHandler;
 import reforged.mods.gravisuite.network.NetworkHandlerClient;
 import reforged.mods.gravisuite.proxy.CommonProxy;
 import reforged.mods.gravisuite.utils.GraviSuiteGuiHandler;
 import reforged.mods.gravisuite.utils.Refs;
-import thermalexpansion.api.core.IDismantleable;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
-@Mod(modid = Refs.ID, name = Refs.NAME, dependencies = Refs.DEPS, useMetadata = true)
+@Mod(modid = Refs.ID, useMetadata = true)
 @NetworkMod(clientSideRequired = true,
         clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.ID }, packetHandler = NetworkHandlerClient.class),
         serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = { Refs.ID }, packetHandler = NetworkHandler.class))
-public class GraviSuite implements ILangProvider {
+public class GraviSuite {
 
     @SidedProxy(clientSide = Refs.CLIENT_PROXY, serverSide = Refs.COMMON_PROXY)
     public static CommonProxy PROXY;
@@ -66,20 +56,19 @@ public class GraviSuite implements ILangProvider {
 
     public GraviSuite() {
         LOGGER.setParent(FMLLog.getLogger());
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new HighlightHandler());
     }
 
     @Mod.PreInit
     public void preInit(FMLPreInitializationEvent e) {
         PROXY.preInit(e);
-        GraviSuiteData.init();
         NetworkRegistry.instance().registerGuiHandler(this, new GraviSuiteGuiHandler());
-        LangManager.THIS.registerLangProvider(this);
-        LangManager.THIS.loadCreativeTabName(Refs.ID, FormattedTranslator.BLUE.literal(Refs.NAME));
+        LangManager.INSTANCE.loadCreativeTabName(Refs.ID, Translator.BLUE.literal(Refs.NAME));
     }
 
     @Mod.Init
     public void init(FMLInitializationEvent e) {
+        PROXY.init(e);
         PROXY.registerRenderers();
     }
 
@@ -87,41 +76,5 @@ public class GraviSuite implements ILangProvider {
     public void postInit(FMLPostInitializationEvent e) {
         PROXY.postInit(e);
         NEIHandler.init();
-    }
-
-    @ForgeSubscribe
-    public void onRightClick(PlayerInteractEvent e) {
-        ItemStack heldStack = e.entityPlayer.getHeldItem();
-        if (heldStack != null) {
-            if (e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
-                Block block = BlockHelper.getBlock(e.entity.worldObj, e.x, e.y, e.z);
-
-                if (heldStack.getItem() == Item.stick && GraviSuiteMainConfig.INSPECT_MODE) {
-                    int metadata = e.entityPlayer.worldObj.getBlockMetadata(e.x, e.y, e.z);
-                    if (block != null) {
-                        LOGGER.info("Block: " + block.translateBlockName() + " | Class Name: " + block.getClass().getName());
-                        LOGGER.info("Block Metadata: " + metadata);
-                    }
-                }
-                if (heldStack.getItem() == GraviSuiteData.GRAVI_TOOL) {
-                    if (block instanceof IDismantleable && ItemGraviTool.readToolMode(heldStack) != ItemGraviTool.ToolMode.WRENCH) {
-                        e.setCanceled(true); // cancel interaction with ThermalExpansion when not in WRENCH mode
-                    }
-                    if (Utils.instanceOf(block, "appeng.common.AppEngMultiBlock") && ItemGraviTool.readToolMode(heldStack) != ItemGraviTool.ToolMode.SCREWDRIVER) { // cancel any interaction with AE block when is not in SCREWDRIVER mode
-                        e.setCanceled(true);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public String getModid() {
-        return Refs.ID;
-    }
-
-    @Override
-    public List<String> getLocalizationList() {
-        return Arrays.asList(GraviSuiteMainConfig.LANGUAGES);
     }
 }

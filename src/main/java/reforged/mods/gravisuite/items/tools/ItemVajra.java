@@ -4,42 +4,35 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
-import ic2.core.util.StackUtil;
+import mods.vintage.core.VintageConfig;
 import mods.vintage.core.helpers.BlockHelper;
-import mods.vintage.core.helpers.StackHelper;
 import mods.vintage.core.helpers.ToolHelper;
 import mods.vintage.core.helpers.pos.BlockPos;
 import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.EnumToolMaterial;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.IToolTipProvider;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.GraviSuite;
+import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.items.features.IEnchantmentProvider;
+import reforged.mods.gravisuite.items.features.IHighlightProvider;
+import reforged.mods.gravisuite.items.features.IPropsProvider;
+import reforged.mods.gravisuite.items.features.IVeinMiner;
+import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
+import reforged.mods.gravisuite.utils.*;
 
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
-public class ItemVajra extends ItemBaseElectricItem {
+public class ItemVajra extends ItemToolElectric implements IPropsProvider, IVeinMiner, IEnchantmentProvider, IHighlightProvider {
 
     public ItemVajra() {
-        super(GraviSuiteMainConfig.VAJRA_ID, "vajra", EnergyValues.VAJRA.tier, EnergyValues.VAJRA.transfer, EnergyValues.VAJRA.maxCapacity, EnumToolMaterial.EMERALD);
+        super(GraviSuiteConfig.VAJRA_ID.get(), "vajra", EnergyValues.VAJRA.tier, EnergyValues.VAJRA.transfer, EnergyValues.VAJRA.maxCapacity, EnumToolMaterial.EMERALD);
         this.efficiencyOnProperMaterial = 1.0F;
         this.setIconIndex(Refs.TOOLS_ID + 2);
         MinecraftForge.setToolClass(this, "pickaxe", 4);
@@ -53,139 +46,81 @@ public class ItemVajra extends ItemBaseElectricItem {
         return EnumRarity.epic;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean par4) {
+        super.addInformation(stack, player, tooltip, par4);
+        Vein vein = VeinMinerHelper.getVein(stack);
+        Props props = PropsHelper.getProps(stack);
+        tooltip.add(Messages.Translations.TOOL_VEIN_MODE.toTooltip().format(vein.MESSAGE));
+        tooltip.add(Messages.Translations.EFF_TOOL_MODE.toTooltip().format(props.MESSAGE));
+        tooltip.add(Messages.Translations.ENCH_MODE.toTooltip().format(EnchantHelper.getEnch(stack).MESSAGE));
+        if (GraviSuite.PROXY.isSneakKeyDown()) {
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.VEIN_MODE_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.ALT_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.EFF_MODE_STAT.format()));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.SNEAK_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, KeyDescriptionHelper.KeyMode.CHANGE, Messages.Translations.ENCH_MODE_STAT.format()));
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+        }
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack par1ItemStack) {
         return false;
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean par4) {
-        super.addInformation(stack, player, tooltip, par4);
-        VajraMode mode = readToolMode(stack);
-        VajraProps props = readToolProps(stack);
-        tooltip.add(Refs.tool_mining_mode_gold + " " + mode.name);
-        tooltip.add(Refs.eff_tool_mode_gold + " " + props.name);
-        addKeyTooltips(tooltip, new IToolTipProvider() {
-            @Override
-            public void addTooltip() {
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "Mode Switch Key", Refs.USE_KEY, Refs.MINING_MODE + ".stat"));
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, "IC2 Alt Key", Refs.USE_KEY, Refs.EFF_MODE + ".stat"));
-                tooltip.add(Helpers.pressXAndYForZ(Refs.to_change_2, Refs.SNEAK_KEY, Refs.USE_KEY, Refs.ENCH_MODE + ".stat"));
-            }
-        });
+    public boolean canOperate(ItemStack stack) {
+        Props props = PropsHelper.getProps(stack);
+        return ElectricItem.canUse(stack, props.COST.getVajra());
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (IC2.platform.isSimulating()) {
             if (IC2.keyboard.isModeSwitchKeyDown(player)) {
-                VajraMode nextMode = readNextToolMode(stack);
-                saveToolMode(stack, nextMode);
-                IC2.platform.messagePlayer(player, Refs.tool_mode + " " + nextMode.name);
-
+                Vein nextVein = VeinMinerHelper.cycleAndSave(stack);
+                IC2.platform.messagePlayer(player, Messages.Translations.TOOL_VEIN_MODE.format(nextVein.MESSAGE));
             }
             if (IC2.keyboard.isAltKeyDown(player)) {
-                VajraProps nextProps = readNextToolProps(stack);
-                saveToolProps(stack, nextProps);
-                IC2.platform.messagePlayer(player, Refs.eff_tool_mode + " " + nextProps.name);
-                this.efficiencyOnProperMaterial = nextProps.efficiency;
+                Props nextProps = PropsHelper.cycleAndSave(stack);
+                IC2.platform.messagePlayer(player, Messages.Translations.EFF_TOOL_MODE.format(nextProps.MESSAGE));
+                this.efficiencyOnProperMaterial = nextProps.EFF.getVajra();
             }
 
             if (IC2.keyboard.isSneakKeyDown(player)) {
-                Map<Integer, Integer> enchMap = new IdentityHashMap<Integer, Integer>();
-                NBTTagList enchTagList = stack.getEnchantmentTagList();
-                if (EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) == 0) {
-                    enchMap.put(Enchantment.silkTouch.effectId, 1);
-                    IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_silk);
-                } else {
-                    enchMap.put(Enchantment.fortune.effectId, 3);
-                    IC2.platform.messagePlayer(player, Refs.tool_mining_mode + " " + Refs.tool_mode_fortune);
-                }
-                if (enchTagList != null) {
-                    for (int i = 0; i < enchTagList.tagCount(); i++) {
-                        int id = ((NBTTagCompound) enchTagList.tagAt(i)).getShort("id");
-                        int lvl = ((NBTTagCompound) enchTagList.tagAt(i)).getShort("lvl");
-                        if (id != Enchantment.fortune.effectId && id != Enchantment.silkTouch.effectId) {
-                            enchMap.put(id, lvl);
-                        }
-                    }
-                }
-                EnchantmentHelper.setEnchantments(enchMap, stack);
+                EnchantmentMode next = EnchantHelper.cycleAndSave(stack);
+                IC2.platform.messagePlayer(player, Messages.Translations.ENCH_MODE.format(next.MESSAGE));
             }
         }
         return stack;
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
-        if (!IC2.keyboard.isModeSwitchKeyDown(player) && !IC2.keyboard.isAltKeyDown(player) && !IC2.keyboard.isSneakKeyDown(player)) {
-            for (int i = 0; i < player.inventory.mainInventory.length; i++) {
-                ItemStack check = player.inventory.mainInventory[i];
-                if (check != null) {
-                    if(check.getDisplayName().toLowerCase(Locale.ENGLISH).contains("torch")) {
-                        Item item = check.getItem();
-                        if (item instanceof net.minecraft.item.ItemBlock) {
-                            int oldMeta = check.getItemDamage();
-                            int oldSize = check.stackSize;
-                            boolean result = check.tryPlaceItemIntoWorld(player, world, x, y, z, side, xOffset,
-                                    yOffset, zOffset);
-                            if (player.capabilities.isCreativeMode) {
-                                check.setItemDamage(oldMeta);
-                                check.stackSize = oldSize;
-                            } else if (check.stackSize <= 0) {
-                                ForgeEventFactory.onPlayerDestroyItem(player, check);
-                                player.inventory.mainInventory[i] = null;
-                            }
-                            if (result)
-                                return true;
-                        }
-                    }
-                }
-            }
-        }
-        return super.onItemUse(stack, player, world, x, y, z, side, xOffset, yOffset, zOffset);
-    }
-
-    @Override
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         World world = player.worldObj;
-        VajraMode mode = readToolMode(stack);
-        VajraProps props = readToolProps(stack);
+        Vein vein = VeinMinerHelper.getVein(stack);
+        Props props = PropsHelper.getProps(stack);
 
-        if (IC2.platform.isSimulating()) {
-            Block block = Block.blocksList[world.getBlockId(x, y, z)];
-            if (block == Block.oreRedstoneGlowing) {
-                block = Block.oreRedstone;
-            }
-            ItemStack blockStack = new ItemStack(block, 1, world.getBlockMetadata(x, y, z));
-            boolean isOre = false;
-            for (ItemStack oreStack : StackHelper.getStackFromOre("ore")) {
-                if (oreStack.isItemEqual(blockStack)) {
-                    isOre = true;
-                    break;
-                }
-            }
-            boolean veinGeneral = ((mode == VajraMode.VEIN && isOre) || mode == VajraMode.VEIN_EXTENDED);
-            if (veinGeneral && !player.capabilities.isCreativeMode) {
-                BlockPos origin = new BlockPos(x, y, z);
-                for (BlockPos coord : BlockHelper.veinPos(world, origin, player.isSneaking() ? 0 : 128)) {
-                    if (coord.equals(origin)) {
-                        continue;
-                    }
-                    if (!ElectricItem.canUse(stack, props.energyCost)) {
-                        break;
-                    }
-                    if (ElectricItem.canUse(stack, props.energyCost)) {
-                        if (canHarvestBlock(block) && ToolHelper.harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player)) {
-                            ElectricItem.use(stack, props.energyCost, player);
-                        }
-                    }
-                }
-            } else {
-                super.onBlockStartBreak(stack, x, y, z, player);
+        if (!IC2.platform.isSimulating()) return false;
+
+        if (!vein.matches(world, x, y, z)) return super.onBlockStartBreak(stack, x, y, z, player);
+
+        BlockPos origin = new BlockPos(x, y, z);
+        Set<BlockPos> veinSet = BlockHelper.veinPos(world, origin, player.isSneaking() ? 0 : VintageConfig.veinMaxCount);
+
+        for (BlockPos coord : veinSet) {
+            if (coord.equals(origin)) continue; // skip origin
+
+            if (!canOperate(stack)) break; // stop if we can't operate
+
+            Block block = BlockHelper.getBlock(world, coord);
+            if (!canHarvestBlock(block)) continue; // skip non-harvestable blocks
+
+            if (ToolHelper.harvestBlock(world, coord.getX(), coord.getY(), coord.getZ(), player) && !player.capabilities.isCreativeMode) {
+                ElectricItem.use(stack, props.COST.getVajra(), player);
             }
         }
 
@@ -194,8 +129,8 @@ public class ItemVajra extends ItemBaseElectricItem {
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLiving entityliving, EntityLiving attacker) {
-        VajraProps props = readToolProps(stack);
-        if (ElectricItem.use(stack, props.energyCost * 2, null)) {
+        Props props = PropsHelper.getProps(stack);
+        if (ElectricItem.use(stack, props.COST.getVajra() * 2, null)) {
             entityliving.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 25);
         } else {
             entityliving.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 1);
@@ -206,12 +141,13 @@ public class ItemVajra extends ItemBaseElectricItem {
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, int blockID, int xPos, int yPos, int zPos, EntityLiving entity) {
         Block block = Block.blocksList[blockID];
-        VajraProps props = readToolProps(stack);
+        Props props = PropsHelper.getProps(stack);
+        int cost = props.COST.getVajra();
         if (block.getBlockHardness(world, xPos, yPos, zPos) != 0.0D) {
             if (entity != null) {
-                ElectricItem.use(stack, props.energyCost, null);
+                ElectricItem.use(stack, cost, null);
             } else {
-                ElectricItem.discharge(stack, props.energyCost, this.TIER, true, false);
+                ElectricItem.discharge(stack, cost, this.TIER, true, false);
             }
         }
         return false;
@@ -224,81 +160,32 @@ public class ItemVajra extends ItemBaseElectricItem {
 
     @Override
     public float getStrVsBlock(ItemStack stack, Block block, int meta) {
-        VajraProps props = readToolProps(stack);
-        if (!ElectricItem.canUse(stack, props.energyCost)) {
-            return 0.5F;
-        }
+        Props props = PropsHelper.getProps(stack);
+        if (!canOperate(stack)) return 0.5f;
         if (canHarvestBlock(block)) {
-            return props.efficiency;
+            return props.EFF.getVajra();
         }
         return 0.5F;
     }
 
-    public static VajraMode readToolMode(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return VajraMode.getFromId(tag.getInteger("toolMode"));
+    @Override
+    public boolean isProvidingHighlight(ItemStack stack) {
+        Vein vein = VeinMinerHelper.getVein(stack);
+        return vein == Vein.ORES || vein == Vein.EXTENDED;
     }
 
-    public static VajraMode readNextToolMode(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return VajraMode.getFromId(tag.getInteger("toolMode") + 1);
+    @Override
+    public List<BlockPos> getHighlightArea(BlockPos start, EntityPlayer player, MovingObjectPosition hitResult) {
+        World world = player.worldObj;
+        Vein vein = VeinMinerHelper.getVein(player.getHeldItem());
+        if (vein != Vein.OFF && vein.matches(world, start.getX(), start.getY(), start.getZ())) {
+            return new ArrayList<BlockPos>(BlockHelper.veinPos(world, start, VintageConfig.veinMaxCount));
+        } else return Collections.emptyList();
     }
 
-    public static void saveToolMode(ItemStack stack, VajraMode mode) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        tag.setInteger("toolMode", mode.ordinal());
-    }
-
-    public static VajraProps readToolProps(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return VajraProps.getFromId(tag.getInteger("toolProps"));
-    }
-
-    public static VajraProps readNextToolProps(ItemStack stack) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        return VajraProps.getFromId(tag.getInteger("toolProps") + 1);
-    }
-
-    public static void saveToolProps(ItemStack stack, VajraProps mode) {
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        tag.setInteger("toolProps", mode.ordinal());
-    }
-
-    public enum VajraMode {
-        NORMAL(Refs.tool_mode_normal),
-        VEIN(Refs.tool_mode_vein),
-        VEIN_EXTENDED(Refs.tool_mode_vein_extended);
-
-        public static final VajraMode[] VALUES = values();
-        public final String name;
-
-        VajraMode(String name) {
-            this.name = name;
-        }
-
-        public static VajraMode getFromId(int id) {
-            return VALUES[id % VALUES.length];
-        }
-    }
-
-    public enum VajraProps {
-        NORMAL(20000.0F, 3200, Refs.eff_tool_mode_normal),
-        LOW_POWER(1000.0F, 1600, Refs.eff_tool_mode_low),
-        FINE(100.0F, 800, Refs.eff_tool_mode_fine);
-        public static final VajraProps[] VALUES = values();
-        public final String name;
-
-        public final float efficiency;
-        public final int energyCost;
-
-        VajraProps(float efficiency, int energyCost, String name) {
-            this.efficiency = efficiency;
-            this.energyCost = energyCost;
-            this.name = name;
-        }
-
-        public static VajraProps getFromId(int id) {
-            return VALUES[id % VALUES.length];
-        }
+    @Override
+    public int[] getHighlightColor(ItemStack stack) {
+        Props props = PropsHelper.getProps(stack);
+        return props.COLOR;
     }
 }

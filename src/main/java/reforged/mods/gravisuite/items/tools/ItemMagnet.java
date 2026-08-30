@@ -6,6 +6,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
 import ic2.core.item.ElectricItem;
 import ic2.core.util.StackUtil;
+import mods.vintage.core.helpers.ElectricHelper;
+import mods.vintage.core.helpers.StackHelper;
 import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -25,18 +27,15 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.IToolTipProvider;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseElectricItem;
+import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemToolElectric;
 import reforged.mods.gravisuite.keyboard.GraviSuiteKeyboardClient;
-import reforged.mods.gravisuite.utils.EnergyValues;
-import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemMagnet extends ItemBaseElectricItem {
+public class ItemMagnet extends ItemToolElectric {
 
     public static final String NBT_ACTIVE = "active";
     public static final String NBT_TICKER = "magnetTicker";
@@ -45,7 +44,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
     public byte MAGNET_TICKER;
 
     public ItemMagnet() {
-        super(GraviSuiteMainConfig.MAGNET_ID, "magnet", EnergyValues.MAGNET.tier, EnergyValues.MAGNET.transfer, EnergyValues.MAGNET.maxCapacity, EnumToolMaterial.IRON);
+        super(GraviSuiteConfig.MAGNET_ID.get(), "magnet", EnergyValues.MAGNET.tier, EnergyValues.MAGNET.transfer, EnergyValues.MAGNET.maxCapacity, EnumToolMaterial.IRON);
         this.setIconIndex(Refs.TOOLS_ID + 3);
         this.MAGNET_TICKER = 10;
     }
@@ -55,12 +54,11 @@ public class ItemMagnet extends ItemBaseElectricItem {
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, final List tooltip, boolean debugMode) {
         super.addInformation(stack, player, tooltip, debugMode);
-        addKeyTooltips(tooltip, new IToolTipProvider() {
-            @Override
-            public void addTooltip() {
-                tooltip.add(Helpers.pressXForY(Refs.to_enable_1, Translator.format(GraviSuiteKeyboardClient.magnet_toggle.keyDescription), Refs.MAGNET_MODE + ".stat"));
-            }
-        });
+        if (GraviSuite.PROXY.isSneakKeyDown()) {
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MAGNET_TOGGLE_KEY, KeyDescriptionHelper.KeyMode.ENABLE, Messages.Translations.MAGNET_MODE_STAT.format()));
+        } else {
+            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+        }
     }
 
     @Override
@@ -71,23 +69,15 @@ public class ItemMagnet extends ItemBaseElectricItem {
 
     public void changeMode(ItemStack stack, EntityPlayer player) {
         String message;
-        NBTTagCompound tag = StackUtil.getOrCreateNbtData(stack);
-        if (Helpers.getCharge(stack) > ENERGY_COST) {
-            tag.setByte(NBT_TICKER, MAGNET_TICKER);
-            if (tag.getBoolean(NBT_ACTIVE)) {
-                tag.setBoolean(NBT_ACTIVE, false);
-                message = Refs.tool_mode_magnet + " " + Refs.status_off;
-            } else {
-                tag.setBoolean(NBT_ACTIVE, true);
-                message = Refs.tool_mode_magnet + " " + Refs.status_on;
-            }
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
+        if (ElectricHelper.getCharge(stack) > ENERGY_COST) {
+            boolean status = !tag.getBoolean(NBT_ACTIVE);
+            tag.setBoolean(NBT_ACTIVE, status);
+            message = Messages.Translations.TOOL_MODE_MAGNET.format(Helpers.getStatusMessage(status));
         } else {
-            message = Refs.status_low;
+            message = Messages.Translations.STATUS_LOW.format();
         }
-
-        if (IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(player, message);
-        }
+        IC2.platform.messagePlayer(player, message);
     }
 
     @Override
@@ -118,7 +108,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
                 double x = player.posX;
                 double y = player.posY;
                 double z = player.posZ;
-                int range = GraviSuiteMainConfig.MAGNET_RANGE;
+                int range = GraviSuiteConfig.MAGNET_RANGE;
                 AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x - range, y - range, z - range, x + range, y + range, z + range);
                 List<Entity> items = selectEntitiesWithinAABB(world, aabb);
                 if (items.isEmpty())
@@ -166,7 +156,7 @@ public class ItemMagnet extends ItemBaseElectricItem {
                             if (!entity.isDead) {
                                 if (entity.boundingBox.intersectsWith(bb)) {
                                     arraylist.add(entity);
-                                    if (arraylist.size() >= GraviSuiteMainConfig.MAGNET_MAX_CAPACITY) {
+                                    if (arraylist.size() >= GraviSuiteConfig.MAGNET_MAX_CAPACITY) {
                                         return arraylist;
                                     }
                                 }

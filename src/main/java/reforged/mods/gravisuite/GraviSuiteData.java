@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
@@ -11,8 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
 import reforged.mods.gravisuite.blocks.BlockRelocatorPortal;
 import reforged.mods.gravisuite.items.ItemComponent;
+import reforged.mods.gravisuite.items.armors.ItemAdvancedJetpack;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
-import reforged.mods.gravisuite.items.armors.ItemJetpack;
 import reforged.mods.gravisuite.items.armors.ItemLappack;
 import reforged.mods.gravisuite.items.tools.*;
 import reforged.mods.gravisuite.items.tools.base.ItemBaseExcavator;
@@ -32,7 +33,7 @@ public class GraviSuiteData {
 
     public static Item ADVANCED_LAPPACK, ULTIMATE_LAPPACK, ADVANCED_JETPACK, ADVANCED_NANO, ADVANCED_QUANT;
 
-    public static Item ADVANCED_DRILL, ADVANCED_CHAINSAW, VAJRA, MAGNET, GRAVI_TOOL, VOIDER;
+    public static Item ADVANCED_DRILL, ADVANCED_IRIDIUM_DRILL, ADVANCED_CHAINSAW, VAJRA, MAGNET, GRAVI_TOOL, VOIDER;
     public static Item WOOD_HAMMER, STONE_HAMMER, IRON_HAMMER, DIAMOND_HAMMER, QUARTZ_HAMMER, RUBY_HAMMER, SAPPHIRE_HAMMER, GREEN_SAPPHIRE_HAMMER, BRONZE_HAMMER;
     public static Item WOOD_EXCAVATOR, STONE_EXCAVATOR, IRON_EXCAVATOR, DIAMOND_EXCAVATOR, QUARTZ_EXCAVATOR, RUBY_EXCAVATOR, SAPPHIRE_EXCAVATOR, GREEN_SAPPHIRE_EXCAVATOR, BRONZE_EXCAVATOR;
 
@@ -53,57 +54,58 @@ public class GraviSuiteData {
         ADVANCED_LAPPACK = new ItemLappack.ItemAdvancedLappack();
         ULTIMATE_LAPPACK = new ItemLappack.ItemUltimateLappack();
 
-        ADVANCED_DRILL = new ItemAdvancedDrill();
+        ADVANCED_DRILL = new ItemAdvancedDrill.ItemAdvancedDiamondDrill();
+        ADVANCED_IRIDIUM_DRILL = new ItemAdvancedDrill.ItemAdvancedIridiumDrill();
         ADVANCED_CHAINSAW = new ItemAdvancedChainsaw();
         VAJRA = new ItemVajra();
         MAGNET = new ItemMagnet();
         GRAVI_TOOL = new ItemGraviTool();
         VOIDER = new ItemVoider();
 
-        if (GraviSuiteMainConfig.ENABLE_HAMMERS) {
-            WOOD_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.WOOD_HAMMER_ID, EnumToolMaterial.WOOD, 0, "wooden");
-            STONE_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.STONE_HAMMER_ID, EnumToolMaterial.STONE, 1, "stone");
-            IRON_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.IRON_HAMMER_ID, EnumToolMaterial.IRON, 2, "iron");
-            DIAMOND_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.DIAMOND_HAMMER_ID, EnumToolMaterial.EMERALD, 3, "diamond");
-            BRONZE_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.BRONZE_HAMMER_ID, EnumToolMaterial.IRON, 4, "bronze");
+        if (GraviSuiteConfig.ENABLE_HAMMERS) {
+            WOOD_HAMMER = new ItemBaseHammer(GraviSuiteConfig.WOOD_HAMMER_ID.get(), EnumToolMaterial.WOOD, 0, "wooden");
+            STONE_HAMMER = new ItemBaseHammer(GraviSuiteConfig.STONE_HAMMER_ID.get(), EnumToolMaterial.STONE, 1, "stone");
+            IRON_HAMMER = new ItemBaseHammer(GraviSuiteConfig.IRON_HAMMER_ID.get(), EnumToolMaterial.IRON, 2, "iron");
+            DIAMOND_HAMMER = new ItemBaseHammer(GraviSuiteConfig.DIAMOND_HAMMER_ID.get(), EnumToolMaterial.EMERALD, 3, "diamond");
+            BRONZE_HAMMER = new ItemBaseHammer(GraviSuiteConfig.BRONZE_HAMMER_ID.get(), EnumToolMaterial.IRON, 4, "bronze");
             if (Loader.isModLoaded("AppliedEnergistics")) {
-                QUARTZ_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.QUARTZ_HAMMER_ID, EnumToolMaterial.IRON, 5, "quartz");
+                QUARTZ_HAMMER = new ItemBaseHammer(GraviSuiteConfig.QUARTZ_HAMMER_ID.get(), EnumToolMaterial.IRON, 5, "quartz");
             }
             if (Loader.isModLoaded("RedPowerBase")) {
-                RUBY_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.RUBY_HAMMER_ID, GEMS_MATERIAL, 6, "ruby");
-                SAPPHIRE_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.SAPPHIRE_HAMMER_ID, GEMS_MATERIAL, 7, "sapphire");
-                GREEN_SAPPHIRE_HAMMER = new ItemBaseHammer(GraviSuiteMainConfig.GREEN_SAPPHIRE_HAMMER_ID, GEMS_MATERIAL, 8, "green_sapphire");
+                RUBY_HAMMER = new ItemBaseHammer(GraviSuiteConfig.RUBY_HAMMER_ID.get(), GEMS_MATERIAL, 6, "ruby");
+                SAPPHIRE_HAMMER = new ItemBaseHammer(GraviSuiteConfig.SAPPHIRE_HAMMER_ID.get(), GEMS_MATERIAL, 7, "sapphire");
+                GREEN_SAPPHIRE_HAMMER = new ItemBaseHammer(GraviSuiteConfig.GREEN_SAPPHIRE_HAMMER_ID.get(), GEMS_MATERIAL, 8, "green_sapphire");
             }
         }
 
-        if (GraviSuiteMainConfig.ENABLE_EXCAVATORS) {
-            WOOD_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.WOOD_EXCAVATOR_ID, EnumToolMaterial.WOOD, 0, "wooden");
-            STONE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.STONE_EXCAVATOR_ID, EnumToolMaterial.STONE, 1, "stone");
-            IRON_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.IRON_EXCAVATOR_ID, EnumToolMaterial.IRON, 2, "iron");
-            DIAMOND_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.DIAMOND_EXCAVATOR_ID, EnumToolMaterial.EMERALD, 3, "diamond");
-            BRONZE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.BRONZE_EXCAVATOR_ID, EnumToolMaterial.IRON, 4, "bronze");
+        if (GraviSuiteConfig.ENABLE_EXCAVATORS) {
+            WOOD_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.WOOD_EXCAVATOR_ID.get(), EnumToolMaterial.WOOD, 0, "wooden");
+            STONE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.STONE_EXCAVATOR_ID.get(), EnumToolMaterial.STONE, 1, "stone");
+            IRON_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.IRON_EXCAVATOR_ID.get(), EnumToolMaterial.IRON, 2, "iron");
+            DIAMOND_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.DIAMOND_EXCAVATOR_ID.get(), EnumToolMaterial.EMERALD, 3, "diamond");
+            BRONZE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.BRONZE_EXCAVATOR_ID.get(), EnumToolMaterial.IRON, 4, "bronze");
             if (Loader.isModLoaded("AppliedEnergistics")) {
-                QUARTZ_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.QUARTZ_EXCAVATOR_ID, EnumToolMaterial.IRON, 5, "quartz");
+                QUARTZ_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.QUARTZ_EXCAVATOR_ID.get(), EnumToolMaterial.IRON, 5, "quartz");
             }
             if (Loader.isModLoaded("RedPowerBase")) {
-                RUBY_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.RUBY_EXCAVATOR_ID, GEMS_MATERIAL, 6, "ruby");
-                SAPPHIRE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.SAPPHIRE_EXCAVATOR_ID, GEMS_MATERIAL, 7, "sapphire");
-                GREEN_SAPPHIRE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteMainConfig.GREEN_SAPPHIRE_EXCAVATOR_ID, GEMS_MATERIAL, 8, "green_sapphire");
+                RUBY_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.RUBY_EXCAVATOR_ID.get(), GEMS_MATERIAL, 6, "ruby");
+                SAPPHIRE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.SAPPHIRE_EXCAVATOR_ID.get(), GEMS_MATERIAL, 7, "sapphire");
+                GREEN_SAPPHIRE_EXCAVATOR = new ItemBaseExcavator(GraviSuiteConfig.GREEN_SAPPHIRE_EXCAVATOR_ID.get(), GEMS_MATERIAL, 8, "green_sapphire");
             }
         }
 
-        ADVANCED_JETPACK = new ItemJetpack.ItemAdvancedElectricJetpack();
-        ADVANCED_NANO = new ItemJetpack.ItemAdvancedNano();
+        ADVANCED_JETPACK = new ItemAdvancedJetpack.ItemAdvancedElectricJetpack();
+        ADVANCED_NANO = new ItemAdvancedJetpack.ItemAdvancedNano();
         ADVANCED_QUANT = new ItemAdvancedQuant();
 
         RELOCATOR = new ItemRelocator();
-        RELOCATOR_PORTAL = new BlockRelocatorPortal(GraviSuiteMainConfig.RELOCATOR_PORTAL_BLOCK_ID);
+        RELOCATOR_PORTAL = new BlockRelocatorPortal(GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID.get());
         GameRegistry.registerTileEntity(TileEntityRelocatorPortal.class, "Relocator Portal");
         GameRegistry.registerBlock(RELOCATOR_PORTAL, ItemRelocatorPortal.class, "BlockRelocatorPortal");
         registerEntity(EntityRelocatorBall.class, "RelocatorBall");
     }
 
-    public static void registerEntity(Class paramClass, String paramString) {
+    public static void registerEntity(Class<? extends Entity> paramClass, String paramString) {
         int i = EntityRegistry.findGlobalUniqueEntityId();
         EntityRegistry.registerModEntity(paramClass, paramString, i, GraviSuite.instance, 64, 1, true);
     }

@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ic2.api.ElectricItem;
 import ic2.core.IC2;
 import mods.vintage.core.helpers.BlockHelper;
+import mods.vintage.core.helpers.ElectricHelper;
 import mods.vintage.core.helpers.pos.BlockPos;
 import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.block.Block;
@@ -18,7 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.GraviSuiteConfig;
 import reforged.mods.gravisuite.blocks.BlockRelocatorPortal;
 import reforged.mods.gravisuite.items.armors.ItemAdvancedQuant;
 import reforged.mods.gravisuite.tiles.TileEntityRelocatorPortal;
@@ -119,10 +120,10 @@ public class EntityRelocatorBall extends EntityThrowable {
                     EntityPlayer player = (EntityPlayer) mop.entityHit;
                     ItemStack stack = player.getCurrentArmor(2);
                     if (stack != null && stack.getItem() instanceof ItemAdvancedQuant) {
-                        if (Helpers.getCharge(stack) < this.dischargeArmorValue) {
+                        if (ElectricHelper.getCharge(stack) < this.dischargeArmorValue) {
                             Helpers.teleportEntity(mop.entityHit, this.targetTpPoint);
                         } else if (IC2.platform.isSimulating()) {
-                            IC2.platform.messagePlayer(player, Translator.format("message.tool.relocator.teleport.to"));
+                            IC2.platform.messagePlayer(player, Translator.RESET.format("message.tool.relocator.teleport.to"));
                             ElectricItem.discharge(stack, this.dischargeArmorValue, Integer.MAX_VALUE, true, false);
                         }
                     } else {
@@ -158,14 +159,14 @@ public class EntityRelocatorBall extends EntityThrowable {
             }
             if (IC2.platform.isSimulating()) {
                 this.worldObj.setBlock(x, y, z, 0);
-                this.worldObj.setBlock(x, y, z, GraviSuiteMainConfig.RELOCATOR_PORTAL_BLOCK_ID);
+                this.worldObj.setBlock(x, y, z, GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID.get());
                 this.worldObj.markBlockForUpdate(x, y, z);
                 MinecraftServer minecraftServer = MinecraftServer.getServer();
                 WorldServer worldServer = minecraftServer.worldServerForDimension(this.targetTpPoint.DIMENSION_ID);
                 worldServer.theChunkProviderServer.loadChunk(this.targetTpPoint.POS.getX() >> 4, this.targetTpPoint.POS.getZ() >> 4);
                 Block block = BlockHelper.getBlock(worldServer, this.targetTpPoint.POS);
                 if (!(block instanceof BlockRelocatorPortal)) {
-                    BlockHelper.setBlock(worldServer, this.targetTpPoint.POS, GraviSuiteMainConfig.RELOCATOR_PORTAL_BLOCK_ID);
+                    BlockHelper.setBlock(worldServer, this.targetTpPoint.POS, GraviSuiteConfig.RELOCATOR_PORTAL_BLOCK_ID.get());
                     BlockHelper.markBlockForUpdate(worldServer, this.targetTpPoint.POS);
                 }
                 TileEntity tileEntity1 = BlockHelper.getBlockTileEntity(worldServer, this.targetTpPoint.POS);

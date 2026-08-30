@@ -3,7 +3,8 @@ package reforged.mods.gravisuite.items.tools;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ic2.core.IC2;
-import mods.vintage.core.platform.lang.FormattedTranslator;
+import mods.vintage.core.helpers.StackHelper;
+import mods.vintage.core.platform.lang.Translator;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumToolMaterial;
@@ -14,17 +15,18 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
-import reforged.mods.gravisuite.items.tools.base.ItemBaseTool;
+import reforged.mods.gravisuite.GraviSuiteConfig;
+import reforged.mods.gravisuite.items.tools.base.ItemToolBase;
 import reforged.mods.gravisuite.utils.Helpers;
-import reforged.mods.gravisuite.utils.Refs;
+import reforged.mods.gravisuite.utils.KeyDescriptionHelper;
+import reforged.mods.gravisuite.utils.Messages;
 
 import java.util.List;
 
-public class ItemVoider extends ItemBaseTool {
+public class ItemVoider extends ItemToolBase {
 
     public ItemVoider() {
-        super(GraviSuiteMainConfig.VOIDER_ID, "voider", EnumToolMaterial.STONE, null);
+        super(GraviSuiteConfig.VOIDER_ID.get(), "voider", EnumToolMaterial.STONE, null);
         this.setIconIndex(37);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -34,24 +36,24 @@ public class ItemVoider extends ItemBaseTool {
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean isDebugMode) {
         super.addInformation(stack, player, tooltip, isDebugMode);
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         NBTTagCompound filterStackTag = tag.getCompoundTag("FilterStack");
         ItemStack filterStack = ItemStack.loadItemStackFromNBT(filterStackTag);
-        tooltip.add(FormattedTranslator.GREEN.format("message.tool.voider.hotbar"));
+        tooltip.add(Translator.GREEN.format("message.tool.voider.hotbar"));
         if (filterStack != null) {
-            tooltip.add(FormattedTranslator.GOLD.format("message.info.filter", FormattedTranslator.AQUA.literal(filterStack.getDisplayName())));
+            tooltip.add(Translator.GOLD.format("message.info.filter", Translator.AQUA.literal(filterStack.getDisplayName())));
         }
         if (GraviSuite.PROXY.isSneakKeyDown()) {
-            tooltip.add(Helpers.clickFor(Refs.SNEAK_KEY + " & Right Click", "message.info.filter.set"));
-            tooltip.add(Helpers.pressXAndYForZ(Refs.to_custom_2, "Mode Switch Key", "Right Click", "message.tool.voider.remove.all"));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(new KeyDescriptionHelper.Keys[] {KeyDescriptionHelper.Keys.SNEAK_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK}, KeyDescriptionHelper.KeyMode.BLOCK, Translator.YELLOW.format("message.info.filter.set")));
+            tooltip.add(KeyDescriptionHelper.buildKeyDescription(KeyDescriptionHelper.Keys.MODE_KEY, KeyDescriptionHelper.Keys.RIGHT_CLICK, Translator.YELLOW.format("message.tool.voider.remove.all")));
         } else {
-            tooltip.add(Helpers.pressForInfo(Refs.SNEAK_KEY));
+            tooltip.add(Helpers.pressForInfo(Messages.Translations.KEY_SNEAK.format()));
         }
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         ItemStack filterStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("FilterStack"));
         if (IC2.keyboard.isModeSwitchKeyDown(player)) {
             if (filterStack != null) {
@@ -67,9 +69,9 @@ public class ItemVoider extends ItemBaseTool {
                 }
                 if (IC2.platform.isRendering()) {
                     if (removed > 0) {
-                        IC2.platform.messagePlayer(player, FormattedTranslator.GREEN.format("message.tool.voider.removed"));
+                        IC2.platform.messagePlayer(player, Translator.GREEN.format("message.tool.voider.removed"));
                     } else {
-                        IC2.platform.messagePlayer(player, FormattedTranslator.RED.format("message.tool.voider.removed.none"));
+                        IC2.platform.messagePlayer(player, Translator.RED.format("message.tool.voider.removed.none"));
                     }
                 }
             }
@@ -86,11 +88,11 @@ public class ItemVoider extends ItemBaseTool {
         Block block = Block.blocksList[blockID];
         ItemStack blockStack = new ItemStack(block, 1, blockMetadata);
         NBTTagCompound filterTag = blockStack.writeToNBT(new NBTTagCompound());
-        NBTTagCompound tag = Helpers.getOrCreateTag(stack);
+        NBTTagCompound tag = StackHelper.getOrCreateTag(stack);
         if (IC2.platform.isSimulating()) {
             if (player.isSneaking()) {
                 tag.setTag("FilterStack", filterTag);
-                IC2.platform.messagePlayer(player, FormattedTranslator.GOLD.format("message.info.filter", FormattedTranslator.AQUA.literal(blockStack.getDisplayName())));
+                IC2.platform.messagePlayer(player, Translator.GOLD.format("message.info.filter", Translator.AQUA.literal(blockStack.getDisplayName())));
                 return true;
             }
         }
@@ -107,13 +109,13 @@ public class ItemVoider extends ItemBaseTool {
             if (hotbarStack != null) {
                 if (hotbarStack.getItem() instanceof ItemVoider) {
                     voider = hotbarStack;
-                    doWork = Helpers.getOrCreateTag(hotbarStack).getCompoundTag("FilterStack") != null;
+                    doWork = StackHelper.getOrCreateTag(hotbarStack).getCompoundTag("FilterStack") != null;
                     break;
                 }
             }
         }
         if (voider != null && doWork) {
-            ItemStack filterStack = ItemStack.loadItemStackFromNBT(Helpers.getOrCreateTag(voider).getCompoundTag("FilterStack"));
+            ItemStack filterStack = ItemStack.loadItemStackFromNBT(StackHelper.getOrCreateTag(voider).getCompoundTag("FilterStack"));
             if (filterStack != null) {
                 ItemStack drop = e.item.getEntityItem();
                 if (drop.isItemEqual(filterStack)) {

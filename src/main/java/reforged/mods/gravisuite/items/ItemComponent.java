@@ -2,15 +2,16 @@ package reforged.mods.gravisuite.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.vintage.core.platform.config.IItemBlockIDProvider;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import reforged.mods.gravisuite.GraviSuite;
-import reforged.mods.gravisuite.GraviSuiteMainConfig;
+import reforged.mods.gravisuite.GraviSuiteConfig;
 
 import java.util.List;
 
-public class ItemComponent extends Item {
+public class ItemComponent extends Item implements IItemBlockIDProvider {
 
     public String[] names = new String[] {
             "superconductor_cover",
@@ -23,7 +24,7 @@ public class ItemComponent extends Item {
     };
 
     public ItemComponent() {
-        super(GraviSuiteMainConfig.COMPONENT_ID);
+        super(GraviSuiteConfig.COMPONENT_ID.get());
         this.setCreativeTab(GraviSuite.TAB);
         this.setItemName("component");
         this.setHasSubtypes(true);
